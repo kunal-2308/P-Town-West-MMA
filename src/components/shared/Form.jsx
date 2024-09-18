@@ -18,8 +18,8 @@ function Form() {
 
   return (
     <>
-      <div className="main-container w-full h-auto bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url('public/images/Home/Trainings/25.png')` }}>
-        <div className="flex flex-col md:flex-row gap-x-4 p-6 sm:p-8 md:pl-28 md:pt-16 justify-start items-start">
+      <div className="main-container w-full h:auto bg-cover bg-center bg-no-repeat lg:h-[800px]" style={{ backgroundImage: `url('public/images/Home/Trainings/25.png')` }}>
+        <div className="flex flex-col md:flex-row gap-x-8 p-6 sm:p-8 md:pl-28 md:pt-16 justify-start items-start">
           
           {/* Heading Section */}
           <div className="flex justify-start items-start pt-2">
@@ -33,7 +33,7 @@ function Form() {
             </span>
 
             {/* Form */}
-            <div className="mt-10 sm:mt-12">
+            <div className="mt-2 sm:mt-6">
               <form onSubmit={handleSubmit}>
                 
                 <input 

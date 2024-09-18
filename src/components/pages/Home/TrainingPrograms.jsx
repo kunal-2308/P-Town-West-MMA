@@ -1,5 +1,6 @@
 import React from 'react';
 import TrainingCard from './TrainingCard';
+import { Link } from 'react-router-dom';
 
 function TrainingPrograms() {
     return (
@@ -16,11 +17,11 @@ function TrainingPrograms() {
 
             {/* Cards Section */}
             <div className="flex flex-wrap justify-center items-center gap-8 p-5 max-w-fullxl mx-auto">
-                <TrainingCard
+                <Link to='/kickboxing'><TrainingCard
                     link="public/images/Home/Trainings/1.png"
                     title="BOXING"
                     desc="Experience the art of eight limbs with our Muay Thai training program in Pune, Baner, where you'll learn authentic techniques, build strength, and enhance your fitness under the guidance of experienced trainers."
-                />
+                /></Link>
                 <TrainingCard
                     link="public/images/Home/Trainings/2.png"
                     title="BRAZILIAN JIU-JITSU"
