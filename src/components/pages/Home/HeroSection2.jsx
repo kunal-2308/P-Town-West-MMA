@@ -12,7 +12,7 @@ function HeroSection2() {
                       w-full h-[500px] sm:h-[600px] md:h-[700px] lg:h-[800px] xl:h-[600px]
                       bg-cover bg-center flex items-center justify-start
                       px-8 sm:px-16 lg:px-40 gap-6 lg:gap-20"
-                    style={{ backgroundImage: `url('/images/Poster/SmokeBg.png')` }}
+                    style={{ backgroundImage: `url('public/images/Home/Trainings/30.png')` }}
                 >
                     <div className="flex flex-col ml-4 sm:ml-10 justify-start items-start">
                         <div className="flex items-center">

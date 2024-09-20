@@ -39,7 +39,7 @@ function Form() {
                 <input 
                   type="text" 
                   name="name" 
-                  className="w-full md:w-[400px] h-[40px] rounded-full mt-7 p-3 font-extralight text-black pl-5" 
+                  className="w-full md:w-[400px] h-[40px] rounded-full mt-7 p-3 font-thin text-black pl-5 placeholder-black placeholder-opacity-60" 
                   placeholder="NAME:" 
                   required 
                   onChange={handleChange}
@@ -48,7 +48,7 @@ function Form() {
                 <input 
                   type="text" 
                   name="phone" 
-                  className="w-full md:w-[400px] h-[40px] rounded-full mt-7 p-3 font-extralight text-black pl-5"  
+                  className="w-full md:w-[400px] h-[40px] rounded-full mt-7 p-5 font-thin text-black pl-5 placeholder-black placeholder-opacity-60"  
                   placeholder="MOBILE NUMBER:" 
                   required 
                   onChange={handleChange}
@@ -57,7 +57,7 @@ function Form() {
                 <input 
                   type="email" 
                   name="email" 
-                  className="w-full md:w-[400px] h-[40px] rounded-full mt-7 p-3 font-extralight text-black pl-5" 
+                  className="w-full md:w-[400px] h-[40px] rounded-full mt-7 p-3 font-thin text-black pl-5 placeholder-black placeholder-opacity-60" 
                   placeholder="E-MAIL ID:" 
                   required 
                   onChange={handleChange}

@@ -22,11 +22,11 @@ function TrainingPrograms() {
                     title="BOXING"
                     desc="Experience the art of eight limbs with our Muay Thai training program in Pune, Baner, where you'll learn authentic techniques, build strength, and enhance your fitness under the guidance of experienced trainers."
                 /></Link>
-                <TrainingCard
+                <Link to='/jitsu'><TrainingCard
                     link="public/images/Home/Trainings/2.png"
                     title="BRAZILIAN JIU-JITSU"
                     desc="Unlock the power of Brazilian Jiu-Jitsu with our specialized training program in Pune, Baner. Learn effective grappling techniques, enhance your ground game, and boost your fitness with personalized instruction."
-                />
+                /></Link>
                 <TrainingCard
                     link="public/images/Home/Trainings/3.png"
                     title="MUAY THAI"

@@ -17,7 +17,7 @@ function HeroSection() {
                 }}
             >
                 {/* Boxing/Kickboxing Text */}
-                <div className="div1 mt-72 lg:mt-64 xl:mt-[400px]"> 
+                <div className="div1 mt-72 lg:mt-64 xl:mt-[400px]">
                     <span className='font-extrabold text-white text-5xl sm:text-6xl lg:text-7xl'>BOXING / KICK BOXING</span>
                 </div>
 
@@ -31,8 +31,8 @@ function HeroSection() {
                         </div>
                         <div className="div-b flex justify-start items-start mt-4 pl-14">
                             <span className=' text-customYellow text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium leading-loose'>Kickboxing / Boxing <br />
-                            Training Program in <br />
-                            Pune, Baner</span>
+                                Training Program in <br />
+                                Pune, Baner</span>
                         </div>
                     </div>
 
