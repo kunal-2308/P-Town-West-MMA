@@ -1,110 +1,116 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 
 function Navbar() {
-  // State to control the dropdown visibility
-  const [viewDropdown, setViewDropdown] = useState(false);
+    let [navStatus, setNavStatus] = useState(false);
 
-  return (
-    <>
-      <nav className="w-full overflow-x-hidden fixed top-0 z-50 bg-white">
-        <div className="lg:h-[100px] h-auto flex justify-between items-center px-6 lg:px-20 w-full">
-          <div className="flex items-center">
-            <div className="logo">
-              <img src="public/images/logo/mainLogo.png" alt="logo" className="h-16 lg:h-20" />
-            </div>
-            <div className="hidden lg:block ml-6 lg:ml-10">
-              <ul className="flex space-x-4 lg:space-x-8 items-center">
-                <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
-                  <Link to="/">Home</Link>
-                </li>
+    const menuBarClick = (e) => {
+        e.preventDefault();
+        setNavStatus(!navStatus);
+    }
 
-                {/* Dropdown Container */}
-                <div
-                  className="div-dropdown-container flex justify-center items-center relative"
-                  onMouseEnter={() => setViewDropdown(true)}
-                  onMouseLeave={() => setViewDropdown(false)}
-                >
-                  {/* Training Programs link with Chevron */}
-                  <li className="hover:cursor-pointer font-semibold text-sm lg:text-base pr-1">
-                    Training Programs
-                  </li>
-                  <ChevronDown className={`transition-transform duration-500 ${viewDropdown ? 'rotate-180' : 'rotate-0'}`} />
+    let [dropdownClick, setdropDownClick] = useState(false);
 
-                  {/* Dropdown Menu */}
-                  {viewDropdown && (
-                    <div className="absolute top-full mt-2 bg-white shadow-lg rounded-lg p-4 w-[200px] z-[1000]">
-                      <ul className="space-y-2">
-                        <li>
-                          <Link to="/training/program1" className="hover:text-blue-600">
-                            Program 1
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/training/program2" className="hover:text-blue-600">
-                            Program 2
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/training/program3" className="hover:text-blue-600">
-                            Program 3
-                          </Link>
-                        </li>
-                      </ul>
+    const dropdownClicked = (e) => {
+        e.preventDefault();
+        setdropDownClick(!dropdownClick);
+    }
+
+    return (
+        <>
+            <nav className="w-full fixed top-0 z-[1000] bg-white">
+                <div className="lg:h-[100px] h-auto flex justify-between items-center px-6 lg:px-20 w-full md:mt-0">
+                    <div className="flex items-center">
+                        <div className="logo sm:mt-10 md:mt-0">
+                            <img src="public/images/logo/mainLogo.png" alt="logo" className="h-16 lg:h-20" />
+                        </div>
+                        <div className="hidden md:block ml-6 lg:ml-10">
+                            <ul className="flex space-x-4 lg:space-x-8 items-center">
+                                <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
+                                    <Link to="/">Home</Link>
+                                </li>
+
+                                <div className="relative">
+                                    <div className="div-nav-drop flex justify-center items-center lg:gap-x-1 cursor-pointer" onClick={dropdownClicked}>
+                                        <li className="font-semibold text-sm lg:text-base">
+                                            Training Programs
+                                        </li>
+                                        <ChevronDown className={`transform transition-transform duration-300 ml-1 ${dropdownClick ? 'rotate-180' : 'rotate-0'}`} />
+                                    </div>
+
+                                    {/* Dropdown Content */}
+                                    <ul className={`absolute left-0 mt-2 py-2 w-40 bg-white shadow-lg rounded-md transition-opacity duration-300 ease-in-out ${dropdownClick ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+                                        <li className="px-4 py-2 text-sm hover:bg-gray-200">
+                                            <Link to="/jitsu"><span className="text-sm">Brazilian Jitsu</span></Link>
+                                        </li>
+                                        <li className="px-4 py-2 text-sm hover:bg-gray-200">
+                                            <Link to="/kickboxing"><span className="text-sm">KickBoxing</span></Link>
+                                        </li>
+                                        <li className="px-4 py-2 text-sm hover:bg-gray-200">
+                                            <Link to="/strength">Stregth Program</Link>
+                                        </li>
+                                        <li className="px-4 py-2 text-sm hover:bg-gray-200">
+                                            <Link to="/kids"><span className="text-sm">Kids</span></Link>
+                                        </li>
+                                        <li className="px-4 py-2 text-sm hover:bg-gray-200">
+                                            <Link to="/nutrition"><span className="text-sm">Nutrition</span></Link>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
+                                    <Link to="/trainer">Our Trainers</Link>
+                                </li>
+                                <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
+                                    <Link to="/about">About Us</Link>
+                                </li>
+                                <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
+                                    <Link to="/schedule">Class Schedule</Link>
+                                </li>
+                                <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
+                                    <Link to="/contact">Contact Us</Link>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                  )}
+                    <div className="mr-6 lg:mr-9 hidden md:block">
+                        <Button className="bg-customYellow text-black hover:bg-customYellow rounded-full font-medium text-sm lg:text-sm">
+                            Book a Free Trial Class
+                        </Button>
+                    </div>
+                    <div className="div-burgerMenu lg:hidden pr-5 hover:cursor-pointer">
+                        <Menu className="text-black" onClick={menuBarClick}></Menu>
+                    </div>
                 </div>
 
-                <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
-                  <Link to="/trainer">Our Trainers</Link>
-                </li>
-                <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
-                  <Link to="/about">About Us</Link>
-                </li>
-                <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
-                  <Link to="/schedule">Class Schedule</Link>
-                </li>
-                <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
-                  <Link to="/contact">Contact Us</Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="mr-6 lg:mr-9">
-            <Button className="bg-customYellow text-black hover:bg-customYellow rounded-full font-medium text-sm lg:text-sm">
-              Book a Free Trial Class
-            </Button>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <div className="block lg:hidden px-6">
-          <ul className="flex flex-col space-y-4 items-center mt-4">
-            <li className="hover:cursor-pointer font-semibold text-sm">
-              <Link to="/">Home</Link>
-            </li>
-            <li className="hover:cursor-pointer font-semibold text-sm">
-              <Link to="/training/programs">Training Programs</Link>
-            </li>
-            <li className="hover:cursor-pointer font-semibold text-sm">
-              <Link to="/trainer">Our Trainers</Link>
-            </li>
-            <li className="hover:cursor-pointer font-semibold text-sm">
-              <Link to="/about">About Us</Link>
-            </li>
-            <li className="hover:cursor-pointer font-semibold text-sm">
-              <Link to="/schedule">Class Schedule</Link>
-            </li>
-            <li className="hover:cursor-pointer font-semibold text-sm">
-              <Link to="/contact">Contact Us</Link>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </>
-  );
+                {/* Mobile Menu */}
+                <div className={`md:hidden overflow-hidden transition-all duration-800 ease-in-out ${navStatus ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}>
+                    <ul className="flex flex-col space-y-4 items-center mt-4">
+                        <li className="hover:cursor-pointer font-semibold text-sm">
+                            <Link to="/">Home</Link>
+                        </li>
+                        <li className="hover:cursor-pointer font-semibold text-sm">
+                            <Link to="/training/programs">Training Programs</Link>
+                        </li>
+                        <li className="hover:cursor-pointer font-semibold text-sm">
+                            <Link to="/trainer">Our Trainers</Link>
+                        </li>
+                        <li className="hover:cursor-pointer font-semibold text-sm">
+                            <Link to="/about">About Us</Link>
+                        </li>
+                        <li className="hover:cursor-pointer font-semibold text-sm">
+                            <Link to="/schedule">Class Schedule</Link>
+                        </li>
+                        <li className="hover:cursor-pointer font-semibold text-sm">
+                            <Link to="/contact">Contact Us</Link>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </>
+    );
 }
 
 export default Navbar;

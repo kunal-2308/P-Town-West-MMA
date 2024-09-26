@@ -7,8 +7,7 @@ function HeroSection1() {
     <>
       <div
         className="
-          w-full h-[500px] sm:h-[600px] md:h-[700px] lg:h-[800px] xl:h-[900px]
-          bg-cover bg-center flex justify-center items-center"
+        relative z-0 w-full h-[500px] sm:h-[600px] md:h-[700px] lg:h-[800px] xl:h-[900px] bg-cover bg-center flex justify-center items-center"
         style={{ backgroundImage: `url('/images/Poster/MMAHero.png')` }}
       >
         <div className="mt-32 sm:mt-40 md:mt-48 lg:mt-56 xl:mt-64 flex justify-center items-center">
