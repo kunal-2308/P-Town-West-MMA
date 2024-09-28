@@ -1,5 +1,5 @@
 import React, { useState,useRef } from 'react'
-
+import {toast} from "sonner"
 function HeroSection1() {
     let [form, setForm] = useState({
         name: "",
@@ -15,7 +15,16 @@ function HeroSection1() {
         e.preventDefault();
         alert(`Name: ${form.name}, Phone: ${form.phone}, Email: ${form.email}`);
     };
+    let phone = '7796870291 / 7887549292';
 
+    
+    let copyItem = (e) =>{
+        e.preventDefault();
+       navigator.clipboard.writeText(phone);
+      toast.success("Copied Successfully");
+    }
+
+   
     return (
         <div className="relative pt-28">
             <img
@@ -34,13 +43,13 @@ function HeroSection1() {
                         <span className='text-white text-start text-xs font-medium'>Ground Floor, Vithala Rukmini Mandir,<br /> Baner Gaon, Pune, Maharashtra 411045</span>
                     </div>
                     <div className="div flex flex-col justify-start items-start gap-y-2">
-                        <div className="div-1 flex justify-center items-center gap-x-4">
+                        <div className="div-1 flex justify-center items-center gap-x-4 hover:cursor-pointer" onClick={copyItem}>
                             <img src="public/images/contact/phone.png" alt="" className='h-5' />
-                            <span className='text-white text-sm'>7796870291 / 7887549292</span>
+                            <span className='text-white text-sm'>{phone}</span>
                         </div>
                         <div className="div-1 flex justify-center items-center gap-x-4">
                             <img src="public/images/contact/mail.png" alt="" className='h-5' />
-                            <span className='text-white text-sm'>PTOWNWESTMMA@GMAIL.COM</span>
+                            <span className='text-white text-sm hover:cursor-pointer'  onClick={() => window.location = 'mailto:PTOWNWESTMMA@GMAIL.COM'}>PTOWNWESTMMA@GMAIL.COM</span>
                         </div>
                     </div>
                 </div>

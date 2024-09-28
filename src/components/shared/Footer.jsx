@@ -1,0 +1,61 @@
+import React from 'react';
+
+function Footer() {
+    return (
+        <>
+            <div className="main-footer-container w-full h-auto lg:pl-28 sm:pl-12 sm:p-4 bg-black flex items-center sm:pt-5 gap-x-20">
+                <div className="div-1-container flex flex-col justify-start items-start gap-y-4 md:gap-y-9">
+                    <div className="div-sec-a flex justify-start items-start flex-col gap-y-2">
+                        <img
+                            src="public/images/logo/mainLogo.png"
+                            alt="footer image"
+                            className="invert h-[50px] sm:h-[60px] md:h-[80px] lg:h-[100px] object-contain"
+                        />
+                        <span className='text-white  text-sm sm:font-bold md:text-lg'>P-Town West MMA</span>
+                    </div>
+                    <div className="div-sec-b w-[100%] text-white flex flex-col gap-y-2">
+                        <span className='text-lg font-semibold'>Office Address</span>
+                        <span className='text-sm  text-gray-400 font-medium'>Ground Floor, Vithala Rukmini Mandir, <br />
+                            Baner Gaon, Pune, Maharashtra 411045
+                        </span>
+                    </div>
+                    <div className="div-sec-c w-[100%] text-white flex flex-col gap-y-2">
+                        <span className='text-lg font-semibold'>Registered Address</span>
+                        <span className='text-sm text-gray-400 font-medium'>Ground Floor, Vithala Rukmini Mandir, <br />
+                            Baner Gaon, Pune, Maharashtra 411045
+                        </span>
+                    </div>
+                    <div className="div-sec-c flex flex-row gap-x-9 justify-center items-center">
+                        <div className="div-a flex flex-col gap-y-1">
+                            <span className='text-white font-bold text-lg'>GST NO.</span>
+                            <span className='text-gray-400'>27AADCO8904F1ZE</span>
+                        </div>
+                        <div className="div-a flex flex-col gap-y-1">
+                            <span className='text-white font-bold text-lg'>IEC Code</span>
+                            <span className='text-gray-400'>AADCO8904F</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div className="div-2-container flex flex-col justify-start items-start gap-y-4 md:gap-y-9">
+                    <div className="div-1 text-white flex flex-col justify-center items-center gap-y-3">
+                        <span className='text-white text-lg font-semibold'>Our Offices</span>
+                        <div className="div-grid grid grid-cols-2 gap-x-10 justify-center items-center text-gray-400 font-medium text-sm">
+                            <span>Pune</span>
+                            <span>Mumbai</span>
+                            <span>Delhi</span>
+                            <span>Chennai</span>
+                            <span>Hyderabad</span>
+                            <span>Ghaziabad</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="div-3-container">
+                    {/* Add your content */}
+                </div>
+            </div>
+        </>
+    );
+}
+
+export default Footer;

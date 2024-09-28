@@ -9,6 +9,7 @@ import Nutrition from './components/pages/Nutrition/Nutrition'
 import Contact from './components/pages/Contact/Contact'
 import Strength from './components/pages/Strength/Strength'
 import Trainer from './components/pages/Trainers/Trainer'
+import { Toaster } from './components/ui/sonner'
 
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
   return (
     <>
       <RouterProvider router={createRouter}></RouterProvider>  
+      <Toaster/>
     </>
   )
 }

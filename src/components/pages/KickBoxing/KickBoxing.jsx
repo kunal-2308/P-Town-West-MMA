@@ -7,6 +7,7 @@ import InfoSection from './InfoSection'
 import Form from '@/components/shared/Form'
 import BenefitSection from './BenefitSection'
 import BenefitInfo from './BenefitInfo'
+import Footer from '@/components/shared/Footer'
 
 function KickBoxing() {
   return (
@@ -19,6 +20,7 @@ function KickBoxing() {
         <Form/>
         <BenefitSection/>
         <BenefitInfo/>
+        <Footer/>
     </>
   )
 }

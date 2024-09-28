@@ -9,6 +9,7 @@ import HeroSection4 from './HeroSection4'
 import HeroSection5 from './HeroSection5'
 import HeroSection6 from './HeroSection6'
 import Benefit from './Benefit'
+import Footer from '@/components/shared/Footer'
 
 function Strength() {
   return (
@@ -23,6 +24,7 @@ function Strength() {
         <HeroSection5/>
         <HeroSection6/>
         <Benefit/>
+        <Footer/>
     </>
   )
 }

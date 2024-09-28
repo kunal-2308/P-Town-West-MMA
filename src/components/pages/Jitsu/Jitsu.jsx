@@ -7,6 +7,7 @@ import InfoSection from './InfoSection'
 import Form from '@/components/shared/Form'
 import BenefitSection from './BenefitSection'
 import BenefitInfo from './BenefitInfo'
+import Footer from '@/components/shared/Footer'
 
 function Jitsu() {
   return (
@@ -20,6 +21,7 @@ function Jitsu() {
         <Form/>
         <BenefitSection/>
         <BenefitInfo/>
+        <Footer/>
     </>
   )
 }

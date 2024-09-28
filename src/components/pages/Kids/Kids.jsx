@@ -4,6 +4,7 @@ import HeroSection from './HeroSection'
 import InfoSection from './InfoSection'
 import HeroSection2 from './HeroSection2'
 import Form from '@/components/shared/Form'
+import Footer from '@/components/shared/Footer'
 
 function Kids() {
   return (
@@ -13,6 +14,7 @@ function Kids() {
     <InfoSection/>
     <HeroSection2/>
     <Form/>
+    <Footer/>
     </>
   )
 }

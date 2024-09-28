@@ -43,19 +43,19 @@ function Navbar() {
                                     {/* Dropdown Content */}
                                     <ul className={`absolute left-0 mt-2 py-2 w-40 bg-white shadow-lg rounded-md transition-opacity duration-300 ease-in-out ${dropdownClick ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                                         <li className="px-4 py-2 text-sm hover:bg-gray-200">
-                                            <Link to="/jitsu"><span className="text-sm">Brazilian Jitsu</span></Link>
+                                            <Link to="/jitsu"><span className="text-sm hover:font-semibold">Brazilian Jitsu</span></Link>
                                         </li>
                                         <li className="px-4 py-2 text-sm hover:bg-gray-200">
-                                            <Link to="/kickboxing"><span className="text-sm">KickBoxing</span></Link>
+                                            <Link to="/kickboxing"><span className="text-sm hover:font-semibold">KickBoxing</span></Link>
                                         </li>
                                         <li className="px-4 py-2 text-sm hover:bg-gray-200">
-                                            <Link to="/strength">Stregth Program</Link>
+                                            <Link to="/strength"><span className="text-sm hover:font-semibold">Stregth Program</span></Link>
                                         </li>
                                         <li className="px-4 py-2 text-sm hover:bg-gray-200">
-                                            <Link to="/kids"><span className="text-sm">Kids</span></Link>
+                                            <Link to="/kids"><span className="text-sm hover:font-semibold">Kids</span></Link>
                                         </li>
                                         <li className="px-4 py-2 text-sm hover:bg-gray-200">
-                                            <Link to="/nutrition"><span className="text-sm">Nutrition</span></Link>
+                                            <Link to="/nutrition"><span className="text-sm hover:font-semibold">Nutrition</span></Link>
                                         </li>
                                     </ul>
                                 </div>

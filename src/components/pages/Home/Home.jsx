@@ -10,6 +10,7 @@ import InfoSection from './InfoSection'
 import Trainers from './Trainers'
 import MmaClub from './MmaClub'
 import Form from '@/components/shared/Form'
+import Footer from '@/components/shared/Footer'
 
 function Home() {
   return (
@@ -25,6 +26,7 @@ function Home() {
       <Trainers/>
       <MmaClub/>
       <Form/>
+      <Footer/>
     </>
   )
 }
