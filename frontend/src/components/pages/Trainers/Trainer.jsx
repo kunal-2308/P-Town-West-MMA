@@ -1,16 +1,15 @@
-import Navbar from 'frontend/src/components/shared/Navbar'
-import React from 'react'
-import Container from './Container'
-import Footer from 'frontend/src/components/shared/Footer'
+import Navbar from "../../shared/Navbar";
+import Container from "./Container";
+import Footer from "../../shared/Footer";
 
 function Trainer() {
   return (
     <>
-        <Navbar/>
-        <Container/>
-        <Footer/>
+      <Navbar />
+      <Container />
+      <Footer />
     </>
-  )
+  );
 }
 
-export default Trainer
+export default Trainer;

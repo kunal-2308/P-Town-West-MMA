@@ -1,6 +1,6 @@
-import { Button } from 'frontend/src/components/ui/button';
-import { MoveRight } from 'lucide-react';
-import React from 'react';
+import { Button } from "../../ui/button";
+import { MoveRight } from "lucide-react";
+import React from "react";
 
 function HeroSection1() {
   return (
@@ -11,9 +11,9 @@ function HeroSection1() {
         style={{ backgroundImage: `url('/images/Poster/MMAHero.png')` }}
       >
         <div className="mt-32 sm:mt-40 md:mt-48 lg:mt-56 xl:mt-64 flex justify-center items-center">
-          <Button className='bg-customYellow text-black rounded-full hover:bg-customYellow hover:cursor-pointer font-semibold text-sm md:text-base lg:text-base'>
+          <Button className="bg-customYellow text-black rounded-full hover:bg-customYellow hover:cursor-pointer font-semibold text-sm md:text-base lg:text-base">
             Book a free trial
-            <MoveRight className='ml-2' />
+            <MoveRight className="ml-2" />
           </Button>
         </div>
       </div>

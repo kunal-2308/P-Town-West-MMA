@@ -1,6 +1,6 @@
-import { Button } from 'frontend/src/components/ui/button';
-import { MoveRight } from 'lucide-react';
-import React from 'react';
+import { Button } from "../../ui/button";
+import { MoveRight } from "lucide-react";
+import React from "react";
 
 function MmaClub() {
   return (
@@ -22,7 +22,13 @@ function MmaClub() {
             {/* Description */}
             <div className="div-2 mt-4 sm:mt-6 flex justify-center lg:justify-start items-center px-4 lg:px-0">
               <span className="text-sm sm:text-base md:text-lg leading-relaxed text-gray-600">
-                Dictum quam et adipiscing faucibus orci neque curabitur. Turpis duis morbi in a at amet scelerisque. Dictum quam et adipiscing faucibus orci neque curabitur. Turpis duis morbi in a at amet scelerisque. Dictum quam et adipiscing faucibus orci neque curabitur. Turpis duis morbi in a at amet scelerisque. Dictum quam et adipiscing faucibus orci neque curabitur. Turpis duis morbi in a at amet scelerisque.
+                Dictum quam et adipiscing faucibus orci neque curabitur. Turpis
+                duis morbi in a at amet scelerisque. Dictum quam et adipiscing
+                faucibus orci neque curabitur. Turpis duis morbi in a at amet
+                scelerisque. Dictum quam et adipiscing faucibus orci neque
+                curabitur. Turpis duis morbi in a at amet scelerisque. Dictum
+                quam et adipiscing faucibus orci neque curabitur. Turpis duis
+                morbi in a at amet scelerisque.
               </span>
             </div>
 
