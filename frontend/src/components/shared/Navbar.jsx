@@ -1,23 +1,40 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { ChevronDown, Menu } from "lucide-react";
+import { getCookie, onAuthStateChangedListener } from "../../auth";
 
 function Navbar() {
   let [navStatus, setNavStatus] = useState(false);
+  let [dropdownClick, setDropDownClick] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const menuBarClick = (e) => {
     e.preventDefault();
     setNavStatus(!navStatus);
   };
 
-  let [dropdownClick, setdropDownClick] = useState(false);
-
   const dropdownClicked = (e) => {
     e.preventDefault();
-    setdropDownClick(!dropdownClick);
+    setDropDownClick(!dropdownClick);
   };
 
+  useEffect(() => {
+    const checkAuthState = () => {
+      const userToken = getCookie("userToken");
+      setIsLoggedIn(!!userToken);
+    };
+
+    checkAuthState();
+
+    onAuthStateChangedListener((user) => {
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+  }, []);
   return (
     <>
       <nav className="w-full fixed top-0 z-[1000] bg-white">
@@ -113,9 +130,11 @@ function Navbar() {
             </div>
           </div>
           <div className="mr-6 lg:mr-9 hidden md:block">
-            <Button className="bg-customYellow text-black hover:bg-customYellow rounded-full font-medium text-sm lg:text-sm">
-              Book a Free Trial Class
-            </Button>
+            <Link to={isLoggedIn ? "/dashboard" : "/signup"}>
+              <Button className="bg-customYellow text-black hover:bg-customYellow rounded-full font-medium text-sm lg:text-sm">
+                {isLoggedIn ? "Go to Dashboard" : "Book a Free Trial Class"}
+              </Button>
+            </Link>
           </div>
           <div className="div-burgerMenu lg:hidden pr-5 hover:cursor-pointer">
             <Menu className="text-black" onClick={menuBarClick}></Menu>
