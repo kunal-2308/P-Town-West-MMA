@@ -4,12 +4,14 @@ import { connectDB } from "./config/db.js";
 import classRoutes from "./routes/classRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 connectDB();
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/classes", classRoutes);
 app.use("/api/admin", adminRoutes);

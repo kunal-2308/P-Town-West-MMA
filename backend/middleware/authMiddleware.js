@@ -1,8 +1,9 @@
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
-import cookies from 'cookie-parser';
+
+// Protect User Middleware
 export const protectUser = async (req, res, next) => {
-  const token = req.cookies.token;
+  const token = req.cookies.token; // Get the token from the cookie
 
   if (!token) return res.status(401).json({ message: "Not authorized" });
 
@@ -22,7 +23,7 @@ export const protectUser = async (req, res, next) => {
 
 // Protect Admin Middleware
 export const protectAdmin = async (req, res, next) => {
-  const token = req.cookies.token;
+  const token = req.cookies.token; // Get the token from the cookie
 
   if (!token) return res.status(401).json({ message: "Not authorized" });
 
