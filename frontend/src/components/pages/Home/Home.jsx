@@ -1,4 +1,3 @@
-import React from "react";
 import Navbar from "../../shared/Navbar";
 import HeroSection1 from "./HeroSection1";
 import HeroSection2 from "./HeroSection2";
