@@ -1,23 +1,32 @@
 import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
-import db from "./config/db.js";
+import { connectDB } from "./config/db.js";
 import classRoutes from "./routes/classRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
+connectDB();
 
 const app = express();
-db();
-
-app.use(cors());
 app.use(express.json());
 
-// Routes
 app.use("/api/classes", classRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/auth", authRoutes);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5007;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+
+// Handle uncaught exceptions and rejections
+process.on("uncaughtException", (error) => {
+  console.error(`Uncaught Exception: ${error.message}`);
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (error) => {
+  console.error(`Unhandled Rejection: ${error.message}`);
+  process.exit(1);
 });

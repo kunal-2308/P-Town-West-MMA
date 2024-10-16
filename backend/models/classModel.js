@@ -7,7 +7,7 @@ const classSchema = new mongoose.Schema(
     time: { type: String, required: true },
     slots: { type: Number, required: true },
     bookedSlots: { type: Number, default: 0 },
-    instructor: { type: String },
+    instructor: { type: String, required: true },
     category: { type: String, required: true },
     isFull: { type: Boolean, default: false },
   },
