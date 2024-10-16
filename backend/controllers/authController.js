@@ -46,15 +46,7 @@ export const login = async (req, res) => {
       { expiresIn: "5D" }
     );
 
-    // Set token as an HTTP-only cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      maxAge: 5 * 24 * 60 * 60 * 1000,
-    });
-
-    res.status(200).json({ userId: user._id, role: user.role });
+    res.status(200).json({ token, userId: user._id, role: user.role });
   } catch (error) {
     res
       .status(500)
