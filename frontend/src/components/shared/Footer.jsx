@@ -8,14 +8,14 @@ function Footer() {
     <>
       <div className="main-footer-container w-full h-auto lg:pl-0 sm:pl-12 sm:p-4 bg-black flex flex-col items-start justify-start -mt-2 pt-10 gap-x-20 z-[999999]">
         <div className="div-img-main-container w-full flex flex-col justify-center items-center md:gap-y-0 gap-y-4">
-          <div className="div-sec-a flex justify-center items-center flex-col gap-y-2 -mt-16">
+          <div className="div-sec-a flex justify-center items-center flex-col gap-y-2 md:-mt-16">
             <img
               src="/images/logo/mainLogo.png"
               alt="footer image"
-              className="invert h-[150px] md:h-[120px] lg:h-[120px] object-contain pr-5 md:pr-0 items-center"
+              className="invert h-[120px] md:h-[120px] lg:h-[120px] object-contain pr-5 md:pr-0 items-center"
             />
           </div>
-          <span className="text-white md:hidden text-center text-2xl pt-5 pl-5 md:pl-4 font-semibold md:font-semibold md:text-lg">
+          <span className="text-white md:hidden text-center text-2xl pt-5  md:pl-4 font-semibold md:font-semibold md:text-lg">
             P-Town West MMA
           </span>
         </div>
@@ -36,7 +36,7 @@ function Footer() {
             P-Town West MMA, Ground Floor, Vithala Rukmini Mandir, Baner Gaon, Pune, Maharashtra 411045
           </span>
         </div>
-        <div className="div-3-1 w-full mt-6 flex flex-row justify-end items-end h-auto gap-x-4 pr-28">
+        <div className="div-3-1 w-full mt-6 flex flex-row justify-center items-center md:justify-end md:items-end h-auto gap-x-4 md:pr-28">
           <AiFillInstagram className="invert hover:cursor-pointer size-8"></AiFillInstagram>
           <FaFacebook className="invert hover:cursor-pointer size-7"></FaFacebook>
           <FaTwitter className="invert hover:cursor-pointer size-7"></FaTwitter>
