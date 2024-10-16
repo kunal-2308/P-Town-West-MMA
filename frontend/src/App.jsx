@@ -10,25 +10,25 @@ import Contact from "./components/pages/Contact/Contact";
 import Strength from "./components/pages/Strength/Strength";
 import Trainer from "./components/pages/Trainers/Trainer";
 import { Toaster } from "./components/ui/sonner";
-import { AuthProvider } from "./components/auth/AuthContext";
-import PrivateRoute from "./components/auth/PrivateRoute";
+// import { AuthProvider } from "./components/auth/AuthContext";
+// import PrivateRoute from "./components/auth/PrivateRoute";
 import Dashboard from "./components/pages/Dashboard/Dashboard";
-import Login from "./components/auth/Login";
-import Signup from "./components/auth/SignUp";
+// import Login from "./components/auth/Login";
+// import Signup from "./components/auth/SignUp";
 import { useEffect } from "react";
-import { onAuthStateChangedListener } from "./auth";
+// import { onAuthStateChangedListener } from "./auth";
 
 function App() {
   // UseEffect to manage auth state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChangedListener((user) => {
-      if (user) {
-        console.log(user);
-      } else {
-        console.log("User signed out");
-      }
-    });
-    return () => unsubscribe();
+    // const unsubscribe = onAuthStateChangedListener((user) => {
+    //   if (user) {
+    //     console.log(user);
+    //   } else {
+    //     console.log("User signed out");
+    //   }
+    // });
+    // return () => unsubscribe();
   }, []);
 
   // Updated router to include private routes and auth-related paths
@@ -69,30 +69,30 @@ function App() {
       path: "/trainer",
       element: <Trainer />,
     },
-    {
-      path: "/dashboard",
-      element: (
-        <PrivateRoute>
-          <Dashboard />
-        </PrivateRoute>
-      ),
-    },
-    {
-      path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "/signup",
-      element: <Signup />,
-    },
+    // {
+    //   path: "/dashboard",
+    //   element: (
+       
+    //       <Dashboard />
+       
+    //   ),
+    // },
+    // {
+    //   path: "/login",
+    //   element: <Login />,
+    // },
+    // {
+    //   path: "/signup",
+    //   element: <Signup />,
+    // },
   ]);
 
   return (
     <>
-      <AuthProvider>
+     
         <RouterProvider router={createRouter}></RouterProvider>
         <Toaster />
-      </AuthProvider>
+      
     </>
   );
 }

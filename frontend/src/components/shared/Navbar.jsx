@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { ChevronDown, Menu } from "lucide-react";
-import { getCookie, onAuthStateChangedListener } from "../../auth";
+// import { getCookie, onAuthStateChangedListener } from "../../auth";
 
 function Navbar() {
   let [navStatus, setNavStatus] = useState(false);
@@ -19,22 +19,22 @@ function Navbar() {
     setDropDownClick(!dropdownClick);
   };
 
-  useEffect(() => {
-    const checkAuthState = () => {
-      const userToken = getCookie("userToken");
-      setIsLoggedIn(!!userToken);
-    };
+  // useEffect(() => {
+  //   const checkAuthState = () => {
+  //     const userToken = getCookie("userToken");
+  //     setIsLoggedIn(!!userToken);
+  //   };
 
-    checkAuthState();
+  //   checkAuthState();
 
-    onAuthStateChangedListener((user) => {
-      if (user) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-    });
-  }, []);
+  //   onAuthStateChangedListener((user) => {
+  //     if (user) {
+  //       setIsLoggedIn(true);
+  //     } else {
+  //       setIsLoggedIn(false);
+  //     }
+  //   });
+  // }, []);
   return (
     <>
       <nav className="fixed top-0 z-[1000] bg-white w-screen shadow-lg">

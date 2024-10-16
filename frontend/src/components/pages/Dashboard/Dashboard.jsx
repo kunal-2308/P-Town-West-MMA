@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
-import { AuthContext } from "../../auth/AuthContext";
+// import { AuthContext } from "../../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../../auth";
+// import { logout } from "../../../auth";
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
