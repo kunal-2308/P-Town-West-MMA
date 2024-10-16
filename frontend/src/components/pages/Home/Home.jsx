@@ -15,26 +15,28 @@ import Footer from "../../shared/Footer";
 function Home() {
   return (
     <>
-      <Navbar />
-      <div className="block md:hidden">
-        <HeroSection2 />
-        <HeroSection1 />
+      <div className="overflow-hidden">
+        <Navbar />
+        <div className="block md:hidden">
+          <HeroSection2 />
+          <HeroSection1 />
+        </div>
+        <div className="hidden md:block">
+          <HeroSection1 />
+          <HeroSection2 />
+        </div>
+        <PoppperContainer />
+        <TrainingPrograms />
+        <Reviews />
+        <VideoSection />
+        <InfoSection />
+        <div className="div hidden md:block">
+          <Trainers />
+        </div>
+        <MmaClub />
+        <Form />
+        <Footer />
       </div>
-      <div className="hidden md:block">
-        <HeroSection1 />
-        <HeroSection2 />
-      </div>
-      <PoppperContainer />
-      <TrainingPrograms />
-      <Reviews />
-      <VideoSection />
-      <InfoSection />
-      <div className="div hidden md:block">
-      <Trainers />
-      </div>
-      <MmaClub />
-      <Form />
-      <Footer />
     </>
   );
 }
