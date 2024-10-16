@@ -8,7 +8,7 @@ function CoreValues() {
       <div className="bg-white h-full w-full flex flex-col items-center mb-20 px-4 sm:px-8">
         {/* Main Title */}
         <div className="mt-20 text-center">
-          <span className="text-4xl sm:text-5xl md:text-6xl lg:text-9xl md:font-[20] md:text-black/45 sm:text-black/5">
+          <span className="text-5xl md:text-6xl lg:text-9xl font-[20] md:text-black/45 text-black/45">
             Our Core Values
           </span>
         </div>

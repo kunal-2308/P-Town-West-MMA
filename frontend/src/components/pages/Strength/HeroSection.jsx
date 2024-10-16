@@ -9,28 +9,35 @@ function HeroSection() {
       <div className="relative">
         <div>
           <img
-            src="public/images/Training/1.png"
+            src="/images/Training/1.png"
             alt="image"
             className="h-[500px] md:h-[600px] lg:h-[800px] w-full object-cover"
           />
           {/* Text at the center of the image */}
           <div className="absolute inset-0 flex items-center justify-center md:justify-start md:items-end pb-10 md:pb-40 px-6 md:pl-12 lg:pl-48">
-            <div className="text-center md:text-start flex flex-col gap-y-4 md:gap-y-6 font-[220]">
-              <span className="tracking-wide text-white text-2xl md:text-3xl lg:text-6xl">
-                STRENGTH &
+            <div className="hidden md:flex text-center md:text-start flex-col md:gap-y-6 md:font-[220] font-bold ">
+              <span className="md:tracking-wide text-white text-3xl md:text-3xl lg:text-6xl">
+                STRENGTH &amp;
               </span>
-              <span className="tracking-wide text-white text-2xl md:text-3xl lg:text-6xl">
+              <span className="md:tracking-wide text-white text-3xl md:text-3xl lg:text-6xl">
                 CONDITIONING PROGRAM
               </span>
             </div>
+            <div className="block w-screen md:hidden text-center md:text-start flex-col md:gap-y-6 md:font-[220] font-bold">
+              <span className="block w-full text-white text-2xl md:text-3xl lg:text-6xl">
+                STRENGTH &amp; <br /> CONDITIONING PROGRAM
+              </span>
+            </div>
+
           </div>
+
         </div>
       </div>
 
       {/* Information Section */}
       <div className="bg-black h-auto flex flex-col lg:flex-row justify-between items-center px-6 md:px-12 lg:px-16 py-8">
         {/* Left Section */}
-        <div className="flex flex-col justify-start items-start w-full lg:w-[600px] mb-8 lg:mb-0">
+        <div className="hidden md:flex flex-col justify-start items-start w-full lg:w-[600px] mb-8 lg:mb-0">
           <div className="flex justify-start items-start">
             <span className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-400 mr-4">
               ////
@@ -39,6 +46,16 @@ function HeroSection() {
               Elevate Your Fitness <br />
               with Our Comprehensive <br />
               Strength & Conditioning <br />
+              Program
+            </span>
+          </div>
+        </div>
+        <div className="block md:hidden flex-col justify-start items-start w-full lg:w-[600px] mb-8 lg:mb-0">
+          <div className="flex justify-start items-start">
+            <span className="text-2xl md:text-2xl lg:text-4xl font-medium text-customYellow">
+              Elevate Your Fitness 
+              with Our Comprehensive 
+              Strength & Conditioning 
               Program
             </span>
           </div>

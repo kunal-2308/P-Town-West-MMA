@@ -3,7 +3,7 @@ import BenefitCard from '../KickBoxing/BenefitCard'
 
 function Benefit() {
   return (
-    <div className="main-div-container p-4 sm:p-8 md:p-12 lg:pl-40 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 h-auto max-h-[600px] lg:pt-16">
+    <div className="main-div-container p-4 sm:p-8 md:p-12 lg:pl-40 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 h-auto lg:pt-16 ">
             <BenefitCard
                 title="Increase Muscle Strength and Endurance"
                 desc="Develop robust muscular strength and endurance through structured resistance training, enabling you to perform daily activities more efficiently and excel in athletic pursuits.

@@ -3,7 +3,7 @@ import BenefitCard from '../KickBoxing/BenefitCard'
 
 function BenefitInfo() {
   return (
-    <div className="main-div-container p-4 sm:p-8 md:p-12 lg:pl-40 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 h-auto max-h-[600px]">
+    <div className="main-div-container p-4 sm:p-8 md:p-12 lg:pl-40 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 h-auto  z-999 overflow-y-scroll mb-10">
             <BenefitCard
                 title="Enhance Cardiovascular Fitness"
                 desc="Brazilian Jiu-Jitsu training sessions are physically demanding, helping you build exceptional cardiovascular endurance. The intense drills and sparring sessions increase your stamina and overall fitness level.

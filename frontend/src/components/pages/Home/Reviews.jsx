@@ -2,7 +2,6 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React, { useState } from 'react';
 
 function Reviews() {
-    // Reviews data array
     const reviews = [
         {
             text: "Training at P-TownWest MMA in Pune, Baner has been a life-changing experience. The expert coaches and comprehensive MMA programs have significantly improved my skills and fitness.",
@@ -24,33 +23,43 @@ function Reviews() {
         "Join the ever-growing P-TownWest MMA community in Baner and start your transformation. Read more testimonials to see the impact of our training."
     ];
 
-    // State to keep track of the current review and description
+
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    // Function to handle previous review
+
     const handlePrevious = () => {
         setCurrentIndex((prevIndex) => (prevIndex === 0 ? reviews.length - 1 : prevIndex - 1));
     };
 
-    // Function to handle next review
+
     const handleNext = () => {
         setCurrentIndex((prevIndex) => (prevIndex === reviews.length - 1 ? 0 : prevIndex + 1));
     };
 
     return (
-        <div className="div-main-container bg-white p-6 sm:p-10 md:p-20">
+        <div className="div-main-container  w-screen bg-white p-6 sm:p-10 md:p-20">
             {/* Title Section */}
-            <div className="div-1 flex justify-start items-center">
-                <span className="text-gray-400 text-xl sm:text-2xl md:text-3xl font-semibold mr-3">////</span>
-                <span className="text-black text-2xl sm:text-3xl md:text-4xl font-semibold">WHAT THEY SAY</span>
+            <div className="div-1 flex md:hidden  justify-center items-center">
+                <span className="text-black text-4xl md:text-4xl font-semibold text-center">WHAT <br />THEY SAY</span>
             </div>
+            <div className="div-2 hidden md:flex flex-row  justify-center md:justify-start items-center">
+                <div className="mr-3">
+                    <span className="text-gray-400 text-xl sm:text-2xl md:text-3xl font-semibold">////</span>
+                </div>
+                <div className='pt-1'>
+                    <span className="text-black text-4xl md:text-4xl font-semibold text-center">
+                        WHAT THEY SAY
+                    </span>
+                </div>
+            </div>
+
 
             {/* Description Section */}
             <div className="div-2 flex flex-col md:flex-row justify-between items-center mt-8 pl-4 md:pl-14">
-                <span className="w-full md:w-[700px] lg:w-[900px] text-sm md:text-base font-extralight transition-all duration-300 ease-in-out">
+                <span className="w-full md:w-[700px] lg:w-[900px] text-xs md:text-base font-extralight transition-all duration-300 ease-in-out">
                     {descriptions[currentIndex]}
                 </span>
-                <div className="div-3-a flex gap-3 mt-6 md:mt-0">
+                <div className="div-3-a flex justify-center items-center gap-3 mt-10 md:mt-0">
                     <span className="bg-black rounded-full p-2 cursor-pointer" onClick={handlePrevious}>
                         <ChevronLeft className="text-white" size="30px" />
                     </span>

@@ -28,7 +28,7 @@ function InfoSection() {
                         <div className="flex flex-col gap-y-6 w-full sm:w-[90%] md:w-[55%] lg:w-[50%]">
                             
                             {/* First Content Block */}
-                            <div className="bg-customYellow flex flex-col justify-center items-center w-[70%] h-auto rounded-lg p-4 md:p-5 lg:p-8 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-105">
+                            <div className="bg-customYellow flex flex-col justify-center items-center w-full md:w-[70%] h-auto rounded-lg p-4 md:p-5 lg:p-8 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-105">
                                 <div className="flex justify-start items-start flex-col gap-y-1 text-start px-2 sm:px-4 md:px-3 lg:px-4">
                                     <span className="font-semibold text-base sm:text-lg md:text-xl lg:text-2xl">Resistance Training</span>
                                     <span className="font-medium text-xs sm:text-sm md:text-sm lg:text-sm mt-2">
@@ -38,7 +38,7 @@ function InfoSection() {
                             </div>
 
                             {/* Second Content Block */}
-                            <div className="bg-black text-white flex flex-col justify-center items-center w-[70%] h-auto rounded-lg p-4 md:p-6 lg:p-8 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-105">
+                            <div className="bg-black text-white flex flex-col justify-center items-center w-full md:w-[70%] h-auto rounded-lg p-4 md:p-6 lg:p-8 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-105">
                                 <div className="flex justify-center items-center flex-col gap-y-2 text-center px-2 sm:px-6 md:px-3 lg:px-5">
                                     <span className="font-semibold text-base sm:text-lg md:text-xl lg:text-2xl">Cardiovascular Conditioning</span>
                                     <span className="font-light text-xs sm:text-sm md:text-sm lg:text-sm mt-2 text-start">

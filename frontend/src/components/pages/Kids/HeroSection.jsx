@@ -14,7 +14,7 @@ function HeroSection() {
           />
           {/* Text at the bottom center of the image */}
           <div className="absolute bottom-0 left-0 right-0 flex justify-center mb-10 md:mb-24 lg:mb-36">
-            <p className="text-white text-4xl sm:text-3xl lg:text-6xl font-extralight text-center">
+            <p className="text-white text-3xl lg:text-6xl font-bold md:font-extralight  text-center">
               KIDS MARTIAL ARTS PROGRAM
             </p>
           </div>
@@ -24,7 +24,7 @@ function HeroSection() {
       {/* Information Section */}
       <div className="div-2 bg-black h-auto md:h-[280px] flex flex-col lg:flex-row justify-between items-center px-6 lg:px-16 py-8">
         {/* Left Section */}
-        <div className="div-1 flex flex-col justify-start items-start w-full lg:w-[600px] mb-8 lg:mb-0">
+        <div className="div-1 hidden md:flex flex-col justify-start items-start w-full lg:w-[600px] mb-8 lg:mb-0">
           <div className="div-a flex justify-start items-start">
             <span className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-400 mr-4">
               {"////"}
@@ -32,6 +32,15 @@ function HeroSection() {
             <span className="lg:text-5xl sm:text-2xl font-medium text-customYellow pt-0">
               Empowering Kids <br />
               Through Martial Arts <br />
+              Training
+            </span>
+          </div>
+        </div>
+        <div className="div-1 block md:hidden flex-col justify-start items-start w-full lg:w-[600px] mb-8 lg:mb-0">
+          <div className="div-a flex justify-start items-start">
+            <span className="lg:text-5xl text-2xl font-medium text-customYellow pt-0">
+              Empowering Kids 
+              Through Martial Arts 
               Training
             </span>
           </div>

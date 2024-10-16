@@ -3,10 +3,10 @@ import React from 'react';
 function HeroSection4() {
     return (
         <>
-            <div className="relative w-full h-auto lg:h-screen">
+            <div className="relative hidden md:block w-full h-auto lg:h-screen">
                 {/* Image Section */}
                 <div className="absolute top-0 right-0 w-full h-[350px] sm:h-[500px] lg:w-[40%] lg:h-full">
-                    <img src="public/images/Training/5.png" alt="Boxer Image" className="w-full h-full object-cover" />
+                    <img src="/images/Training/5.png" alt="Boxer Image" className="w-full h-full object-cover" />
                 </div>
 
                 {/* Text Section */}

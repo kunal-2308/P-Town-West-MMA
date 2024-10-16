@@ -14,14 +14,14 @@ function MmaClub() {
               <span className="font-semibold text-gray-400 text-xl sm:text-2xl md:text-3xl">
                 ////
               </span>
-              <span className="font-medium text-2xl sm:text-4xl md:text-5xl">
+              <span className="font-semibold text-2xl sm:text-4xl md:text-5xl pt-1 text-black/85">
                 P-TOWN MMA CLUB
               </span>
             </div>
 
             {/* Description */}
             <div className="div-2 mt-4 sm:mt-6 flex justify-center lg:justify-start items-center px-4 lg:px-0">
-              <span className="text-sm sm:text-base md:text-lg leading-relaxed text-gray-600">
+              <span className="text-xs sm:text-base md:text-lg leading-relaxed text-gray-600">
                 Dictum quam et adipiscing faucibus orci neque curabitur. Turpis
                 duis morbi in a at amet scelerisque. Dictum quam et adipiscing
                 faucibus orci neque curabitur. Turpis duis morbi in a at amet
@@ -33,7 +33,7 @@ function MmaClub() {
             </div>
 
             {/* Button */}
-            <div className="mt-4 sm:mt-6 flex justify-center lg:justify-start">
+            <div className="mt-8 sm:mt-6 flex justify-center lg:justify-start">
               <Button className="bg-customYellow text-black rounded-full hover:bg-customYellow hover:cursor-pointer font-semibold text-xs sm:text-sm md:text-sm px-4 py-2 sm:px-5 md:px-6">
                 JOIN THE CLUB
                 <MoveRight className="ml-2" />

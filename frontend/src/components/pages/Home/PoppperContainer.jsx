@@ -1,9 +1,21 @@
+import { MoveRight } from 'lucide-react';
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '../../ui/button';
 
 function PoppperContainer() {
     return (
         <>
             <div className="main-popper-container bg-white m-4 flex flex-wrap justify-center items-center gap-5">
+                <div className="div-info block md:hidden flex flex-col justify-center items-center  font-light text-sm pl-7 pr-7 pt-3 gap-y-5">
+                    <span className='text-center'>P Town West is proud to offer the best coaches in Pune, Baner, providing live training to help you achieve your goals. Our team is dedicated to helping you succeed and reach your full potential. Join us today and experience the difference for yourself.</span>
+                    <Button className="bg-customYellow text-black rounded-full flex items-center px-6 sm:px-8 md:px-5 lg:px-10 hover:bg-customYellow">
+                        <Link to="/contact" className="flex items-center font-semibold text-sm sm:text-base lg:text-base">
+                            Book a free trial
+                            <MoveRight className="ml-2" />
+                        </Link>
+                    </Button>
+                </div>
                 {/* First Popper */}
                 <div
                     className="div-1-popper bg-cover bg-center h-[480px] w-[100%] sm:w-[360px] rounded-xl flex justify-start items-end pb-4 pl-8 transform transition-transform duration-300 ease-in-out hover:scale-105"
@@ -24,7 +36,7 @@ function PoppperContainer() {
                         <div className="div pt-7 pl-10">
                             <img src="/images/Home/Popper/Vector.png" alt="alt image" className='h-[60px]' />
                         </div>
-                        <div className="div-2-a-black-1 flex flex-col justify-center items-start ml-3 pl-7 mt-4">
+                        <div className="div-2-a-black-1 flex flex-col justify-center items-start ml-3 pl-7 mt-4 pr-5">
                             <span className='font-thin text-white text-2xl'>P TOWN WEST MMA</span>
                             <span className='font-base text-customYellow text-3xl mt-2'>is the perfect place to start your martial arts journey</span>
                         </div>

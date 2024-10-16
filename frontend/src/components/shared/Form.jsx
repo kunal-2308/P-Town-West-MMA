@@ -19,20 +19,19 @@ function Form() {
   return (
     <>
       <div className="main-container w-full h:auto bg-cover bg-center bg-no-repeat lg:h-[800px]" style={{ backgroundImage: `url('public/images/Home/Trainings/25.png')` }}>
-        <div className="flex flex-col md:flex-row gap-x-8 p-6 sm:p-8 md:pl-28 md:pt-16 justify-start items-start">
-          
-          {/* Heading Section */}
+        <div className="flex flex-col md:flex-row gap-x-8 p-6 sm:p-8 pl-10 md:pt-16 justify-start items-start">
           <div className="flex justify-start items-start pt-2">
-            <span className="text-3xl sm:text-4xl md:text-5xl text-gray-400 font-semibold">////</span>
+            <span className="text-3xl hidden md:block md:text-5xl text-gray-400 font-semibold">////</span>
           </div>
-          
-          {/* Form Section */}
           <div className="w-full max-w-lg md:max-w-md flex flex-col">
-            <span className="text-white text-4xl sm:text-5xl md:text-7xl font-medium tracking-wide">
+            <span className="hidden md:block text-white text-4xl sm:text-5xl md:text-7xl font-medium tracking-wide">
               BOOK A <br />FREE TRIAL CLASS
             </span>
+            <span className="block md:hidden text-white text-3xl md:text-7xl font-medium tracking-wide">
+              BOOK A FREE <br /> TRIAL CLASS
+            </span>
 
-            {/* Form */}
+
             <div className="mt-2 sm:mt-6">
               <form onSubmit={handleSubmit}>
                 

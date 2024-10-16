@@ -16,14 +16,22 @@ function Home() {
   return (
     <>
       <Navbar />
-      <HeroSection1 />
-      <HeroSection2 />
+      <div className="block md:hidden">
+        <HeroSection2 />
+        <HeroSection1 />
+      </div>
+      <div className="hidden md:block">
+        <HeroSection1 />
+        <HeroSection2 />
+      </div>
       <PoppperContainer />
       <TrainingPrograms />
       <Reviews />
       <VideoSection />
       <InfoSection />
+      <div className="div hidden md:block">
       <Trainers />
+      </div>
       <MmaClub />
       <Form />
       <Footer />

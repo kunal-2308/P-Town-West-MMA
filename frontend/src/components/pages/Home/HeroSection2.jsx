@@ -5,52 +5,45 @@ import { Link } from "react-router-dom";
 
 function HeroSection2() {
   return (
-    <>
-      <div className="flex items-center justify-center w-full">
-        <div
-          className="
-                      w-full h-[500px] sm:h-[600px] md:h-[700px] lg:h-[800px] xl:h-[600px]
-                      bg-cover bg-center flex items-center justify-start
-                      px-8 sm:px-16 lg:px-40 gap-6 lg:gap-20"
-          style={{
-            backgroundImage: `url('public/images/Home/Trainings/30.png')`,
-          }}
-        >
-          <div className="flex flex-col ml-4 sm:ml-10 justify-start items-start">
-            <div className="flex items-center">
-              <span className="font-medium text-xl sm:text-2xl lg:text-4xl text-gray-400 mr-3">
-                ////
-              </span>
-              <span className="font-semibold text-2xl sm:text-4xl lg:text-4xl text-white">
-                WELCOME TO
-              </span>
-            </div>
-            <div>
-              <span className="text-5xl sm:text-7xl lg:text-8xl font-semibold text-customYellow">
-                P-TOWN
-              </span>
-            </div>
-            <div>
-              <span className="text-5xl sm:text-7xl lg:text-8xl font-semibold text-customYellow">
-                WEST MMA
-              </span>
-            </div>
-          </div>
+    <div className="relative w-screen h-[300px] md:h-[700px] lg:h-[800px] xl:h-[600px] flex justify-center items-center md:justify-start overflow-x-hidden">
+      <img
+        src="public/images/Home/Trainings/30.png"
+        alt="Background"
+        className="absolute inset-0 w-full h-full object-cover z-0"
+      />
 
-          <div className="mt-20 lg:mt-40 min-w-max">
-            <Button className="bg-customYellow text-black hover:bg-customYellow rounded-full flex justify-center items-center px-6 py-2 sm:px-8 lg:px-10 lg:py-4">
-              <Link
-                to="/contact"
-                className="flex justify-center items-center font-semibold text-sm sm:text-base lg:text-base"
-              >
-                Contact Us
-                <MoveRight className="ml-2" />
-              </Link>
-            </Button>
+      <div className="relative z-10 flex flex-col md:flex-row justify-center items-center gap-6 lg:gap-x-10 pt-16 pl-0 md:pl-20 lg:pl-40">
+        <div className="flex flex-col gap-y-2 px-5 justify-center items-center md:justify-start md:items-start">
+          <div className="flex justify-center items-center md:justify-start md:items-start w-[100%]">
+            <span className="font-medium text-xs md:text-3xl lg:text-4xl text-gray-400 mr-1 md:mr-3">////</span>
+            <span className="font-medium text-xs md:text-4xl lg:text-5xl text-white">WELCOME TO</span>
+          </div>
+          <div className="text-customYellow font-semibold text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
+            P-TOWN
+          </div>
+          <div className="text-customYellow font-semibold text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
+            WEST MMA
           </div>
         </div>
+
+        <div className="hidden md:flex mt-3 lg:mt-12 justify-start items-start md:justify-end md:items-end sm:pt-24">
+          <Button className="bg-customYellow text-black rounded-full flex items-center px-6 sm:px-8 md:px-5 lg:px-10 hover:bg-customYellow">
+            <Link to="/contact" className="flex items-center font-semibold text-sm sm:text-base lg:text-base">
+              Contact Us
+              <MoveRight className="ml-2" />
+            </Link>
+          </Button>
+        </div>
+        <div className="block h-auto md:hidden mt-1 lg:mt-5 justify-start items-start md:justify-end md:items-end sm:pt-24">
+          <Button className="bg-customYellow text-black rounded-full flex items-center px-6 sm:px-8 md:px-5 lg:px-10 hover:bg-customYellow">
+            <Link to="/contact" className="flex items-center font-semibold text-sm sm:text-base lg:text-base">
+              Book a free trial
+              <MoveRight className="ml-2" />
+            </Link>
+          </Button>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 

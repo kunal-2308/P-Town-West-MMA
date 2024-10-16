@@ -3,7 +3,7 @@ import BenefitCard from './BenefitCard';
 
 function BenefitInfo() {
     return (
-        <div className="main-div-container p-4 sm:p-8 md:p-12 lg:pl-40 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 h-auto max-h-[600px]">
+        <div className="main-div-container p-4 sm:p-8 md:p-12 lg:pl-40 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 h-auto max-h-[600px] overflow-y-scroll z-[100] mb-10">
             <BenefitCard
                 title="Increase Strength and Power"
                 desc="Through a combination of striking techniques, bodyweight exercises, and resistance training, kickboxing helps build muscle and improve overall strength. You'll develop powerful legs, core, and upper body, enhancing your ability to deliver effective strikes."
