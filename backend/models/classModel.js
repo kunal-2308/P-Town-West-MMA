@@ -5,6 +5,7 @@ const classSchema = new mongoose.Schema(
     name: { type: String, required: true },
     date: { type: Date, required: true },
     time: { type: String, required: true },
+    timeOut: { type: String, required: true },
     slots: { type: Number, required: true },
     bookedSlots: { type: Number, default: 0 },
     instructor: { type: String, required: true },
