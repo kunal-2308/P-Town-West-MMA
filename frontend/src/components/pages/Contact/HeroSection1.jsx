@@ -45,11 +45,11 @@ function HeroSection1() {
                         </div>
                         <div className="div flex flex-col justify-start items-start gap-y-2">
                             <div className="div-1 flex justify-center items-center gap-x-4 hover:cursor-pointer" onClick={copyItem}>
-                                <img src="public/images/contact/phone.png" alt="" className='h-5' />
+                                <img src="/images/contact/phone.png" alt="" className='h-5' />
                                 <span className='text-white text-sm'>{phone}</span>
                             </div>
                             <div className="div-1 flex justify-center items-center gap-x-4">
-                                <img src="public/images/contact/mail.png" alt="" className='h-5' />
+                                <img src="/images/contact/mail.png" alt="" className='h-5' />
                                 <span className='text-white text-sm hover:cursor-pointer' onClick={() => window.location = 'mailto:PTOWNWESTMMA@GMAIL.COM'}>PTOWNWESTMMA@GMAIL.COM</span>
                             </div>
                         </div>

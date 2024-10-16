@@ -6,7 +6,7 @@ function Trainers() {
     <>
       <div 
         className="div-main-container w-full min-h-max flex flex-col justify-center items-center h-auto"
-        style={{ backgroundImage: `url('public/images/Poster/SmokeBg.png')` }}
+        style={{ backgroundImage: `url('/images/Poster/SmokeBg.png')` }}
       >
         {/* Title Section */}
         <div className="div-1-a flex justify-center items-center mt-5 md:mt-10">
@@ -21,7 +21,7 @@ function Trainers() {
         {/* Image Section */}
         <div className="relative w-full h-auto flex justify-center items-center mt-8">
           <img 
-            src="public/images/Home/Trainings/22.png" 
+            src="/images/Home/Trainings/22.png" 
             alt="Trainers" 
             className="w-full h-[500px] object-cover rounded-lg"
           />

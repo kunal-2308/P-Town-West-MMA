@@ -18,7 +18,7 @@ function TrainingCard({ link, title, desc }) {
                     {title}
                 </span>
                 <img
-                    src="public/images/Home/Trainings/arrows.png"
+                    src="/images/Home/Trainings/arrows.png"
                     alt="arrow"
                     className="h-[20px] sm:h-[22px] md:h-[25px]"
                 />

@@ -14,17 +14,17 @@ function VideoSection() {
                 <div className="div mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
                     {/* Video Section Cards */}
                     <VideoSectionCards 
-                      thumbnail="public/images/Home/Trainings/12.png" 
+                      thumbnail="/images/Home/Trainings/12.png" 
                       video="https://www.youtube.com/watch?v=8-aI8Fp2bPU&pp=ygUUbW1hIHRyYWluaW5nIGF0IGhvbWU%3D" 
                       title="Beginner Friendly Training" 
                     />
                     <VideoSectionCards 
-                      thumbnail="public/images/Home/Trainings/13.png" 
+                      thumbnail="/images/Home/Trainings/13.png" 
                       video="https://www.youtube.com/watch?v=8-aI8Fp2bPU&pp=ygUUbW1hIHRyYWluaW5nIGF0IGhvbWU%3D" 
                       title="Muay Thai Classes" 
                     />
                     <VideoSectionCards 
-                      thumbnail="public/images/Home/Trainings/14.png" 
+                      thumbnail="/images/Home/Trainings/14.png" 
                       video="https://www.youtube.com/watch?v=8-aI8Fp2bPU&pp=ygUUbW1hIHRyYWluaW5nIGF0IGhvbWU%3D" 
                       title="Brazilian Jiu-Jitsu" 
                     />

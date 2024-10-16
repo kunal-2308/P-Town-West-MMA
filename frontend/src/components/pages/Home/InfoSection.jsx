@@ -10,7 +10,7 @@ function InfoSection() {
           {/* Left Image */}
           <div className="div-1-image flex-shrink-0">
             <img
-              src="public/images/Home/Trainings/21.png"
+              src="/images/Home/Trainings/21.png"
               alt="image"
               className="h-[240px] sm:h-[300px] md:h-[360px] lg:h-[500px] xl:h-[535px] object-cover w-full md:w-[420px] rounded-lg"
             />
@@ -49,7 +49,7 @@ function InfoSection() {
         <div
           className="div bg-cover bg-center bg-no-repeat h-[260px] sm:h-[300px] lg:h-[330px] w-full max-w-[890px] rounded-lg flex flex-col pl-4 sm:pl-8 md:pl-12 pt-12 sm:pt-16 md:pt-20"
           style={{
-            backgroundImage: `url('public/images/Home/Trainings/23.png')`,
+            backgroundImage: `url('/images/Home/Trainings/23.png')`,
           }}
         >
           <div className="div-1 w-full max-w-[300px] sm:max-w-[400px] md:max-w-[450px] flex flex-col gap-y-3">

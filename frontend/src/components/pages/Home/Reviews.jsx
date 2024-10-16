@@ -72,7 +72,7 @@ function Reviews() {
             {/* Reviews Section */}
             <div className="div-review-container flex flex-col md:flex-row justify-center items-center mt-12 md:mt-20 gap-10 md:gap-x-32">
                 <div className="div-3 flex gap-x-5 transition-all duration-300 ease-in-out">
-                    <img src="public/images/Home/Trainings/up.png" alt="Review Icon" className="h-10 w-10 md:h-16 md:w-16" />
+                    <img src="/images/Home/Trainings/up.png" alt="Review Icon" className="h-10 w-10 md:h-16 md:w-16" />
                     <div className="div-content flex flex-col w-full md:w-[400px] pt-4 md:pt-10">
                         <span className="text-sm md:text-base font-semibold transition-all duration-300 ease-in-out">
                             {reviews[0].text}
@@ -83,7 +83,7 @@ function Reviews() {
                     </div>
                 </div>
                 <div className="div-3 flex gap-x-5 transition-all duration-300 ease-in-out">
-                    <img src="public/images/Home/Trainings/up.png" alt="Review Icon" className="h-10 w-10 md:h-16 md:w-16" />
+                    <img src="/images/Home/Trainings/up.png" alt="Review Icon" className="h-10 w-10 md:h-16 md:w-16" />
                     <div className="div-content flex flex-col w-full md:w-[400px] pt-4 md:pt-10">
                         <span className="text-sm md:text-base font-semibold transition-all duration-300 ease-in-out">
                             {reviews[1].text}

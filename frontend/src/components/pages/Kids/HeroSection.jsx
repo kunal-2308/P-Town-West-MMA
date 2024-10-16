@@ -8,7 +8,7 @@ function HeroSection() {
       <div className="relative div-1">
         <div className="div-main-img pt-10">
           <img
-            src="public/images/Kids/32.png"
+            src="/images/Kids/32.png"
             alt="image"
             className="h-auto w-full"
           />

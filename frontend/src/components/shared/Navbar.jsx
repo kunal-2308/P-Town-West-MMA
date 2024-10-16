@@ -42,7 +42,7 @@ function Navbar() {
           <div className="flex items-center">
             <div className="logo sm:mt-10 md:mt-0 mb-2">
               <img
-                src="public/images/logo/mainLogo.png"
+                src="/images/logo/mainLogo.png"
                 alt="logo"
                 className="h-16 lg:h-20"
               />

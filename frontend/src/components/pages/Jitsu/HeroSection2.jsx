@@ -71,7 +71,7 @@ function HeroSection2() {
 
                 {/* Image Section */}
                 <div className="flex justify-end items-end w-full mt-8 lg:mt-16 mr-6 lg:mr-20">
-                    <img src="public/images/Kickboxing/7.png" alt="Kickboxing Image" className="w-full lg:w-[1000px] max-w-full h-[500px] lg:h-[600px]" />
+                    <img src="/images/Kickboxing/7.png" alt="Kickboxing Image" className="w-full lg:w-[1000px] max-w-full h-[500px] lg:h-[600px]" />
                 </div>
             </div>
 

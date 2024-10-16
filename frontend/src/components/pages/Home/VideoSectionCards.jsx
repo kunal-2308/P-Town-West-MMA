@@ -27,7 +27,7 @@ function VideoSectionCards({ thumbnail, video, title }) {
               {/* Play Button */}
               <button className="absolute inset-0 flex justify-center items-center">
                 <span className="bg-white rounded-full flex justify-center items-center h-12 w-12">
-                  <img src="public/images/Home/Trainings/polygon.png" alt="arrowhead" className="h-6 w-6" />
+                  <img src="/images/Home/Trainings/polygon.png" alt="arrowhead" className="h-6 w-6" />
                 </span>
               </button>
             </div>

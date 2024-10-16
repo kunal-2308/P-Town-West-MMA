@@ -9,7 +9,7 @@ function HeroSection1() {
       <div className="relative div-1 mt-12 md:mt-4">
         <div className="div-main-img">
           <img
-            src="public/images/Kickboxing/6.png"
+            src="/images/Kickboxing/6.png"
             alt="image"
             className="h-auto w-full"
           />

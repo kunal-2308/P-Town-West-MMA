@@ -7,7 +7,7 @@ function HeroSection3() {
         className="hidden div-main-container w-full h-[600px] sm:h-[700px] md:h-[800px] lg:h-[660px] 
         md:flex flex-col justify-start bg-cover bg-center bg-no-repeat 
         pl-6 sm:pl-12 md:pl-24 lg:pl-52 pt-16 sm:pt-20 md:pt-24 lg:pt-32"
-        style={{ backgroundImage: `url('public/images/Kickboxing/3.png')` }}
+        style={{ backgroundImage: `url('/images/Kickboxing/3.png')` }}
       >
         {/* Title Section */}
         <div className="div-1-title">
@@ -32,7 +32,7 @@ function HeroSection3() {
         <span className="absolute top-0 left-0 px-4 py-6 text-2xl md:text-5xl lg:text-5xl text-customYellow font-medium leading-tight w-[80%] mt-3">
           WHY CHOOSE OUR <br /> KICKBOXING PROGRAM?
         </span>
-        <img src="public/images/Kickboxing/3.png" alt="" className="w-full h-auto" />
+        <img src="/images/Kickboxing/3.png" alt="" className="w-full h-auto" />
       </div>
 
       <div className='block md:hidden bg-black text-white -mt-1 flex justify-center items-center flex-col pl-7 pr-7 pt-6 gap-y-3 pb-7'>

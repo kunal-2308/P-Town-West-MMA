@@ -7,7 +7,7 @@ function HeroSection2() {
   return (
     <div className="relative w-screen h-[300px] md:h-[700px] lg:h-[800px] xl:h-[600px] flex justify-center items-center md:justify-start overflow-x-hidden">
       <img
-        src="public/images/Home/Trainings/30.png"
+        src="/images/Home/Trainings/30.png"
         alt="Background"
         className="absolute inset-0 w-full h-full object-cover z-0"
       />
