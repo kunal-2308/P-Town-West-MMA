@@ -1,8 +1,9 @@
+import { strict } from "assert";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-// Sign Up
+// Sign Up (Register)
 export const register = async (req, res) => {
   const { name, email, password, phoneNumber } = req.body;
 
@@ -19,13 +20,7 @@ export const register = async (req, res) => {
       phoneNumber,
     });
 
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
-    res.status(201).json({ token, userId: user._id, role: user.role });
+    res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     res
       .status(500)
@@ -33,7 +28,7 @@ export const register = async (req, res) => {
   }
 };
 
-// Sign In
+// Sign In (Login)
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -48,10 +43,18 @@ export const login = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "5D" }
     );
 
-    res.status(200).json({ token, userId: user._id, role: user.role });
+    // Set token as an HTTP-only cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 5 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json({ userId: user._id, role: user.role });
   } catch (error) {
     res
       .status(500)
@@ -74,10 +77,18 @@ export const adminLogin = async (req, res) => {
     const token = jwt.sign(
       { id: admin._id, role: admin.role },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "5D" }
     );
 
-    res.status(200).json({ token, adminId: admin._id });
+    // Set token as an HTTP-only cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 5 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json({ adminId: admin._id });
   } catch (error) {
     res
       .status(500)
