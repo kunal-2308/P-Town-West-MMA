@@ -10,7 +10,7 @@ const verifyTokenAndFetchUser = async (token) => {
 
 // Protect User Middleware
 export const protectUser = async (req, res, next) => {
-  const token = req.cookies.token;
+  const token = req.cookies.jwt_token;
 
   if (!token) {
     return res.status(401).json({ message: "Not authorized, no token" });
@@ -33,7 +33,7 @@ export const protectUser = async (req, res, next) => {
 
 // Protect Admin Middleware
 export const protectAdmin = async (req, res, next) => {
-  const token = req.cookies.token;
+  const token = req.cookies.jwt_token;
 
   if (!token) {
     return res.status(401).json({ message: "Not authorized, no token" });

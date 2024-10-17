@@ -11,7 +11,6 @@ const Dashboard = () => {
     if (!token) {
       navigate("/login");
     } else {
-      // Get user name from cookies
       const userName = Cookies.get("userName");
       setUser({ displayName: userName });
     }

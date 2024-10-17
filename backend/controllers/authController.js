@@ -83,7 +83,7 @@ export const login = async (req, res) => {
     // setCookie(res, "userName", user.name); // Use `user` instead of `admin`
     // setCookie(res, "role", user.role); // Use `user.role`
 
-    res.cookie("jwt-token", token);
+    res.cookie("jwt_token", token);
     res.status(200).json({
       token,
       userId: user._id,
@@ -117,7 +117,7 @@ export const adminLogin = async (req, res) => {
     // setCookie(res, "userName", admin.name);
     // setCookie(res, "role", admin.role);
 
-    res.cookie("jwt-token", token);
+    res.cookie("jwt_token", token);
 
     res.status(200).json({
       token,
@@ -134,21 +134,21 @@ export const adminLogin = async (req, res) => {
   }
 };
 
-export const logout = async(req,res)=>{
+export const logout = async (req, res) => {
   try {
-    res.clearCookie('jwt-token');
-    res.clearCookie('email');
-    res.clearCookie('role');
-    res.clearCookie('userName');
+    res.clearCookie("jwt_token");
+    res.clearCookie("email");
+    res.clearCookie("role");
+    res.clearCookie("userName");
     res.status(200).json({
-      message :'Logged out successfully',
-      status:'true'
+      message: "Logged out successfully",
+      status: "true",
     });
-    res.redirect('/login');
+    res.redirect("/login");
   } catch (error) {
     res.status(400).json({
-      message:{error},
-      status:'false'
+      message: { error },
+      status: "false",
     });
   }
-}
+};
