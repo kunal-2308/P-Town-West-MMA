@@ -133,3 +133,22 @@ export const adminLogin = async (req, res) => {
       .json({ message: "Something went wrong", error: error.message });
   }
 };
+
+export const logout = async(req,res)=>{
+  try {
+    res.clearCookie('jwt-token');
+    res.clearCookie('email');
+    res.clearCookie('role');
+    res.clearCookie('userName');
+    res.status(200).json({
+      message :'Logged out successfully',
+      status:'true'
+    });
+    res.redirect('/login');
+  } catch (error) {
+    res.status(400).json({
+      message:{error},
+      status:'false'
+    });
+  }
+}
