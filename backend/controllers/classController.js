@@ -3,7 +3,7 @@ import User from "../models/userModel.js";
 
 // User: Book a class
 export const bookClass = async (req, res) => {
-  const { classId } = req.body;
+  const { classId } = req.query;
   const userId = req.user.id;
 
   try {

@@ -2,9 +2,9 @@ import Navbar from "../shared/Navbar";
 import Footer from "../shared/Footer";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -79,10 +79,9 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // // Use js-cookie to set cookies for token, user name, email, and phone number
-        // Cookies.set("token", data.token, { secure: true });
-        // Cookies.set("userName", data.name, { secure: true });
-        // Cookies.set("email", formData.email, { secure: true });
+        Cookies.set("jwt_token", data.token, { secure: true });
+        Cookies.set("userName", data.name, { secure: true });
+        Cookies.set("email", formData.email, { secure: true });
 
         // Show success toast
         toast.success("Login successful!", { autoClose: 2000 });
@@ -93,7 +92,7 @@ const Login = () => {
         }, 2000);
       } else {
         setApiError(data.message || "Login failed. Please try again.");
-        toast.error(apiError || "Login failed.", { autoClose: 2000 });
+        toast.error(data.message || "Login failed.", { autoClose: 2000 });
       }
     } catch (error) {
       console.error("Login error:", error);
