@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { ChevronDown, Menu } from "lucide-react";
-// import { getCookie, onAuthStateChangedListener } from "../../auth";
 
 function Navbar() {
   let [navStatus, setNavStatus] = useState(false);
   let [dropdownClick, setDropDownClick] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  let [mobileDropdownClick, setMobileDropdownClick] = useState(false); // For mobile view
 
   const menuBarClick = (e) => {
     e.preventDefault();
@@ -19,22 +18,11 @@ function Navbar() {
     setDropDownClick(!dropdownClick);
   };
 
-  // useEffect(() => {
-  //   const checkAuthState = () => {
-  //     const userToken = getCookie("userToken");
-  //     setIsLoggedIn(!!userToken);
-  //   };
+  const mobileDropdownClicked = (e) => {
+    e.preventDefault();
+    setMobileDropdownClick(!mobileDropdownClick);
+  };
 
-  //   checkAuthState();
-
-  //   onAuthStateChangedListener((user) => {
-  //     if (user) {
-  //       setIsLoggedIn(true);
-  //     } else {
-  //       setIsLoggedIn(false);
-  //     }
-  //   });
-  // }, []);
   return (
     <>
       <nav className="fixed top-0 z-[1000] bg-white w-screen shadow-lg">
@@ -49,14 +37,12 @@ function Navbar() {
             </div>
           </div>
 
-          
           <div className="hidden md:block ml-6 lg:ml-10">
             <ul className="flex space-x-4 lg:space-x-8 items-center">
-              
               <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
                 <Link to="/">Home</Link>
               </li>
-             
+
               <div className="relative">
                 <div
                   className="flex items-center cursor-pointer"
@@ -71,7 +57,7 @@ function Navbar() {
                     }`}
                   />
                 </div>
-                
+
                 <ul
                   className={`absolute left-0 mt-2 py-2 w-48 bg-white shadow-lg rounded-md transition-opacity duration-300 ease-in-out ${
                     dropdownClick ? "opacity-100 visible" : "opacity-0 invisible"
@@ -135,9 +121,37 @@ function Navbar() {
             <li className="hover:cursor-pointer font-semibold text-sm">
               <Link to="/">Home</Link>
             </li>
-            <li className="hover:cursor-pointer font-semibold text-sm">
-              <Link to="/training/programs">Training Programs</Link>
+            <li
+              className="hover:cursor-pointer font-semibold text-sm flex items-center"
+              onClick={mobileDropdownClicked}
+            >
+              Training Programs
+              <ChevronDown
+                className={`ml-1 transform transition-transform ${
+                  mobileDropdownClick ? "rotate-180" : "rotate-0"
+                }`}
+              />
             </li>
+            {/* Mobile dropdown items */}
+            {mobileDropdownClick && (
+              <ul className="flex flex-col text-center space-y-2">
+                <li className="text-sm font-medium">
+                  <Link to="/jitsu">Brazilian Jitsu</Link>
+                </li>
+                <li className="text-sm font-medium">
+                  <Link to="/kickboxing">KickBoxing</Link>
+                </li>
+                <li className="text-sm font-medium">
+                  <Link to="/strength">Strength Program</Link>
+                </li>
+                <li className="text-sm font-medium">
+                  <Link to="/kids">Kids</Link>
+                </li>
+                <li className="text-sm font-medium">
+                  <Link to="/nutrition">Nutrition</Link>
+                </li>
+              </ul>
+            )}
             <li className="hover:cursor-pointer font-semibold text-sm">
               <Link to="/trainer">Our Trainers</Link>
             </li>
