@@ -1,5 +1,5 @@
 import "./App.css";
-import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./components/pages/Home/Home";
 import KickBoxing from "./components/pages/KickBoxing/KickBoxing";
 import Jitsu from "./components/pages/Jitsu/Jitsu";
@@ -13,8 +13,8 @@ import { Toaster } from "./components/ui/sonner";
 // import { AuthProvider } from "./components/auth/AuthContext";
 // import PrivateRoute from "./components/auth/PrivateRoute";
 import Dashboard from "./components/pages/Dashboard/Dashboard";
-// import Login from "./components/auth/Login";
-// import Signup from "./components/auth/SignUp";
+import Login from "./components/Auth/Login";
+import Signup from "./components/Auth/SignUp";
 import { useEffect } from "react";
 // import { onAuthStateChangedListener } from "./auth";
 
@@ -69,30 +69,24 @@ function App() {
       path: "/trainer",
       element: <Trainer />,
     },
-    // {
-    //   path: "/dashboard",
-    //   element: (
-       
-    //       <Dashboard />
-       
-    //   ),
-    // },
-    // {
-    //   path: "/login",
-    //   element: <Login />,
-    // },
-    // {
-    //   path: "/signup",
-    //   element: <Signup />,
-    // },
+    {
+      path: "/dashboard",
+      element: <Dashboard />,
+    },
+    {
+      path: "/login",
+      element: <Login />,
+    },
+    {
+      path: "/signup",
+      element: <Signup />,
+    },
   ]);
 
   return (
     <>
-     
-        <RouterProvider router={createRouter}></RouterProvider>
-        <Toaster />
-      
+      <RouterProvider router={createRouter}></RouterProvider>
+      <Toaster />
     </>
   );
 }

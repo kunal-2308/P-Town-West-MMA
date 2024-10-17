@@ -5,6 +5,7 @@ import classRoutes from "./routes/classRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 dotenv.config();
 connectDB();
@@ -12,6 +13,7 @@ connectDB();
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
 app.use("/api/classes", classRoutes);
 app.use("/api/admin", adminRoutes);

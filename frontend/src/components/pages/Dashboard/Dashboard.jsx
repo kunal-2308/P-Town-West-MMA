@@ -1,24 +1,26 @@
-import { useContext, useEffect } from "react";
-// import { AuthContext } from "../../auth/AuthContext";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { logout } from "../../../auth";
+import Cookies from "js-cookie";
+
 const Dashboard = () => {
-  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (!user) {
+    const token = Cookies.get("token");
+    if (!token) {
       navigate("/login");
+    } else {
+      // Get user name from cookies
+      const userName = Cookies.get("userName");
+      setUser({ displayName: userName });
     }
-  }, [user, navigate]);
+  }, [navigate]);
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
+  const handleLogout = () => {
+    Cookies.remove("token");
+    Cookies.remove("userName");
+    navigate("/login");
   };
 
   return (
@@ -28,7 +30,7 @@ const Dashboard = () => {
           <h1 className="text-5xl font-bold text-gray-800">
             {user.displayName || "Welcome!"}
           </h1>
-          <p className="py-4 text-gray-600">{user.email}</p>
+          <p className="py-4 text-gray-600">Welcome back!</p>
           <button
             onClick={handleLogout}
             className="mt-4 bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition duration-200"

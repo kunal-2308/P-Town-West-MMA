@@ -1,26 +1,60 @@
-import { strict } from "assert";
-import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import cookie from "cookie";
+import User from "../models/userModel.js";
 
-// Sign Up (Register)
+// Helper function to create token
+const createToken = (userId, role) => {
+  return jwt.sign({ id: userId, role }, process.env.JWT_SECRET, {
+    expiresIn: "5d", // 5 days token expiry
+  });
+};
+
+// Set cookie helper
+const setCookie = (res, name, value, options = {}) => {
+  res.setHeader(
+    "Set-Cookie",
+    cookie.serialize(name, value, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 5 * 24 * 60 * 60, // 5 days
+      sameSite: "Strict",
+      path: "/",
+      ...options,
+    })
+  );
+};
+
+// Register
 export const register = async (req, res) => {
-  const { name, email, password, phoneNumber } = req.body;
+  const { name, email, password, phone } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
-    if (existingUser)
+    if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      phoneNumber,
+      phone,
     });
 
-    res.status(201).json({ message: "User registered successfully" });
+    const token = createToken(user._id, user.role);
+
+    setCookie(res, "token", token);
+    setCookie(res, "userName", user.name);
+
+    res.status(201).json({
+      message: "User registered successfully",
+      token,
+      userId: user._id,
+      name: user.name,
+      email: user.email,
+    });
   } catch (error) {
     res
       .status(500)
@@ -28,7 +62,7 @@ export const register = async (req, res) => {
   }
 };
 
-// Sign In (Login)
+// Login
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -40,13 +74,18 @@ export const login = async (req, res) => {
     if (!isPasswordCorrect)
       return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "5D" }
-    );
+    const token = createToken(user._id, user.role);
 
-    res.status(200).json({ token, userId: user._id, role: user.role });
+    setCookie(res, "token", token);
+    setCookie(res, "userName", user.name);
+
+    res.status(200).json({
+      token,
+      userId: user._id,
+      role: user.role,
+      name: user.name,
+      email: user.email,
+    });
   } catch (error) {
     res
       .status(500)
@@ -66,21 +105,18 @@ export const adminLogin = async (req, res) => {
     if (!isPasswordCorrect)
       return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign(
-      { id: admin._id, role: admin.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "5D" }
-    );
+    const token = createToken(admin._id, admin.role);
 
-    // Set token as an HTTP-only cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      maxAge: 5 * 24 * 60 * 60 * 1000,
+    setCookie(res, "token", token);
+    setCookie(res, "userName", admin.name);
+
+    res.status(200).json({
+      token,
+      userId: admin._id,
+      role: admin.role,
+      name: admin.name,
+      email: admin.email,
     });
-
-    res.status(200).json({ adminId: admin._id });
   } catch (error) {
     res
       .status(500)
