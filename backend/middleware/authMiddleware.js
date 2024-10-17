@@ -1,43 +1,59 @@
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
+// Helper function to verify token and fetch user
+const verifyTokenAndFetchUser = async (token) => {
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const user = await User.findById(decoded.id);
+  return { decoded, user };
+};
+
 // Protect User Middleware
 export const protectUser = async (req, res, next) => {
-  const token = req.cookies.token; // Get the token from the cookie
+  const token = req.cookies.token;
 
-  if (!token) return res.status(401).json({ message: "Not authorized" });
+  if (!token) {
+    return res.status(401).json({ message: "Not authorized, no token" });
+  }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id);
-
-    if (!req.user) {
+    const { user } = await verifyTokenAndFetchUser(token);
+    if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    req.user = user; // Attach user to request
     next();
   } catch (error) {
-    res.status(401).json({ message: "Token failed", error: error.message });
+    res
+      .status(401)
+      .json({ message: "Token verification failed", error: error.message });
   }
 };
 
 // Protect Admin Middleware
 export const protectAdmin = async (req, res, next) => {
-  const token = req.cookies.token; // Get the token from the cookie
+  const token = req.cookies.token;
 
-  if (!token) return res.status(401).json({ message: "Not authorized" });
+  if (!token) {
+    return res.status(401).json({ message: "Not authorized, no token" });
+  }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
+    const { user } = await verifyTokenAndFetchUser(token);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    if (!user) return res.status(404).json({ message: "User not found" });
-    if (user.role !== "admin")
+    if (user.role !== "admin") {
       return res.status(403).json({ message: "Admin access only" });
+    }
 
-    req.user = user;
+    req.user = user; // Attach user to request
     next();
   } catch (error) {
-    res.status(401).json({ message: "Token failed", error: error.message });
+    res
+      .status(401)
+      .json({ message: "Token verification failed", error: error.message });
   }
 };

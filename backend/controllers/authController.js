@@ -16,10 +16,10 @@ const setCookie = (res, name, value, options = {}) => {
     "Set-Cookie",
     cookie.serialize(name, value, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 5 * 24 * 60 * 60, // 5 days
+      secure: false, // Should be false for local development
+      maxAge: 5 * 24 * 60 * 60, // 5 days in seconds
       sameSite: "Strict",
-      path: "/",
+      path: "/", // Cookie path
       ...options,
     })
   );
@@ -45,8 +45,10 @@ export const register = async (req, res) => {
 
     const token = createToken(user._id, user.role);
 
-    setCookie(res, "token", token);
-    setCookie(res, "userName", user.name);
+    // Set token and userName in cookies
+    // setCookie(res, "token", token);
+    // setCookie(res, "userName", user.name);
+    // setCookie(res, "role", user.role); // Ensure role is also set for the user
 
     res.status(201).json({
       message: "User registered successfully",
@@ -76,9 +78,12 @@ export const login = async (req, res) => {
 
     const token = createToken(user._id, user.role);
 
-    setCookie(res, "token", token);
-    setCookie(res, "userName", user.name);
+    // Set cookies for token, userName, and role
+    // setCookie(res, "token", token);
+    // setCookie(res, "userName", user.name); // Use `user` instead of `admin`
+    // setCookie(res, "role", user.role); // Use `user.role`
 
+    res.cookie("jwt-token", token);
     res.status(200).json({
       token,
       userId: user._id,
@@ -107,8 +112,12 @@ export const adminLogin = async (req, res) => {
 
     const token = createToken(admin._id, admin.role);
 
-    setCookie(res, "token", token);
-    setCookie(res, "userName", admin.name);
+    // Set token and userName in cookies
+    // setCookie(res, "token", token);
+    // setCookie(res, "userName", admin.name);
+    // setCookie(res, "role", admin.role);
+
+    res.cookie("jwt-token", token);
 
     res.status(200).json({
       token,
@@ -118,6 +127,7 @@ export const adminLogin = async (req, res) => {
       email: admin.email,
     });
   } catch (error) {
+    console.error("Error during admin login:", error);
     res
       .status(500)
       .json({ message: "Something went wrong", error: error.message });

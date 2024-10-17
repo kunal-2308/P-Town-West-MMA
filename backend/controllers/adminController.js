@@ -5,13 +5,16 @@ export const addClass = async (req, res) => {
   const { name, date, time, slots, instructor, category } = req.body;
 
   try {
+    const week = moment(date).isoWeek();
+    const classDate = new Date(date);
     const newClass = await Class.create({
       name,
-      date,
+      date: classDate,
       time,
       slots,
       instructor,
       category,
+      week,
     });
     res.status(201).json(newClass);
   } catch (error) {

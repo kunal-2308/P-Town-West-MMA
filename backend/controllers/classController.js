@@ -50,12 +50,10 @@ export const getBookedClasses = async (req, res) => {
 
     res.status(200).json(user.bookedClasses);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Failed to retrieve booked classes",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Failed to retrieve booked classes",
+      error: error.message,
+    });
   }
 };
 
@@ -86,11 +84,48 @@ export const getPreviousClasses = async (req, res) => {
 
     res.status(200).json(previousClasses);
   } catch (error) {
+    res.status(500).json({
+      message: "Failed to retrieve previous classes",
+      error: error.message,
+    });
+  }
+};
+
+// User: Get all classes (with optional category and week filter)
+export const getAllClasses = async (req, res) => {
+  const { category, week } = req.query; // Get category and week from query parameters
+
+  try {
+    const filter = {};
+
+    // Add filters based on provided query parameters
+    if (category) {
+      filter.category = category;
+    }
+
+    if (week) {
+      filter.week = week; // Use the week field to filter
+    }
+
+    const classes = await Class.find(filter);
+    res.status(200).json(classes);
+  } catch (error) {
     res
       .status(500)
-      .json({
-        message: "Failed to retrieve previous classes",
-        error: error.message,
-      });
+      .json({ message: "Failed to retrieve classes", error: error.message });
+  }
+};
+
+// User: Get classes by week
+export const getClassesByWeek = async (req, res) => {
+  const { week } = req.params; // Get the week from URL parameters
+
+  try {
+    const classes = await Class.find({ week: week });
+    res.status(200).json(classes);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to retrieve classes", error: error.message });
   }
 };

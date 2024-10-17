@@ -3,6 +3,8 @@ import Footer from "../shared/Footer";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -13,6 +15,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [apiError, setApiError] = useState(""); // For showing API-related errors
+  const [loading, setLoading] = useState(false); // For showing loading spinner
   const navigate = useNavigate(); // For redirection after login
 
   const images = [
@@ -59,8 +62,12 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setApiError("");
+    setLoading(true); // Set loading state to true
 
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      setLoading(false); // Stop loading if validation fails
+      return;
+    }
 
     try {
       const response = await fetch("http://localhost:5007/api/auth/login", {
@@ -72,19 +79,33 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
+        // Use js-cookie to set cookies for token, user name, email, and phone number
         Cookies.set("token", data.token, { secure: true });
         Cookies.set("userName", data.name, { secure: true });
+        Cookies.set("email", formData.email, { secure: true });
 
-        // Redirect to the dashboard
-        navigate("/dashboard");
+        // Show success toast
+        toast.success("Login successful!", { autoClose: 2000 });
+
+        // Redirect to the dashboard after a slight delay
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 2000);
       } else {
         setApiError(data.message || "Login failed. Please try again.");
+        toast.error(apiError || "Login failed.", { autoClose: 2000 });
       }
     } catch (error) {
       console.error("Login error:", error);
       setApiError("An error occurred. Please try again later.");
+      toast.error("An error occurred. Please try again later.", {
+        autoClose: 2000,
+      });
+    } finally {
+      setLoading(false); // Stop loading after the response
     }
   };
+
   return (
     <>
       <Navbar />
@@ -160,9 +181,33 @@ const Login = () => {
 
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition"
+                  className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition flex items-center justify-center"
+                  disabled={loading}
                 >
-                  Login
+                  {loading ? (
+                    <svg
+                      className="animate-spin h-5 w-5 text-white mr-2"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    "Login"
+                  )}
                 </button>
               </form>
 
@@ -180,6 +225,7 @@ const Login = () => {
         </div>
       </div>
       <Footer />
+      <ToastContainer />
     </>
   );
 };

@@ -1,17 +1,21 @@
 import Navbar from "../shared/Navbar";
 import Footer from "../shared/Footer";
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false); // Loading state for button
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -29,12 +33,10 @@ const SignUp = () => {
     return () => clearInterval(interval);
   }, [images.length]);
 
-  // Handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
-    // Live validation for password match
     if (name === "confirmPassword" || name === "password") {
       if (name === "confirmPassword" && formData.password !== value) {
         setErrors((prev) => ({
@@ -56,17 +58,13 @@ const SignUp = () => {
     }
   };
 
-  // Validate form data (for submit)
   const validateForm = () => {
     const newErrors = {};
-
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email || !emailRegex.test(formData.email)) {
       newErrors.email = "Please enter a valid email address.";
     }
 
-    // Ensure passwords match
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match.";
     }
@@ -75,11 +73,10 @@ const SignUp = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      // Proceed with form submission logic
+      setLoading(true); // Show spinner
       try {
         const response = await fetch(
           "http://localhost:5007/api/auth/register",
@@ -93,16 +90,28 @@ const SignUp = () => {
         );
         const data = await response.json();
         if (data.token) {
-          // Store token in cookie
-          document.cookie = `token=${data.token}; path=/;`;
-          // Redirect to dashboard
-          window.location.href = "/dashboard";
+          Cookies.set("token", data.token, { path: "/", secure: true });
+          Cookies.set("name", formData.name, { path: "/", secure: true });
+          Cookies.set("email", formData.email, { path: "/", secure: true });
+          Cookies.set("phoneNumber", formData.phoneNumber, {
+            path: "/",
+            secure: true,
+          });
+          toast.success("Account created successfully!");
+          setTimeout(() => {
+            window.location.href = "/dashboard"; // Redirect to dashboard after a short delay
+          }, 2000);
+        } else {
+          toast.error("Registration failed. Please try again.");
         }
       } catch (error) {
+        toast.error("An error occurred during registration.");
         console.error("Error during registration:", error);
+      } finally {
+        setLoading(false); // Hide spinner
       }
     } else {
-      console.log("Form validation failed.");
+      toast.error("Form validation failed.");
     }
   };
 
@@ -161,10 +170,10 @@ const SignUp = () => {
                   <label className="block text-gray-700">Phone</label>
                   <input
                     type="tel"
-                    name="phone"
+                    name="phoneNumber"
                     className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter your phone number"
-                    value={formData.phone}
+                    value={formData.phoneNumber}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -216,9 +225,14 @@ const SignUp = () => {
 
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition"
+                  className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition flex items-center justify-center"
+                  disabled={loading}
                 >
-                  Create an Account
+                  {loading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-white"></div>
+                  ) : (
+                    "Create an Account"
+                  )}
                 </button>
               </form>
 
@@ -236,6 +250,7 @@ const SignUp = () => {
         </div>
       </div>
       <Footer />
+      <ToastContainer />
     </>
   );
 };

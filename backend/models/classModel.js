@@ -10,7 +10,7 @@ const classSchema = new mongoose.Schema(
     instructor: { type: String, required: true },
     category: { type: String, required: true },
     isFull: { type: Boolean, default: false },
-    // applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: "applications" }],
+    week: { type: Number },
   },
   {
     timestamps: true,
