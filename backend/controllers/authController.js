@@ -27,7 +27,7 @@ const setCookie = (res, name, value, options = {}) => {
 
 // Register
 export const register = async (req, res) => {
-  const { name, email, password, phone } = req.body;
+  const { name, email, password, phoneNumber } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
@@ -40,7 +40,7 @@ export const register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      phone,
+      phoneNumber,
     });
 
     const token = createToken(user._id, user.role);

@@ -60,7 +60,9 @@ function Navbar() {
 
                 <ul
                   className={`absolute left-0 mt-2 py-2 w-48 bg-white shadow-lg rounded-md transition-opacity duration-300 ease-in-out ${
-                    dropdownClick ? "opacity-100 visible" : "opacity-0 invisible"
+                    dropdownClick
+                      ? "opacity-100 visible"
+                      : "opacity-0 invisible"
                   }`}
                 >
                   <li className="px-4 py-2 text-sm hover:bg-gray-200">
@@ -176,7 +178,7 @@ function Navbar() {
       </nav>
 
       {/* Custom styles for 639px to 767px */}
-      <style jsx>{`
+      <style>{`
         @media (max-width: 767px) and (min-width: 640px) {
           nav {
             justify-content: space-between;
