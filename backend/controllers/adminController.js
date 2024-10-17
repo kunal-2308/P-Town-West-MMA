@@ -1,4 +1,5 @@
 import Class from "../models/classModel.js";
+import moment from 'moment'; // Import moment here
 
 // Admin: Add a class
 export const addClass = async (req, res) => {

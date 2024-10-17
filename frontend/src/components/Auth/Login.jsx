@@ -79,10 +79,10 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Use js-cookie to set cookies for token, user name, email, and phone number
-        Cookies.set("token", data.token, { secure: true });
-        Cookies.set("userName", data.name, { secure: true });
-        Cookies.set("email", formData.email, { secure: true });
+        // // Use js-cookie to set cookies for token, user name, email, and phone number
+        // Cookies.set("token", data.token, { secure: true });
+        // Cookies.set("userName", data.name, { secure: true });
+        // Cookies.set("email", formData.email, { secure: true });
 
         // Show success toast
         toast.success("Login successful!", { autoClose: 2000 });
