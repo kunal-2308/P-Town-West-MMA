@@ -97,7 +97,7 @@ function Reviews() {
             </div>
 
             {/* Navigation Buttons */}
-            <div className="div-3-a w-full flex justify-center items-center md:justify-end gap-3 mt-6 md:mt-5">
+            <div className="div-3-a w-full flex justify-center items-center md:justify-end gap-3 mt-6 md:mt-7 md:pr-5">
                 <span className="bg-black rounded-full p-2 cursor-pointer" onClick={handlePrevious}>
                     <ChevronLeft className="text-white" size="30px" />
                 </span>
