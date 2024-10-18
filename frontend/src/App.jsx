@@ -13,6 +13,7 @@ import { Toaster } from "./components/ui/sonner";
 // import { AuthProvider } from "./components/auth/AuthContext";
 // import PrivateRoute from "./components/auth/PrivateRoute";
 import Dashboard from "./components/pages/Dashboard/Dashboard";
+import ClassDetails from "./components/pages/Dashboard/ClassDetails";
 import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/SignUp";
 import { useEffect } from "react";
@@ -80,6 +81,10 @@ function App() {
     {
       path: "/signup",
       element: <Signup />,
+    },
+    {
+      path: "/classes/:classId",
+      element: <ClassDetails />,
     },
   ]);
 

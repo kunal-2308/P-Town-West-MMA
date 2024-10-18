@@ -5,7 +5,7 @@ import User from "../models/userModel.js";
 export const bookClass = async (req, res) => {
   const { id: classId } = req.params;
   const userId = req.user.id;
-  
+
   try {
     const classToBook = await Class.findById(classId);
 
@@ -15,7 +15,16 @@ export const bookClass = async (req, res) => {
 
     // Check if the class is full
     if (classToBook.isFull || classToBook.bookedSlots >= classToBook.slots) {
-      return res.status(400).json({ message: "Class is fully booked" });
+      return res
+        .status(400)
+        .json({ message: "Class is fully booked. Please try another class." });
+    }
+
+    // Check if user already booked the class
+    if (classToBook.applicants.includes(userId)) {
+      return res
+        .status(400)
+        .json({ message: "You have already booked this class." });
     }
 
     // Increment booked slots
@@ -24,7 +33,6 @@ export const bookClass = async (req, res) => {
       classToBook.isFull = true;
     }
 
-   
     // Associate the class with the user
     const user = await User.findById(userId);
     user.bookedClasses = user.bookedClasses || [];
@@ -32,7 +40,6 @@ export const bookClass = async (req, res) => {
     classToBook.applicants.push(userId);
     await user.save();
     await classToBook.save();
-
 
     res.status(200).json({ message: "Class booked successfully", classToBook });
   } catch (error) {
@@ -42,8 +49,48 @@ export const bookClass = async (req, res) => {
   }
 };
 
+export const cancelBooking = async (req, res) => {
+  const { id: classId } = req.params;
+  const userId = req.user.id;
 
+  try {
+    const classToCancel = await Class.findById(classId);
 
+    if (!classToCancel) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    // Check if user has booked the class
+    if (!classToCancel.applicants.includes(userId)) {
+      return res
+        .status(400)
+        .json({ message: "You have not booked this class." });
+    }
+
+    // Decrement booked slots and remove the user from applicants
+    classToCancel.bookedSlots -= 1;
+    classToCancel.isFull = false; // Reset full status if the class is no longer fully booked
+    classToCancel.applicants = classToCancel.applicants.filter(
+      (applicant) => applicant.toString() !== userId.toString()
+    );
+
+    const user = await User.findById(userId);
+    user.bookedClasses = user.bookedClasses.filter(
+      (bookedClass) => bookedClass.toString() !== classId.toString()
+    );
+
+    await user.save();
+    await classToCancel.save();
+
+    res
+      .status(200)
+      .json({ message: "Booking cancelled successfully", classToCancel });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to cancel booking", error: error.message });
+  }
+};
 
 // User: Get booked classes
 export const getBookedClasses = async (req, res) => {
@@ -121,16 +168,17 @@ export const getAllClasses = async (req, res) => {
   }
 };
 
-// User: Get classes by week
-export const getClassesByWeek = async (req, res) => {
-  const { week } = req.params; // Get the week from URL parameters
-
+// Get class by id
+export const getClassById = async (req, res) => {
   try {
-    const classes = await Class.find({ week: week });
-    res.status(200).json(classes);
+    const classId = req.params.classId; // Correct the parameter name
+    const classDetails = await Class.findById(classId);
+    if (!classDetails) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+    res.json(classDetails);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Failed to retrieve classes", error: error.message });
+    console.error("Error fetching class details:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

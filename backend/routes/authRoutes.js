@@ -14,5 +14,6 @@ router.post("/register", register);
 router.post("/login", login);
 router.post("/admin/login", adminLogin);
 router.get("/logout", logout);
-router.get('/user/details',protectUser,getUserDetails);
+router.get("/user/details", protectUser, getUserDetails);
+
 export default router;

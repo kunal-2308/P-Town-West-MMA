@@ -4,13 +4,17 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Modal from "../../../components/shared/Modal"; // Import the Modal component
 
 const Dashboard = () => {
-  const [user, setUser] = useState(null);
   const [allClasses, setAllClasses] = useState([]);
   const [upcomingClasses, setUpcomingClasses] = useState([]);
-  const [previousClasses, setPreviousClasses] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [userName, setUserName] = useState("");
+
+  // Modal states
+  const [showModal, setShowModal] = useState(false);
+  const [allBookedClasses, setAllBookedClasses] = useState([]);
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,9 +27,6 @@ const Dashboard = () => {
     if (!token) {
       navigate("/login");
     } else {
-      const userName = Cookies.get("userName");
-      setUser({ displayName: userName });
-
       if (token) {
         axios
           .get("http://localhost:5007/api/classes/all-classes", {
@@ -38,12 +39,29 @@ const Dashboard = () => {
             console.error("Error fetching all classes:", error);
           });
 
-        // Simulate fetching upcoming and previous classes
-        setUpcomingClasses([]); // Replace with real data
-        setPreviousClasses([]); // Replace with real data
+        axios
+          .get("http://localhost:5007/api/auth/user/details", {
+            withCredentials: true,
+          })
+          .then((response) => {
+            const { userDetails } = response.data;
+            const bookedClasses = userDetails.bookedClasses;
+            setUpcomingClasses(bookedClasses);
+
+            // Set the user name
+            setUserName(userDetails.name); // Assuming 'name' is the field in user details
+          })
+          .catch((error) => {
+            console.error("Error fetching user details:", error);
+          });
       }
     }
   }, [navigate]);
+
+  // Handle class click
+  const handleClick = (classId) => {
+    navigate(`/classes/${classId}`); // Redirect to a new page with the class ID in the URL
+  };
 
   // Category filter handler
   const handleCategoryClick = (category) => {
@@ -85,11 +103,17 @@ const Dashboard = () => {
     }
   };
 
+  // Open modal with all upcoming classes
+  const handleShowAllClasses = () => {
+    setAllBookedClasses(upcomingClasses);
+    setShowModal(true);
+  };
+
   return (
     <>
       <Navbar />
       {/* Main content */}
-      <div className="flex flex-col lg:flex-row lg:h-screen justify-between mt-20 px-6 lg:mt-52">
+      <div className="flex flex-col lg:flex-row lg:h-screen justify-between mt-36 px-6 lg:mt-52">
         {/* Left Section - All Classes */}
         <div className="w-full lg:w-3/4 mb-8 lg:mb-0">
           <h1 className="text-2xl lg:text-3xl font-bold mb-4">
@@ -128,7 +152,10 @@ const Dashboard = () => {
                 <p>{cls.time}</p>
                 <p>{cls.slots} slots available</p>
                 <div>
-                  <button className="my-4 p-2 rounded-lg bg-black text-white">
+                  <button
+                    className="my-4 p-2 rounded-lg bg-black text-white"
+                    onClick={() => handleClick(cls._id)}
+                  >
                     Book Now
                   </button>
                 </div>
@@ -166,7 +193,7 @@ const Dashboard = () => {
           {/* User Info */}
           <div className="bg-blue-500 text-white p-4 rounded-lg shadow-md">
             <h2 className="text-lg lg:text-xl font-bold">
-              Welcome, {user?.displayName}
+              Welcome, {userName}
             </h2>
           </div>
 
@@ -174,31 +201,28 @@ const Dashboard = () => {
           <div className="bg-white mt-6 p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-bold mb-4">Upcoming Classes</h3>
             {upcomingClasses.length > 0 ? (
-              upcomingClasses.map((cls) => (
-                <div key={cls._id} className="bg-gray-100 p-2 rounded-lg mb-2">
-                  <p>{cls.name}</p>
-                  <p>{cls.date}</p>
-                  <p>{cls.time}</p>
-                </div>
-              ))
+              <>
+                {upcomingClasses.slice(0, 2).map((cls) => (
+                  <div
+                    key={cls._id}
+                    className="bg-gray-100 p-2 rounded-lg mb-2"
+                  >
+                    <p>{cls.name}</p>
+                    <p>{cls.date}</p>
+                    <p>{cls.time}</p>
+                  </div>
+                ))}
+                {upcomingClasses.length > 2 && (
+                  <button
+                    className="text-blue-500 underline"
+                    onClick={handleShowAllClasses}
+                  >
+                    +{upcomingClasses.length - 2} more
+                  </button>
+                )}
+              </>
             ) : (
               <p>No upcoming classes scheduled.</p>
-            )}
-          </div>
-
-          {/* Previous Classes */}
-          <div className="bg-white mt-6 p-4 rounded-lg shadow-md">
-            <h3 className="text-lg font-bold mb-4">Previous Classes</h3>
-            {previousClasses.length > 0 ? (
-              previousClasses.map((cls) => (
-                <div key={cls._id} className="bg-gray-100 p-2 rounded-lg mb-2">
-                  <p>{cls.name}</p>
-                  <p>{cls.date}</p>
-                  <p>{cls.time}</p>
-                </div>
-              ))
-            ) : (
-              <p>No previous classes attended.</p>
             )}
           </div>
 
@@ -211,7 +235,20 @@ const Dashboard = () => {
           </button>
         </div>
       </div>
-      <div className="mt-10"></div>
+
+      {/* Modal for showing all booked classes */}
+      {showModal && (
+        <Modal title="All Upcoming Classes" onClose={() => setShowModal(false)}>
+          {allBookedClasses.map((cls) => (
+            <div key={cls._id} className="bg-gray-100 p-2 rounded-lg mb-2">
+              <p>{cls.name}</p>
+              <p>{cls.date}</p>
+              <p>{cls.time}</p>
+            </div>
+          ))}
+        </Modal>
+      )}
+      <div className="mt-20"></div>
       <Footer />
     </>
   );
