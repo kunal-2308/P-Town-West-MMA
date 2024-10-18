@@ -11,6 +11,7 @@ const classSchema = new mongoose.Schema(
     category: { type: String, required: true },
     isFull: { type: Boolean, default: false },
     week: { type: Number },
+    applicants: [{type:mongoose.Schema.Types.ObjectId,ref:'User'}]
   },
   {
     timestamps: true,

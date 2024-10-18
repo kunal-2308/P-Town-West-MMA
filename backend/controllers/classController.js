@@ -1,6 +1,5 @@
 import Class from "../models/classModel.js";
 import User from "../models/userModel.js";
-
 // User: Book a class
 export const bookClass = async (req, res) => {
   const { classId } = req.query;

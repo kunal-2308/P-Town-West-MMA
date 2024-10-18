@@ -10,22 +10,22 @@ const createToken = (userId, role) => {
   });
 };
 
-// Set cookie helper
-const setCookie = (res, name, value, options = {}) => {
-  res.setHeader(
-    "Set-Cookie",
-    cookie.serialize(name, value, {
-      httpOnly: true,
-      secure: false, // Should be false for local development
-      maxAge: 5 * 24 * 60 * 60, // 5 days in seconds
-      sameSite: "Strict",
-      path: "/", // Cookie path
-      ...options,
-    })
-  );
-};
+// // Set cookie helper
+// const setCookie = (res, name, value, options = {}) => {
+//   res.setHeader(
+//     "Set-Cookie",
+//     cookie.serialize(name, value, {
+//       httpOnly: true,
+//       secure: false, // Should be false for local development
+//       maxAge: 5 * 24 * 60 * 60, // 5 days in seconds
+//       sameSite: "Strict",
+//       path: "/", // Cookie path
+//       ...options,
+//     })
+//   );
+// };
 
-// Register
+// Register :
 export const register = async (req, res) => {
   const { name, email, password, phoneNumber } = req.body;
 
