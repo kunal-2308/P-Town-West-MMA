@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import Navbar from "../../../components/shared/Navbar";
@@ -6,6 +6,7 @@ import Footer from "../../../components/shared/Footer";
 
 const ClassDetails = () => {
   const { classId } = useParams();
+  const navigate = useNavigate(); // Initialize useNavigate
   const [classDetails, setClassDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -75,6 +76,10 @@ const ClassDetails = () => {
     }
   };
 
+  const handleClose = () => {
+    navigate("/dashboard"); 
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -102,7 +107,7 @@ const ClassDetails = () => {
   return (
     <>
       <Navbar />
-      <div className="h-screen mt-52 mx-auto py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+      <div className="h-screen mt-44 mx-auto py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
         <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
           <h1 className="text-4xl font-bold text-purple-700 mb-6 text-center">{classDetails.name}</h1>
           <div className="mb-6">
@@ -144,6 +149,14 @@ const ClassDetails = () => {
               </div>
             </>
           )}
+          <div className="flex justify-center mt-4">
+            <button
+              className="px-4 py-2 text-lg bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-lg transition duration-300 ease-in-out"
+              onClick={handleClose} 
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
       <Footer />
