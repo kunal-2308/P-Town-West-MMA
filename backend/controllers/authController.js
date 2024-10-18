@@ -10,21 +10,6 @@ const createToken = (userId, role) => {
   });
 };
 
-// // Set cookie helper
-// const setCookie = (res, name, value, options = {}) => {
-//   res.setHeader(
-//     "Set-Cookie",
-//     cookie.serialize(name, value, {
-//       httpOnly: true,
-//       secure: false, // Should be false for local development
-//       maxAge: 5 * 24 * 60 * 60, // 5 days in seconds
-//       sameSite: "Strict",
-//       path: "/", // Cookie path
-//       ...options,
-//     })
-//   );
-// };
-
 // Register :
 export const register = async (req, res) => {
   const { name, email, password, phoneNumber } = req.body;
@@ -114,11 +99,6 @@ export const adminLogin = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
 
     const token = createToken(admin._id, admin.role);
-
-    // Set token and userName in cookies
-    // setCookie(res, "token", token);
-    // setCookie(res, "userName", admin.name);
-    // setCookie(res, "role", admin.role);
 
     res.cookie("jwt_token", token);
 
