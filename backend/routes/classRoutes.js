@@ -11,7 +11,7 @@ import { protectUser } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/book", protectUser, bookClass);
+router.post("/book/:id", protectUser, bookClass);
 router.get("/booked", protectUser, getBookedClasses);
 router.get("/available", protectUser, getAvailableClasses);
 router.get("/previous", protectUser, getPreviousClasses);

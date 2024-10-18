@@ -1,10 +1,11 @@
 import Class from "../models/classModel.js";
 import User from "../models/userModel.js";
 // User: Book a class
-export const bookClass = async (req, res) => {
-  const { classId } = req.query;
-  const userId = req.user.id;
 
+export const bookClass = async (req, res) => {
+  const { id: classId } = req.params;
+  const userId = req.user.id;
+  
   try {
     const classToBook = await Class.findById(classId);
 
@@ -23,13 +24,15 @@ export const bookClass = async (req, res) => {
       classToBook.isFull = true;
     }
 
-    await classToBook.save();
-
+   
     // Associate the class with the user
     const user = await User.findById(userId);
     user.bookedClasses = user.bookedClasses || [];
     user.bookedClasses.push(classToBook._id);
+    classToBook.applicants.push(userId);
     await user.save();
+    await classToBook.save();
+
 
     res.status(200).json({ message: "Class booked successfully", classToBook });
   } catch (error) {
@@ -38,6 +41,9 @@ export const bookClass = async (req, res) => {
       .json({ message: "Failed to book class", error: error.message });
   }
 };
+
+
+
 
 // User: Get booked classes
 export const getBookedClasses = async (req, res) => {

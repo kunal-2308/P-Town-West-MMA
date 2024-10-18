@@ -76,7 +76,8 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate("bookedClasses"); // Populate booked classes
+
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
@@ -86,17 +87,12 @@ export const login = async (req, res) => {
     const token = createToken(user._id, user.role);
 
     // Set cookies for token, userName, and role
-    // setCookie(res, "token", token);
-    // setCookie(res, "userName", user.name); // Use `user` instead of `admin`
-    // setCookie(res, "role", user.role); // Use `user.role`
-
     res.cookie("jwt_token", token);
+
+    // Send back the user details along with the booked classes
     res.status(200).json({
       token,
-      userId: user._id,
-      role: user.role,
-      name: user.name,
-      email: user.email,
+      user,
     });
   } catch (error) {
     return res
@@ -156,6 +152,24 @@ export const logout = async (req, res) => {
     res.status(400).json({
       message: { error },
       status: "false",
+    });
+  }
+};
+
+export const getUserDetails = async (req, res) => {
+  try {
+    let userId = req.user._id;
+
+    // Fetch user details and populate bookedClasses
+    let userDetails = await User.findById(userId).populate("bookedClasses");
+
+    res.status(200).json({
+      message: "User fetched successfully",
+      userDetails,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: `Error occurred: ${error}`,
     });
   }
 };

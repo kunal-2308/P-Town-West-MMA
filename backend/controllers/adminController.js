@@ -3,7 +3,7 @@ import moment from 'moment'; // Import moment here
 
 // Admin: Add a class
 export const addClass = async (req, res) => {
-  const { name, date, time, slots, instructor, category } = req.body;
+  const { name, date, timeIn,timeOut, slots, instructor, category } = req.body;
 
   try {
     const week = moment(date).isoWeek();
@@ -11,11 +11,11 @@ export const addClass = async (req, res) => {
     const newClass = await Class.create({
       name,
       date: classDate,
-      time,
+      timeIn,
+      timeOut,
       slots,
       instructor,
       category,
-      week,
     });
     res.status(201).json(newClass);
   } catch (error) {
