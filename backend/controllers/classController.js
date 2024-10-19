@@ -13,6 +13,15 @@ export const bookClass = async (req, res) => {
       return res.status(404).json({ message: "Class not found" });
     }
 
+    // Check if the class date is in the past
+    const classDate = new Date(classToBook.date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set time to midnight for accurate comparison
+
+    if (classDate < today) {
+      return res.status(400).json({ message: "Cannot book a previous class." });
+    }
+
     // Check if the class is full
     if (classToBook.isFull || classToBook.bookedSlots >= classToBook.slots) {
       return res
@@ -20,7 +29,7 @@ export const bookClass = async (req, res) => {
         .json({ message: "Class is fully booked. Please try another class." });
     }
 
-    // Check if user already booked the class
+    // Check if the user has already booked the class
     if (classToBook.applicants.includes(userId)) {
       return res
         .status(400)
@@ -180,5 +189,86 @@ export const getClassById = async (req, res) => {
   } catch (error) {
     console.error("Error fetching class details:", error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getListOfUpcomingClasses = async (req, res) => {
+  try {
+    let allClasses = await Class.find({});
+    let upcomingClasses = allClasses.filter(
+      (c) => new Date(c.date) > new Date()
+    );
+    res.status(200).json({
+      message: "Upcoming classes fetched successfully",
+      upcomingClasses: upcomingClasses,
+    });
+  } catch (error) {
+    console.error("Error occurred:", error);
+    res.status(500).json({
+      message: "Failed to retrieve classes",
+      error: error.message,
+    });
+  }
+};
+
+export const getListOfPreviousClasses = async (req, res) => {
+  try {
+    let allClasses = await Class.find({});
+    let previousClasses = allClasses.filter(
+      (c) => new Date(c.date) < new Date()
+    );
+    res.status(200).json({
+      message: "Previous classes fetched successfully",
+      previousClasses: previousClasses,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to retrieve classes",
+      error: error.message,
+    });
+  }
+};
+
+export const getListOfApplicants = async (req, res) => {
+  try {
+    let classId = req.params.classId;
+
+    let classWithApplicants = await Class.findById(classId).populate({
+      path: "applicants",
+      select: "name email phoneNumber bookedClasses", 
+      populate: {
+        path: "bookedClasses",
+        model: "Class", 
+        select: "name date",
+      },
+    });
+
+    
+    if (!classWithApplicants) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    const applicants = classWithApplicants.applicants.map((applicant) => ({
+      name: applicant.name,
+      email: applicant.email,
+      phoneNumber: applicant.phoneNumber,
+      applications: applicant.bookedClasses.map((bookedClass) => ({
+        classId: bookedClass._id,
+        className: bookedClass.name,
+        classDate: bookedClass.date,
+      })),
+    }));
+
+    res.status(200).json({
+      message: "Applicants fetched successfully",
+      applicants: applicants, 
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to retrieve applicants",
+      error: error.message,
+    });
   }
 };
