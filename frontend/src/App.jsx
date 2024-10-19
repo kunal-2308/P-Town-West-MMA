@@ -10,31 +10,15 @@ import Contact from "./components/pages/Contact/Contact";
 import Strength from "./components/pages/Strength/Strength";
 import Trainer from "./components/pages/Trainers/Trainer";
 import { Toaster } from "./components/ui/sonner";
-// import { AuthProvider } from "./components/auth/AuthContext";
-// import PrivateRoute from "./components/auth/PrivateRoute";
 import Dashboard from "./components/pages/Dashboard/Dashboard";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import ClassDetails from "./components/pages/Dashboard/ClassDetails";
 import Login from "./components/Auth/Login";
 import AdminLogin from "./components/Admin/Login";
 import Signup from "./components/Auth/SignUp";
-import { useEffect } from "react";
-// import { onAuthStateChangedListener } from "./auth";
+
 
 function App() {
-  // UseEffect to manage auth state changes
-  useEffect(() => {
-    // const unsubscribe = onAuthStateChangedListener((user) => {
-    //   if (user) {
-    //     console.log(user);
-    //   } else {
-    //     console.log("User signed out");
-    //   }
-    // });
-    // return () => unsubscribe();
-  }, []);
-
-  // Updated router to include private routes and auth-related paths
   const createRouter = createBrowserRouter([
     {
       path: "/",

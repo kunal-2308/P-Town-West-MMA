@@ -28,5 +28,4 @@ router.get("/admin/upcoming", getListOfUpcomingClasses);
 router.get('/applicants/:classId',protectAdmin,getListOfApplicants);
 
 
-
 export default router;
