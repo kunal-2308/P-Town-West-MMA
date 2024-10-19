@@ -19,14 +19,17 @@ const ClassDetails = () => {
     const fetchClassDetails = async () => {
       if (token) {
         try {
-          const response = await fetch(`http://localhost:5007/api/classes/${classId}`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-          });
+          const response = await fetch(
+            `http://localhost:5007/api/classes/${classId}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+            }
+          );
 
           if (!response.ok) {
             const errorMessage = await response.text(); // Get the response body as text
@@ -53,14 +56,17 @@ const ClassDetails = () => {
   const handleBookClass = async () => {
     if (token) {
       try {
-        const response = await fetch(`http://localhost:5007/api/classes/book/${classId}`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
+        const response = await fetch(
+          `http://localhost:5007/api/classes/book/${classId}`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) {
           const errorMessage = await response.text();
@@ -77,13 +83,15 @@ const ClassDetails = () => {
   };
 
   const handleClose = () => {
-    navigate("/dashboard"); 
+    navigate("/dashboard");
   };
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p className="text-xl font-semibold text-gray-600">Loading class details...</p>
+        <p className="text-xl font-semibold text-gray-600">
+          Loading class details...
+        </p>
       </div>
     );
   }
@@ -109,25 +117,31 @@ const ClassDetails = () => {
       <Navbar />
       <div className="h-screen mt-44 mx-auto py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
         <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
-          <h1 className="text-4xl font-bold text-purple-700 mb-6 text-center">{classDetails.name}</h1>
+          <h1 className="text-4xl font-bold text-purple-700 mb-6 text-center">
+            {classDetails.name}
+          </h1>
           <div className="mb-6">
             <p className="text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Date:</span> {classDetails.date}
             </p>
             <p className="text-lg font-medium text-gray-700 mb-2">
-              <span className="font-semibold">Time In:</span> {classDetails.timeIn}
+              <span className="font-semibold">Time In:</span>{" "}
+              {classDetails.timeIn}
             </p>
             <p className="text-lg font-medium text-gray-700 mb-2">
-              <span className="font-semibold">Time Out:</span> {classDetails.timeOut}
+              <span className="font-semibold">Time Out:</span>{" "}
+              {classDetails.timeOut}
             </p>
             <p className="text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Slots:</span> {classDetails.slots}
             </p>
             <p className="text-lg font-medium text-gray-700 mb-2">
-              <span className="font-semibold">Booked Slots:</span> {classDetails.bookedSlots}
+              <span className="font-semibold">Booked Slots:</span>{" "}
+              {classDetails.bookedSlots}
             </p>
             <p className="text-lg font-medium text-gray-700 mb-2">
-              <span className="font-semibold">Category:</span> {classDetails.category}
+              <span className="font-semibold">Category:</span>{" "}
+              {classDetails.category}
             </p>
           </div>
           {bookingSuccess ? (
@@ -137,7 +151,9 @@ const ClassDetails = () => {
           ) : (
             <>
               {bookingError && (
-                <div className="text-red-500 text-lg font-semibold mb-4">{bookingError}</div>
+                <div className="text-red-500 text-lg font-semibold mb-4">
+                  {bookingError}
+                </div>
               )}
               <div className="flex justify-center">
                 <button
@@ -152,7 +168,7 @@ const ClassDetails = () => {
           <div className="flex justify-center mt-4">
             <button
               className="px-4 py-2 text-lg bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-lg transition duration-300 ease-in-out"
-              onClick={handleClose} 
+              onClick={handleClose}
             >
               Close
             </button>
