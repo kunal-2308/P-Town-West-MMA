@@ -17,4 +17,8 @@ router.delete("/delete/:id", protectAdmin, deleteClass);
 
 router.get("/all", protectAdmin, getAllClasses);
 
+
+
+
+
 export default router;

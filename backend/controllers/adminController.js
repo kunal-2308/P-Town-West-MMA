@@ -6,7 +6,6 @@ export const addClass = async (req, res) => {
   const { name, date, timeIn,timeOut, slots, instructor, category } = req.body;
 
   try {
-    const week = moment(date).isoWeek();
     const classDate = new Date(date);
     const newClass = await Class.create({
       name,

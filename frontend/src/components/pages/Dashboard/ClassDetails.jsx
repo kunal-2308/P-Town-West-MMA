@@ -53,6 +53,7 @@ const ClassDetails = () => {
     fetchClassDetails();
   }, [classId, token]);
 
+  
   const handleBookClass = async () => {
     if (token) {
       try {
