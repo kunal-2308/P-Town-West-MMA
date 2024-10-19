@@ -3,6 +3,11 @@ import Footer from "../shared/Footer";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import AdminHome from "./AdminHome";
+import AdminUpcoming from "./AdminUpcoming";
+import AdminPrevious from "./AdminPrevious";
+import AdminClassAdd from "./AdminClassAdd";
+import AdminAdd from "./AdminAdd";
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -16,15 +21,15 @@ const AdminDashboard = () => {
   const renderContent = () => {
     switch (selectedTab) {
       case "Home":
-        return <p>This is the Home content.</p>;
+        return <AdminHome />;
       case "Upcoming Class":
-        return <p>Upcoming Class details will be shown here.</p>;
+        return <AdminUpcoming />;
       case "Previous Class":
-        return <p>Previous Class details will be shown here.</p>;
+        return <AdminPrevious />;
       case "Schedule Class":
-        return <p>You can schedule a class here.</p>;
+        return <AdminClassAdd />;
       case "Add Admin":
-        return <p>Here you can add a new admin.</p>;
+        return <AdminAdd />;
       default:
         return <p>Welcome to the admin dashboard.</p>;
     }
