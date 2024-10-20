@@ -80,6 +80,10 @@ function App() {
       path: "/classes/:classId",
       element: <ClassDetails />,
     },
+    {
+      path:'/class/schedule',
+      element:<Dashboard/>
+    }
   ]);
 
   return (

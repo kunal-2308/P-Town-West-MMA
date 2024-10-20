@@ -89,7 +89,7 @@ function Navbar() {
                 <Link to="/about">About Us</Link>
               </li>
               <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
-                <Link to="/schedule">Class Schedule</Link>
+                <Link to="/class/schedule">Class Schedule</Link>
               </li>
               <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
                 <Link to="/contact">Contact Us</Link>
@@ -161,7 +161,7 @@ function Navbar() {
               <Link to="/about">About Us</Link>
             </li>
             <li className="hover:cursor-pointer font-semibold text-sm">
-              <Link to="/schedule">Class Schedule</Link>
+              <Link to="/class/schedule">Class Schedule</Link>
             </li>
             <li className="hover:cursor-pointer font-semibold text-sm">
               <Link to="/contact">Contact Us</Link>
