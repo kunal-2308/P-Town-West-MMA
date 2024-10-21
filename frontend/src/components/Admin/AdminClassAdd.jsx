@@ -9,8 +9,8 @@ const AdminClassAdd = () => {
     instructor: "",
     slots: "",
     date: "",
-    startTime: "",
-    endTime: "",
+    timeIn: "", // Updated to timeIn
+    timeOut: "", // Updated to timeOut
     description: "",
     category: "",
   });
@@ -56,8 +56,8 @@ const AdminClassAdd = () => {
       !formData.category ||
       !formData.slots ||
       !formData.date ||
-      !formData.timeIn ||
-      !formData.timeOut ||
+      !formData.timeIn || // Updated validation
+      !formData.timeOut || // Updated validation
       !formData.description
     ) {
       toast.error("Please fill out all required fields.");
@@ -76,8 +76,8 @@ const AdminClassAdd = () => {
         instructor: "",
         slots: "",
         date: "",
-        startTime: "",
-        endTime: "",
+        timeIn: "", // Reset timeIn
+        timeOut: "", // Reset timeOut
         description: "",
         category: "",
       });
@@ -186,7 +186,7 @@ const AdminClassAdd = () => {
           <label className="block text-sm font-medium mb-2">Start Time</label>
           <input
             type="time"
-            name="startTime"
+            name="timeIn" // Updated name to timeIn
             value={formData.timeIn}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md"
@@ -198,7 +198,7 @@ const AdminClassAdd = () => {
           <label className="block text-sm font-medium mb-2">End Time</label>
           <input
             type="time"
-            name="endTime"
+            name="timeOut" // Updated name to timeOut
             value={formData.timeOut}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md"
