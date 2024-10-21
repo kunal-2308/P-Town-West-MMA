@@ -152,19 +152,19 @@ const Dashboard = () => {
       <Navbar />
       <div className="div-1-herosection relative mt-10">
         <img src="/images/Training/3.png" alt="" className="w-screen" />
-        <div className="absolute inset-y-1/2 left-0 transform -translate-y-1/2 text-customYellow sm:text-7xl text-sm font-medium pl-40 w-[50%]">
+        <div className="absolute inset-y-1/2 left-0 transform -translate-y-1/2 text-customYellow text-7xl  font-medium pl-40 w-[50%]">
           Schedule an Appointment
         </div>
       </div>
 
       {/* Main content */}
-      <div className="flex flex-col lg:flex-row lg:h-screen justify-between mt-10 px-6 lg:mt-20">
+      <div className="flex flex-col lg:flex-row lg:h-screen justify-between mt-36 px-6 lg:mt-20">
         {/* Left Section - All Classes */}
         <div className="w-full lg:w-3/4 mb-8 lg:mb-0 pl-10 pr-10">
           <h1 className="text-2xl lg:text-2xl font-medium mb-4">
             Available Classes
           </h1>
-          <div className="flex flex-wrap gap-2 lg:gap-4 mb-4">
+          <div className="flex space-x-2 lg:space-x-4 mb-4">
             <button
               className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${
                 selectedCategory === "All"
