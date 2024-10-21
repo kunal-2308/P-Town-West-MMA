@@ -1,71 +1,160 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AdminClassAdd = () => {
   const [formData, setFormData] = useState({
-    class: "",
-    level: "",
-    trainer: "",
+    name: "",
+    instructor: "",
     slots: "",
     date: "",
     startTime: "",
     endTime: "",
-    message: "",
+    description: "",
+    category: "",
   });
+
+  const [categories, setCategories] = useState([]);
+  const [instructors, setInstructors] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5007/api/admin/all",
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("API Response:", response.data); // Log to ensure we get data
+        const { categories, instructors } = response.data;
+        setCategories(categories);
+        setInstructors(instructors);
+      } catch (error) {
+        console.error("Error fetching details:", error);
+        toast.error("Failed to load categories or instructors.");
+      }
+    };
+
+    fetchDetails();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Basic validation
+    if (
+      !formData.name ||
+      !formData.instructor ||
+      !formData.category ||
+      !formData.slots ||
+      !formData.date ||
+      !formData.timeIn ||
+      !formData.timeOut ||
+      !formData.description
+    ) {
+      toast.error("Please fill out all required fields.");
+      return;
+    }
+
+    setIsLoading(true); // Show loading state when submitting
+
+    try {
+      await axios.post("http://localhost:5007/api/admin/add", formData, {
+        withCredentials: true,
+      });
+
+      setFormData({
+        name: "",
+        instructor: "",
+        slots: "",
+        date: "",
+        startTime: "",
+        endTime: "",
+        description: "",
+        category: "",
+      });
+      toast.success("Class successfully added!");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("An error occurred while adding the class.");
+    } finally {
+      setIsLoading(false); // Stop loading once done
+    }
+  };
+
   return (
     <div className="p-8 max-w-4xl mx-auto bg-white border border-gray-300 rounded-lg shadow-md">
+      <ToastContainer />
       <h2 className="text-2xl font-bold mb-6">Schedule a Class</h2>
-      <form className="grid grid-cols-2 gap-6">
-        {/* Select Class */}
+      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
+        {/* Class Name */}
         <div>
-          <label className="block text-sm font-medium mb-2">Select Class</label>
-          <select
-            name="class"
-            value={formData.class}
+          <label className="block text-sm font-medium mb-2">Class Name</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md"
-          >
-            <option>Select</option>
-            {/* Add class options here */}
-          </select>
+            placeholder="Class Name"
+          />
         </div>
 
-        {/* Select Level */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Select Level</label>
-          <select
-            name="level"
-            value={formData.level}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-          >
-            <option>Select</option>
-            {/* Add level options here */}
-          </select>
-        </div>
-
-        {/* Select Trainer */}
+        {/* Category */}
         <div>
           <label className="block text-sm font-medium mb-2">
-            Select Trainer
+            Select/Enter Category
           </label>
-          <select
-            name="trainer"
-            value={formData.trainer}
+          <input
+            type="text"
+            name="category"
+            value={formData.category}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md"
-          >
-            <option>Select</option>
-            {/* Add trainer options here */}
-          </select>
+            placeholder="Enter Category"
+            list="category-list"
+          />
+          <datalist id="category-list">
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </datalist>
         </div>
 
-        {/* Enter No. of Slots */}
+        {/* Instructor */}
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            Select/Enter Instructor
+          </label>
+          <input
+            type="text"
+            name="instructor"
+            value={formData.instructor}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            placeholder="Enter Instructor"
+            list="instructor-list"
+          />
+          <datalist id="instructor-list">
+            {instructors.map((instructor) => (
+              <option key={instructor} value={instructor}>
+                {instructor}
+              </option>
+            ))}
+          </datalist>
+        </div>
+
+        {/* Slots */}
         <div>
           <label className="block text-sm font-medium mb-2">
             Enter No. of Slots
@@ -76,11 +165,11 @@ const AdminClassAdd = () => {
             value={formData.slots}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="Value"
+            placeholder="No. of Slots"
           />
         </div>
 
-        {/* Choose Date */}
+        {/* Date */}
         <div>
           <label className="block text-sm font-medium mb-2">Choose Date</label>
           <input
@@ -98,7 +187,7 @@ const AdminClassAdd = () => {
           <input
             type="time"
             name="startTime"
-            value={formData.startTime}
+            value={formData.timeIn}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md"
           />
@@ -110,20 +199,18 @@ const AdminClassAdd = () => {
           <input
             type="time"
             name="endTime"
-            value={formData.endTime}
+            value={formData.timeOut}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md"
           />
         </div>
 
-        {/* Additional Message */}
+        {/* Description */}
         <div className="col-span-2">
-          <label className="block text-sm font-medium mb-2">
-            Additional Message
-          </label>
+          <label className="block text-sm font-medium mb-2">Description</label>
           <textarea
-            name="message"
-            value={formData.message}
+            name="description"
+            value={formData.description}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Enter additional message"
@@ -140,9 +227,12 @@ const AdminClassAdd = () => {
           </button>
           <button
             type="submit"
-            className="px-6 py-2 bg-blue-600 text-white rounded-md"
+            className={`px-6 py-2 rounded-md text-white ${
+              isLoading ? "bg-gray-400" : "bg-blue-600"
+            }`}
+            disabled={isLoading}
           >
-            Save
+            {isLoading ? "Saving..." : "Save"}
           </button>
         </div>
       </form>

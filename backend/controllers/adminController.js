@@ -1,9 +1,18 @@
 import Class from "../models/classModel.js";
-import moment from 'moment'; // Import moment here
+import moment from "moment"; // Import moment here
 
 // Admin: Add a class
 export const addClass = async (req, res) => {
-  const { name, date, timeIn,timeOut, slots, instructor, category } = req.body;
+  const {
+    name,
+    date,
+    timeIn,
+    timeOut,
+    slots,
+    instructor,
+    description,
+    category,
+  } = req.body;
 
   try {
     const classDate = new Date(date);
@@ -14,6 +23,7 @@ export const addClass = async (req, res) => {
       timeOut,
       slots,
       instructor,
+      description,
       category,
     });
     res.status(201).json(newClass);
@@ -58,8 +68,15 @@ export const deleteClass = async (req, res) => {
 // Admin: Get all classes (for managing purposes)
 export const getAllClasses = async (req, res) => {
   try {
+    // Fetch all classes
     const classes = await Class.find({});
-    res.status(200).json(classes);
+
+    // Extract unique instructors and categories
+    const instructors = [...new Set(classes.map((cls) => cls.instructor))];
+    const categories = [...new Set(classes.map((cls) => cls.category))];
+
+    // Send the classes, unique instructors, and unique categories
+    res.status(200).json({ classes, instructors, categories });
   } catch (error) {
     res
       .status(500)
