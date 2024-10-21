@@ -29,7 +29,7 @@ const AdminUpcoming = () => {
         Upcoming Classes
       </h2>
       <div className="div-container-main grid grid-cols-3 gap-4">
-        {upcomingArray.slice(0, 3).map((classItem) => (
+        {upcomingArray.map((classItem) => (
           <div
             className="div-card-container bg-customDark text-white rounded-3xl h-auto w-auto p-5"
             key={classItem._id}
