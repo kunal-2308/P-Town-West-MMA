@@ -48,47 +48,90 @@ const AdminDashboard = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col md:flex-row sm:mt-20 mt-16 p-20 md:gap-x-3">
-        <button className="md:hidden px-4 py-2 bg-gray-800 text-white z-[999]" onClick={toggleSidebar}>
+      <div className="flex flex-col md:flex-row sm:mt-20 text-white mt-16 p-20 md:gap-x-3">
+        <button
+          className="md:hidden px-4 py-2 bg-gray-800 text-white z-[999]"
+          onClick={toggleSidebar}
+        >
           {isSidebarOpen ? "Close Menu" : "Open Menu"}
         </button>
 
-        <div className={`${isSidebarOpen ? "block" : "hidden"} md:block w-[20vw] bg-lightGray text-black p-6 md:static absolute z-50 h-screen md:h-auto rounded-lg pl-10`}>
-          <h1 className="text-xl font-light mb-8 mt-5">Admin</h1>
-          <ul className="space-y-4">
-            <li className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${selectedTab === "Home" ? "bg-customBlue text-white" : "text-black/60 hover:bg-customBlue hover:text-white"}`} onClick={() => setSelectedTab("Home")}>
+        <div
+          className={`${
+            isSidebarOpen ? "block" : "hidden"
+          } md:block w-[20vw] bg-black text-white p-6 md:static absolute z-50 h-screen md:h-auto rounded-3xl flex flex-col justify-start items-center`}
+        >
+          <ul className="space-y-4 mt-10">
+            <li
+              className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${
+                selectedTab === "Home"
+                  ? "bg-customYellow text-black"
+                  : "hover:bg-customYellow hover:text-black"
+              }`}
+              onClick={() => setSelectedTab("Home")}
+            >
               <GoHomeFill className="text-2xl" />
               <span>Home</span>
             </li>
-            <li className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${selectedTab === "Upcoming Class" ? "bg-customBlue text-white" : "text-black/60 hover:bg-customBlue hover:text-white"}`} onClick={() => setSelectedTab("Upcoming Class")}>
+            <li
+              className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${
+                selectedTab === "Upcoming Class"
+                  ? "bg-customYellow text-black"
+                  : "hover:bg-customYellow hover:text-black"
+              }`}
+              onClick={() => setSelectedTab("Upcoming Class")}
+            >
               <FaRegCalendarAlt className="text-2xl" />
               <span>Upcoming Class</span>
             </li>
-            <li className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${selectedTab === "Previous Class" ? "bg-customBlue text-white" : "text-black/60 hover:bg-customBlue hover:text-white"}`} onClick={() => setSelectedTab("Previous Class")}>
+            <li
+              className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${
+                selectedTab === "Previous Class"
+                  ? "bg-customYellow text-black"
+                  : "hover:bg-customYellow hover:text-black"
+              }`}
+              onClick={() => setSelectedTab("Previous Class")}
+            >
               <FaClipboardList className="text-2xl" />
               <span>Previous Class</span>
             </li>
-            <li className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${selectedTab === "Schedule Class" ? "bg-customBlue text-white" : "text-black/60 hover:bg-customBlue hover:text-white"}`} onClick={() => setSelectedTab("Schedule Class")}>
+            <li
+              className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${
+                selectedTab === "Schedule Class"
+                  ? "bg-customYellow text-black"
+                  : "hover:bg-customYellow hover:text-black"
+              }`}
+              onClick={() => setSelectedTab("Schedule Class")}
+            >
               <FaRegCalendarAlt className="text-2xl" />
               <span>Schedule Class</span>
             </li>
-            <li className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${selectedTab === "Add Admin" ? "bg-customBlue text-white" : "text-black/60 hover:bg-customBlue hover:text-white"}`} onClick={() => setSelectedTab("Add Admin")}>
+            <li
+              className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${
+                selectedTab === "Add Admin"
+                  ? "bg-customYellow text-black"
+                  : "hover:bg-customYellow hover:text-black"
+              }`}
+              onClick={() => setSelectedTab("Add Admin")}
+            >
               <FaUserPlus className="text-2xl" />
               <span>Add Admin</span>
             </li>
-            <li className="flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer hover:bg-red-500 hover:text-white text-black/60" onClick={handleLogout}>
+            <li
+              className="flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer hover:bg-red-500 hover:text-white text-black/60"
+              onClick={handleLogout}
+            >
               <IoLogOut className="text-2xl" />
               <span>Logout</span>
             </li>
           </ul>
         </div>
 
-        <div className="flex-1 bg-white p-10 rounded-lg">
+        <div className="flex-1 bg-white rounded-lg">
           <div className="mt-4 text-lg text-gray-600">{renderContent()}</div>
         </div>
       </div>
       <Footer />
-    
     </>
   );
 };
