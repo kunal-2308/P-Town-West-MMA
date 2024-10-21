@@ -118,7 +118,7 @@ const AdminDashboard = () => {
               <span>Add Admin</span>
             </li>
             <li
-              className="flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer hover:bg-red-500 hover:text-white text-black/60"
+              className="flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer hover:bg-red-500 hover:text-white text-white"
               onClick={handleLogout}
             >
               <IoLogOut className="text-2xl" />

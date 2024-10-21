@@ -14,10 +14,9 @@ const EditEventModal = ({ isOpen, onClose, classItem, onSave }) => {
     if (classItem) {
       setFormData({
         name: classItem.name || "",
-        // Validate date before formatting it to avoid "Invalid time value" error
         date: classItem.date && !isNaN(new Date(classItem.date).getTime()) 
           ? new Date(classItem.date).toISOString().split("T")[0]
-          : "", // If invalid or null, leave it empty
+          : "", 
         timeIn: classItem.timeIn || "",
         timeOut: classItem.timeOut || "",
         slots: classItem.slots || "",
@@ -32,19 +31,45 @@ const EditEventModal = ({ isOpen, onClose, classItem, onSave }) => {
     });
   };
 
+  // Function to get the value of a specific cookie by name
+  const getCookie = (cookieName) => {
+    const name = cookieName + "=";
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookieArray = decodedCookie.split(';');
+    for(let i = 0; i < cookieArray.length; i++) {
+      let cookie = cookieArray[i].trim();
+      if (cookie.indexOf(name) === 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+    return "";
+  };
+
   const handleSave = async () => {
     try {
-      await axios.put(`http://localhost:5007/api/classes/admin/${classItem._id}`, formData, {
-        withCredentials: true,
+      const authToken = getCookie('jwt_token'); // Get JWT token from cookies
+      if (!authToken) {
+        throw new Error("Authentication token missing");
+      }
+
+      await axios({
+        method: 'PUT',
+        url: `http://localhost:5007/api/admin/update/${classItem._id}`,
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Include the token here
+        },
+        data: {
+          ...formData
+        }
       });
       onSave();
       onClose();
     } catch (error) {
-      console.log(error);
+      console.error("Error updating event:", error);
     }
   };
 
-  if (!isOpen || !classItem) return null; // Check if modal should be open and classItem is available
+  if (!isOpen || !classItem) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
