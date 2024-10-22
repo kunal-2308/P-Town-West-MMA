@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
 import "react-toastify/dist/ReactToastify.css";
 
-const EditClassModal = ({
+const EditEventModal = ({
   isOpen,
   onClose,
   classData,
@@ -12,11 +12,13 @@ const EditClassModal = ({
   categories,
   instructors,
 }) => {
-  const [updatedData, setUpdatedData] = useState(classData);
+  const [updatedData, setUpdatedData] = useState(classData || {});
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setUpdatedData(classData);
+    if (classData) {
+      setUpdatedData(classData);
+    }
   }, [classData]);
 
   const handleChange = (e) => {
@@ -45,7 +47,8 @@ const EditClassModal = ({
     }
   };
 
-  if (!isOpen) return null;
+  // Return null if the modal is not open or if updatedData is missing the name property
+  if (!isOpen || !updatedData.name) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -59,7 +62,7 @@ const EditClassModal = ({
             <input
               type="text"
               name="name"
-              value={updatedData.name}
+              value={updatedData.name || ""}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
               required
@@ -72,7 +75,7 @@ const EditClassModal = ({
             <input
               type="text"
               name="category"
-              value={updatedData.category}
+              value={updatedData.category || ""}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
               list="category-list"
@@ -80,9 +83,7 @@ const EditClassModal = ({
             />
             <datalist id="category-list">
               {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
+                <option key={category} value={category} />
               ))}
             </datalist>
           </div>
@@ -93,7 +94,7 @@ const EditClassModal = ({
             <input
               type="text"
               name="instructor"
-              value={updatedData.instructor}
+              value={updatedData.instructor || ""}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
               list="instructor-list"
@@ -101,9 +102,7 @@ const EditClassModal = ({
             />
             <datalist id="instructor-list">
               {instructors.map((instructor) => (
-                <option key={instructor} value={instructor}>
-                  {instructor}
-                </option>
+                <option key={instructor} value={instructor} />
               ))}
             </datalist>
           </div>
@@ -114,7 +113,7 @@ const EditClassModal = ({
             <input
               type="date"
               name="date"
-              value={updatedData.date.split("T")[0]}
+              value={updatedData.date ? updatedData.date.split("T")[0] : ""}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
               required
@@ -127,7 +126,7 @@ const EditClassModal = ({
             <input
               type="time"
               name="timeIn"
-              value={updatedData.timeIn}
+              value={updatedData.timeIn || ""}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
               required
@@ -140,7 +139,7 @@ const EditClassModal = ({
             <input
               type="time"
               name="timeOut"
-              value={updatedData.timeOut}
+              value={updatedData.timeOut || ""}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
               required
@@ -153,7 +152,7 @@ const EditClassModal = ({
             <input
               type="number"
               name="slots"
-              value={updatedData.slots}
+              value={updatedData.slots || ""}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
               required
@@ -162,12 +161,10 @@ const EditClassModal = ({
 
           {/* Description */}
           <div className="col-span-2">
-            <label className="block text-sm font-medium mb-1">
-              Description
-            </label>
+            <label className="block text-sm font-medium mb-1">Description</label>
             <textarea
               name="description"
-              value={updatedData.description}
+              value={updatedData.description || ""}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
               required
@@ -185,9 +182,7 @@ const EditClassModal = ({
             </button>
             <button
               type="submit"
-              className={`px-6 py-2 rounded-md text-white ${
-                isLoading ? "bg-gray-400" : "bg-blue-600"
-              }`}
+              className={`px-6 py-2 rounded-md text-white ${isLoading ? "bg-gray-400" : "bg-blue-600"}`}
               disabled={isLoading}
             >
               {isLoading ? "Updating..." : "Update Class"}
@@ -199,7 +194,7 @@ const EditClassModal = ({
   );
 };
 
-EditClassModal.propTypes = {
+EditEventModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   classData: PropTypes.shape({
@@ -218,4 +213,4 @@ EditClassModal.propTypes = {
   instructors: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-export default EditClassModal;
+export default EditEventModal;

@@ -96,6 +96,25 @@ const AdminUpcoming = () => {
                   {classItem.applicants.length}
                 </span>
               </div>
+              <div className="div-content-item flex flex-row gap-2">
+                <span className="text-sm text-white">instructor:</span>
+                <span className="text-sm text-white/80">
+                  {classItem.instructor}
+                </span>
+              </div>
+              <div className="div-content-item flex flex-row gap-2">
+                <span className="text-sm text-white">description:</span>
+                <span className="text-sm text-white/80">
+                  {classItem.description}
+                </span>
+              </div>
+              <div className="div-content-item flex flex-row gap-2">
+                <span className="text-sm text-white">category:</span>
+                <span className="text-sm text-white/80">
+                  {classItem.category}
+                </span>
+              </div>
+             
 
               <div className="div-main-button flex flex-row gap-2 mt-5">
                 <button
