@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import axios from "axios";
+import PropTypes from "prop-types";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -20,36 +20,21 @@ const EditClassModal = ({ isOpen, onClose, classData, onUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      !updatedData.name ||
-      !updatedData.date ||
-      !updatedData.timeIn ||
-      !updatedData.timeOut ||
-      !updatedData.slots
-    ) {
-      toast.error("Please fill out all required fields.");
-      return;
-    }
-
-    setIsLoading(true); // Set loading state while the API request is in progress
-
+    setIsLoading(true);
     try {
-      const { id } = updatedData; // Assuming classData contains an ID for the class
-      await axios.put(
-        `http://localhost:5007/api/admin/update/${id}`,
+      const response = await axios.post(
+        `http://localhost:5007/api/admin/update/${updatedData._id}`,
         updatedData,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
       toast.success("Class successfully updated!");
-      onUpdate(updatedData); // Notify the parent component
-      onClose(); // Close the modal
+      onUpdate(response.data); // Call the onUpdate function to update state in the parent
     } catch (error) {
       console.error("Error updating class:", error);
       toast.error("An error occurred while updating the class.");
     } finally {
-      setIsLoading(false); // Stop loading state
+      setIsLoading(false);
+      onClose();
     }
   };
 
@@ -58,83 +43,82 @@ const EditClassModal = ({ isOpen, onClose, classData, onUpdate }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <ToastContainer />
-      <div className="bg-white p-4 rounded-md shadow-md max-w-sm">
-        <h2 className="text-lg font-semibold mb-4">Edit Class</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-2">
-            <label className="block mb-1">Class Name</label>
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg">
+        <h2 className="text-2xl font-bold mb-4">Edit Class</h2>
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+          <div className="col-span-2">
+            <label className="block text-sm font-medium mb-1">Class Name</label>
             <input
               type="text"
               name="name"
               value={updatedData.name}
               onChange={handleChange}
-              className="w-full border rounded-md p-1"
+              className="w-full p-2 border border-gray-300 rounded-md"
               required
             />
           </div>
 
-          <div className="mb-2">
-            <label className="block mb-1">Date</label>
+          <div>
+            <label className="block text-sm font-medium mb-1">Date</label>
             <input
               type="date"
               name="date"
               value={updatedData.date.split("T")[0]}
               onChange={handleChange}
-              className="w-full border rounded-md p-1"
+              className="w-full p-2 border border-gray-300 rounded-md"
               required
             />
           </div>
 
-          <div className="mb-2">
-            <label className="block mb-1">Time In</label>
+          <div>
+            <label className="block text-sm font-medium mb-1">Start Time</label>
             <input
               type="time"
               name="timeIn"
               value={updatedData.timeIn}
               onChange={handleChange}
-              className="w-full border rounded-md p-1"
+              className="w-full p-2 border border-gray-300 rounded-md"
               required
             />
           </div>
 
-          <div className="mb-2">
-            <label className="block mb-1">Time Out</label>
+          <div>
+            <label className="block text-sm font-medium mb-1">End Time</label>
             <input
               type="time"
               name="timeOut"
               value={updatedData.timeOut}
               onChange={handleChange}
-              className="w-full border rounded-md p-1"
+              className="w-full p-2 border border-gray-300 rounded-md"
               required
             />
           </div>
 
-          <div className="mb-2">
-            <label className="block mb-1">Slots</label>
+          <div>
+            <label className="block text-sm font-medium mb-1">Slots</label>
             <input
               type="number"
               name="slots"
               value={updatedData.slots}
               onChange={handleChange}
-              className="w-full border rounded-md p-1"
+              className="w-full p-2 border border-gray-300 rounded-md"
               required
             />
           </div>
 
-          <div className="flex justify-end mt-4">
+          <div className="col-span-2 flex justify-end space-x-4">
             <button
               type="button"
-              className="px-4 py-2 border rounded-md text-gray-500 mr-2"
+              className="px-6 py-2 border border-gray-400 rounded-md text-gray-500"
               onClick={onClose}
-              disabled={isLoading} // Disable the Cancel button while loading
             >
               Cancel
             </button>
             <button
               type="submit"
-              className={`px-4 py-2 ${
+              className={`px-6 py-2 rounded-md text-white ${
                 isLoading ? "bg-gray-400" : "bg-blue-600"
-              } text-white rounded-md`}
+              }`}
               disabled={isLoading}
             >
               {isLoading ? "Updating..." : "Update Class"}
