@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import EditEventModal from "./EditEventModal"; // Assuming these modal components exist
+import EditEventModal from "./EditEventModal";
 import ViewClassModal from "./ViewClassModal";
 
 const AdminUpcoming = () => {
   const [upcomingArray, setUpcomingArray] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedClass, setSelectedClass] = useState(null);
-  const [viewClass, setViewClass] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // State for Edit Modal
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false); // State for View Modal
+  const [selectedClass, setSelectedClass] = useState(null); // State for selected class (edit)
+  const [viewClass, setViewClass] = useState(null); // State for class to view details
 
   // Fetch upcoming classes
   useEffect(() => {
@@ -25,21 +26,39 @@ const AdminUpcoming = () => {
     getUpcomingClasses();
   }, []);
 
-  // Open edit modal
+  // Open the Edit Modal
   const handleEditClick = (classItem) => {
-    setSelectedClass(classItem); // Set the selected class for editing
-    setIsModalOpen(true); // Open the modal
+    setSelectedClass(classItem); // Set the class to edit
+    if (!isViewModalOpen) {
+      setIsEditModalOpen(true); // Only open edit modal if view modal is not open
+    }
   };
 
-  // Open view details modal
-  const handleViewDetails = (classId) => {
-    setViewClass(classId); // Set the class to view
+  // Open the View Modal
+  const handleViewDetails = (classItem) => {
+    setViewClass(classItem); // Set the class to view details
+    if (!isEditModalOpen) {
+      setIsViewModalOpen(true); // Only open view modal if edit modal is not open
+    }
+  };
+
+  // Close the Edit Modal
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setSelectedClass(null);
+  };
+
+  // Close the View Modal
+  const closeViewModal = () => {
+    setIsViewModalOpen(false);
+    setViewClass(null);
   };
 
   // Close modals and refresh data if needed after save
   const handleSave = () => {
-    setIsModalOpen(false);
-    // Optionally refresh the data here
+    closeEditModal(); // Close edit modal after save
+    closeViewModal(); // Optionally, close view modal if needed
+    // Optionally, refresh the data here
   };
 
   return (
@@ -87,7 +106,7 @@ const AdminUpcoming = () => {
                 </button>
                 <button
                   className="text-sm bg-customYellow p-2 rounded-lg hover:font-semibold text-black"
-                  onClick={() => handleViewDetails(classItem._id)}
+                  onClick={() => handleViewDetails(classItem)}
                 >
                   View Details
                 </button>
@@ -98,19 +117,23 @@ const AdminUpcoming = () => {
       </div>
 
       {/* Modal for Editing */}
-      <EditEventModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        classItem={selectedClass}
-        onSave={handleSave}
-      />
+      {isEditModalOpen && (
+        <EditEventModal
+          isOpen={isEditModalOpen}
+          onClose={closeEditModal}
+          classItem={selectedClass}
+          onSave={handleSave}
+        />
+      )}
 
       {/* Modal for Viewing Details */}
-      <ViewClassModal
-        isOpen={viewClass !== null}
-        onClose={() => setViewClass(null)}
-        classItem={viewClass}
-      />
+      {isViewModalOpen && (
+        <ViewClassModal
+          isOpen={isViewModalOpen}
+          onClose={closeViewModal}
+          classItem={viewClass}
+        />
+      )}
     </div>
   );
 };
