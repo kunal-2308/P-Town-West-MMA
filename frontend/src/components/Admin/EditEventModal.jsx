@@ -1,145 +1,221 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import PropTypes from "prop-types";
+import "react-toastify/dist/ReactToastify.css";
 
-const EditEventModal = ({ isOpen, onClose, classItem, onSave }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    date: "",
-    timeIn: "",
-    timeOut: "",
-    slots: "",
-  });
+const EditClassModal = ({
+  isOpen,
+  onClose,
+  classData,
+  onUpdate,
+  categories,
+  instructors,
+}) => {
+  const [updatedData, setUpdatedData] = useState(classData);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (classItem) {
-      setFormData({
-        name: classItem.name || "",
-        date: classItem.date && !isNaN(new Date(classItem.date).getTime()) 
-          ? new Date(classItem.date).toISOString().split("T")[0]
-          : "", 
-        timeIn: classItem.timeIn || "",
-        timeOut: classItem.timeOut || "",
-        slots: classItem.slots || "",
-      });
-    }
-  }, [classItem]);
+    setUpdatedData(classData);
+  }, [classData]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setUpdatedData({ ...updatedData, [name]: value });
   };
 
-  // Function to get the value of a specific cookie by name
-  const getCookie = (cookieName) => {
-    const name = cookieName + "=";
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const cookieArray = decodedCookie.split(';');
-    for(let i = 0; i < cookieArray.length; i++) {
-      let cookie = cookieArray[i].trim();
-      if (cookie.indexOf(name) === 0) {
-        return cookie.substring(name.length, cookie.length);
-      }
-    }
-    return "";
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
 
-  const handleSave = async () => {
     try {
-      const authToken = getCookie('jwt_token'); // Get JWT token from cookies
-      if (!authToken) {
-        throw new Error("Authentication token missing");
-      }
-
-      await axios({
-        method: 'PUT',
-        url: `http://localhost:5007/api/admin/update/${classItem._id}`,
-        headers: {
-          Authorization: `Bearer ${authToken}`, // Include the token here
-        },
-        data: {
-          ...formData
-        }
-      });
-      onSave();
-      onClose();
+      const response = await axios.post(
+        `http://localhost:5007/api/admin/update/${updatedData._id}`,
+        updatedData,
+        { withCredentials: true }
+      );
+      toast.success("Class successfully updated!");
+      onUpdate(response.data);
     } catch (error) {
-      console.error("Error updating event:", error);
+      console.error("Error updating class:", error);
+      toast.error("An error occurred while updating the class.");
+    } finally {
+      setIsLoading(false);
+      onClose();
     }
   };
 
-  if (!isOpen || !classItem) return null;
+  if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-3xl w-full max-w-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-customYellow">Edit Event</h2>
-        <form className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Class Name</label>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <ToastContainer />
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg">
+        <h2 className="text-2xl font-bold mb-4">Edit Class</h2>
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+          {/* Class Name */}
+          <div className="col-span-2">
+            <label className="block text-sm font-medium mb-1">Class Name</label>
             <input
               type="text"
               name="name"
-              value={formData.name}
+              value={updatedData.name}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-lg"
+              className="w-full p-2 border border-gray-300 rounded-md"
+              required
             />
           </div>
+
+          {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Date</label>
+            <label className="block text-sm font-medium mb-1">Category</label>
+            <input
+              type="text"
+              name="category"
+              value={updatedData.category}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              list="category-list"
+              required
+            />
+            <datalist id="category-list">
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </datalist>
+          </div>
+
+          {/* Instructor */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Instructor</label>
+            <input
+              type="text"
+              name="instructor"
+              value={updatedData.instructor}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              list="instructor-list"
+              required
+            />
+            <datalist id="instructor-list">
+              {instructors.map((instructor) => (
+                <option key={instructor} value={instructor}>
+                  {instructor}
+                </option>
+              ))}
+            </datalist>
+          </div>
+
+          {/* Date */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Date</label>
             <input
               type="date"
               name="date"
-              value={formData.date}
+              value={updatedData.date.split("T")[0]}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-lg"
+              className="w-full p-2 border border-gray-300 rounded-md"
+              required
             />
           </div>
-          <div className="flex gap-4">
-            <div className="w-1/2">
-              <label className="block text-sm font-medium text-gray-700">Start Time</label>
-              <input
-                type="time"
-                name="timeIn"
-                value={formData.timeIn}
-                onChange={handleChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-lg"
-              />
-            </div>
-            <div className="w-1/2">
-              <label className="block text-sm font-medium text-gray-700">End Time</label>
-              <input
-                type="time"
-                name="timeOut"
-                value={formData.timeOut}
-                onChange={handleChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-lg"
-              />
-            </div>
-          </div>
+
+          {/* Start Time */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Slots</label>
+            <label className="block text-sm font-medium mb-1">Start Time</label>
+            <input
+              type="time"
+              name="timeIn"
+              value={updatedData.timeIn}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+
+          {/* End Time */}
+          <div>
+            <label className="block text-sm font-medium mb-1">End Time</label>
+            <input
+              type="time"
+              name="timeOut"
+              value={updatedData.timeOut}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+
+          {/* Slots */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Slots</label>
             <input
               type="number"
               name="slots"
-              value={formData.slots}
+              value={updatedData.slots}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-lg"
+              className="w-full p-2 border border-gray-300 rounded-md"
+              required
             />
           </div>
+
+          {/* Description */}
+          <div className="col-span-2">
+            <label className="block text-sm font-medium mb-1">
+              Description
+            </label>
+            <textarea
+              name="description"
+              value={updatedData.description}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+
+          {/* Buttons */}
+          <div className="col-span-2 flex justify-end space-x-4">
+            <button
+              type="button"
+              className="px-6 py-2 border border-gray-400 rounded-md text-gray-500"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className={`px-6 py-2 rounded-md text-white ${
+                isLoading ? "bg-gray-400" : "bg-blue-600"
+              }`}
+              disabled={isLoading}
+            >
+              {isLoading ? "Updating..." : "Update Class"}
+            </button>
+          </div>
         </form>
-        <div className="flex justify-end mt-6 gap-4">
-          <button onClick={onClose} className="text-sm bg-gray-400 text-white px-4 py-2 rounded-lg">
-            Cancel
-          </button>
-          <button onClick={handleSave} className="text-sm bg-customYellow text-black px-4 py-2 rounded-lg">
-            Save
-          </button>
-        </div>
       </div>
     </div>
   );
 };
 
-export default EditEventModal;
+EditClassModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  classData: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    instructor: PropTypes.string.isRequired,
+    slots: PropTypes.number.isRequired,
+    date: PropTypes.string.isRequired,
+    timeIn: PropTypes.string.isRequired,
+    timeOut: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+  }).isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+  instructors: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+export default EditClassModal;
