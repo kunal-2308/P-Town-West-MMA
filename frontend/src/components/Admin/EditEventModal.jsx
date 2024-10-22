@@ -1,120 +1,161 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import PropTypes from "prop-types";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const EditEventModal = ({
-  isOpen,
-  onClose,
-  classData,
-  onUpdate,
-  categories,
-  instructors,
-}) => {
-  const [updatedData, setUpdatedData] = useState(classData || {});
+const EditEventModal = ({ classId, onClose, isOpen, categories, instructors }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    date: '',
+    timeIn: '',
+    timeOut: '',
+    instructor: '',
+    category: '',
+    slots: '',
+  });
+
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (classData) {
-      setUpdatedData(classData);
-    }
-  }, [classData]);
+    const fetchEventDetails = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5007/api/classes/${classId}`, {
+          withCredentials: true,
+        });
 
-  const handleChange = (e) => {
+        const eventDetails = res.data;
+
+        // Convert the date to the required format
+        const formattedDate = eventDetails.date.split('T')[0]; // Get the 'YYYY-MM-DD' part
+        const formattedTimeIn = new Date(eventDetails.timeIn).toLocaleTimeString('en-GB', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true,
+        });
+        const formattedTimeOut = new Date(eventDetails.timeOut).toLocaleTimeString('en-GB', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true,
+        });
+
+        setFormData({
+          ...eventDetails,
+          date: formattedDate,
+          timeIn: formattedTimeIn,
+          timeOut: formattedTimeOut,
+        });
+      } catch (error) {
+        console.error('Error fetching event details:', error);
+        toast.error("Failed to load event details.");
+      }
+    };
+
+    if (classId) {
+      fetchEventDetails();
+    }
+  }, [classId]);
+
+  if (!isOpen) {
+    return null;
+  }
+
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUpdatedData({ ...updatedData, [name]: value });
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+
+    // Basic validation
+    if (!formData.name || !formData.instructor || !formData.category || !formData.slots || !formData.date || !formData.timeIn || !formData.timeOut) {
+      toast.error("Please fill out all required fields.");
+      return;
+    }
+
+    setIsLoading(true); // Show loading state when submitting
 
     try {
-      const response = await axios.post(
-        `http://localhost:5007/api/admin/update/${updatedData._id}`,
-        updatedData,
-        { withCredentials: true }
-      );
-      toast.success("Class successfully updated!");
-      onUpdate(response.data);
-    } catch (error) {
-      console.error("Error updating class:", error);
-      toast.error("An error occurred while updating the class.");
-    } finally {
-      setIsLoading(false);
+      await axios.put(`http://localhost:5007/api/admin/update/${classId}`, formData, {
+        withCredentials: true,
+      });
+      toast.success("Event updated successfully.");
       onClose();
+    } catch (error) {
+      console.error('Error updating event:', error);
+      toast.error("Failed to update the event.");
+    } finally {
+      setIsLoading(false); // Stop loading once done
     }
   };
 
-  // Return null if the modal is not open or if updatedData is missing the name property
-  if (!isOpen || !updatedData.name) return null;
-
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <ToastContainer />
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg">
-        <h2 className="text-2xl font-bold mb-4">Edit Class</h2>
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-          {/* Class Name */}
-          <div className="col-span-2">
-            <label className="block text-sm font-medium mb-1">Class Name</label>
+    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-[99999]">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl overflow-y-auto max-h-[90vh]">
+        <ToastContainer />
+        <h2 className="text-2xl font-bold mb-6">Edit Event: {formData.name || "Unnamed Event"}</h2>
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
+          {/* Event Name */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Event Name</label>
             <input
               type="text"
               name="name"
-              value={updatedData.name || ""}
-              onChange={handleChange}
+              value={formData.name}
+              onChange={handleInputChange}
               className="w-full p-2 border border-gray-300 rounded-md"
+              placeholder="Event Name"
               required
             />
-          </div>
-
-          {/* Category */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Category</label>
-            <input
-              type="text"
-              name="category"
-              value={updatedData.category || ""}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              list="category-list"
-              required
-            />
-            <datalist id="category-list">
-              {categories.map((category) => (
-                <option key={category} value={category} />
-              ))}
-            </datalist>
           </div>
 
           {/* Instructor */}
           <div>
-            <label className="block text-sm font-medium mb-1">Instructor</label>
+            <label className="block text-sm font-medium mb-2">Select/Enter Instructor</label>
             <input
               type="text"
               name="instructor"
-              value={updatedData.instructor || ""}
-              onChange={handleChange}
+              value={formData.instructor}
+              onChange={handleInputChange}
               className="w-full p-2 border border-gray-300 rounded-md"
+              placeholder="Enter Instructor"
               list="instructor-list"
               required
             />
             <datalist id="instructor-list">
-              {instructors.map((instructor) => (
-                <option key={instructor} value={instructor} />
+              {instructors.map((inst) => (
+                <option key={inst._id} value={inst.name}>
+                  {inst.name}
+                </option>
               ))}
             </datalist>
           </div>
 
+          {/* Slots */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Enter No. of Slots</label>
+            <input
+              type="number"
+              name="slots"
+              value={formData.slots}
+              onChange={handleInputChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              placeholder="No. of Slots"
+              required
+            />
+          </div>
+
           {/* Date */}
           <div>
-            <label className="block text-sm font-medium mb-1">Date</label>
+            <label className="block text-sm font-medium mb-2">Choose Date</label>
             <input
               type="date"
               name="date"
-              value={updatedData.date ? updatedData.date.split("T")[0] : ""}
-              onChange={handleChange}
+              value={formData.date}
+              onChange={handleInputChange}
               className="w-full p-2 border border-gray-300 rounded-md"
               required
             />
@@ -122,12 +163,12 @@ const EditEventModal = ({
 
           {/* Start Time */}
           <div>
-            <label className="block text-sm font-medium mb-1">Start Time</label>
+            <label className="block text-sm font-medium mb-2">Start Time</label>
             <input
               type="time"
               name="timeIn"
-              value={updatedData.timeIn || ""}
-              onChange={handleChange}
+              value={formData.timeIn}
+              onChange={handleInputChange}
               className="w-full p-2 border border-gray-300 rounded-md"
               required
             />
@@ -135,40 +176,37 @@ const EditEventModal = ({
 
           {/* End Time */}
           <div>
-            <label className="block text-sm font-medium mb-1">End Time</label>
+            <label className="block text-sm font-medium mb-2">End Time</label>
             <input
               type="time"
               name="timeOut"
-              value={updatedData.timeOut || ""}
-              onChange={handleChange}
+              value={formData.timeOut}
+              onChange={handleInputChange}
               className="w-full p-2 border border-gray-300 rounded-md"
               required
             />
           </div>
 
-          {/* Slots */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Slots</label>
-            <input
-              type="number"
-              name="slots"
-              value={updatedData.slots || ""}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-
-          {/* Description */}
+          {/* Category */}
           <div className="col-span-2">
-            <label className="block text-sm font-medium mb-1">Description</label>
-            <textarea
-              name="description"
-              value={updatedData.description || ""}
-              onChange={handleChange}
+            <label className="block text-sm font-medium mb-2">Select/Enter Category</label>
+            <input
+              type="text"
+              name="category"
+              value={formData.category}
+              onChange={handleInputChange}
               className="w-full p-2 border border-gray-300 rounded-md"
+              placeholder="Enter Category"
+              list="category-list"
               required
             />
+            <datalist id="category-list">
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </datalist>
           </div>
 
           {/* Buttons */}
@@ -178,39 +216,20 @@ const EditEventModal = ({
               className="px-6 py-2 border border-gray-400 rounded-md text-gray-500"
               onClick={onClose}
             >
-              Cancel
+              Discard
             </button>
             <button
               type="submit"
-              className={`px-6 py-2 rounded-md text-white ${isLoading ? "bg-gray-400" : "bg-blue-600"}`}
+              className={`px-6 py-2 rounded-md text-white ${isLoading ? 'bg-gray-400' : 'bg-blue-600'}`}
               disabled={isLoading}
             >
-              {isLoading ? "Updating..." : "Update Class"}
+              {isLoading ? 'Saving...' : 'Save'}
             </button>
           </div>
         </form>
       </div>
     </div>
   );
-};
-
-EditEventModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  classData: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    instructor: PropTypes.string.isRequired,
-    slots: PropTypes.number.isRequired,
-    date: PropTypes.string.isRequired,
-    timeIn: PropTypes.string.isRequired,
-    timeOut: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    category: PropTypes.string.isRequired,
-  }).isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  instructors: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default EditEventModal;
