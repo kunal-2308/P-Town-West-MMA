@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const EditEventModal = ({ classId, onClose, isOpen }) => {
+const AdminClassAdd = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    date: '',
-    timeIn: '',
-    timeOut: '',
-    instructor: '',
-    category: '',
-    slots: '',
+    name: "",
+    instructor: "",
+    slots: "",
+    date: "",
+    timeIn: "", // Updated to timeIn
+    timeOut: "", // Updated to timeOut
+    description: "",
+    category: "",
   });
 
   const [categories, setCategories] = useState([]);
@@ -19,55 +20,46 @@ const EditEventModal = ({ classId, onClose, isOpen }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchEventDetails = async () => {
+    const fetchDetails = async () => {
       try {
-        const res = await axios.get(`http://localhost:5007/api/classes/${classId}`, {
-          withCredentials: true,
-        });
-        setFormData(res.data);
-      } catch (error) {
-        console.error('Error fetching event details:', error);
-        toast.error("Failed to load event details.");
-      }
-    };
-
-    const fetchInstructorsAndCategories = async () => {
-      try {
-        const response = await axios.get('http://localhost:5007/api/admin/all', {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          "http://localhost:5007/api/admin/all",
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("API Response:", response.data); // Log to ensure we get data
         const { categories, instructors } = response.data;
         setCategories(categories);
         setInstructors(instructors);
       } catch (error) {
-        console.error('Error fetching categories and instructors:', error);
+        console.error("Error fetching details:", error);
         toast.error("Failed to load categories or instructors.");
       }
     };
 
-    if (classId) {
-      fetchEventDetails();
-    }
-    fetchInstructorsAndCategories();
-  }, [classId]);
+    fetchDetails();
+  }, []);
 
-  if (!isOpen) {
-    return null;
-  }
-
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic validation
-    if (!formData.name || !formData.instructor || !formData.category || !formData.slots || !formData.date || !formData.timeIn || !formData.timeOut) {
+    if (
+      !formData.name ||
+      !formData.instructor ||
+      !formData.category ||
+      !formData.slots ||
+      !formData.date ||
+      !formData.timeIn || // Updated validation
+      !formData.timeOut || // Updated validation
+      !formData.description
+    ) {
       toast.error("Please fill out all required fields.");
       return;
     }
@@ -75,157 +67,177 @@ const EditEventModal = ({ classId, onClose, isOpen }) => {
     setIsLoading(true); // Show loading state when submitting
 
     try {
-      await axios.put(`http://localhost:5007/api/admin/update/${classId}`, formData, {
+      await axios.post("http://localhost:5007/api/admin/add", formData, {
         withCredentials: true,
       });
-      toast.success("Event updated successfully.");
-      onClose();
+
+      setFormData({
+        name: "",
+        instructor: "",
+        slots: "",
+        date: "",
+        timeIn: "", // Reset timeIn
+        timeOut: "", // Reset timeOut
+        description: "",
+        category: "",
+      });
+      toast.success("Class successfully added!");
     } catch (error) {
-      console.error('Error updating event:', error);
-      toast.error("Failed to update the event.");
+      console.error("Error submitting form:", error);
+      toast.error("An error occurred while adding the class.");
     } finally {
       setIsLoading(false); // Stop loading once done
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-[99999]">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl overflow-y-auto max-h-[90vh]">
-        <ToastContainer />
-        <h2 className="text-2xl font-bold mb-6">Edit Event: {formData.name || "Unnamed Event"}</h2>
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
-          {/* Event Name */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Event Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              placeholder="Event Name"
-              required
-            />
-          </div>
+    <div className="p-8 max-w-4xl mx-auto bg-white border border-gray-300 rounded-lg shadow-md">
+      <ToastContainer />
+      <h2 className="text-2xl font-bold mb-6">Schedule a Class</h2>
+      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
+        {/* Class Name */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Class Name</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            placeholder="Class Name"
+          />
+        </div>
 
-          {/* Instructor */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Select/Enter Instructor</label>
-            <input
-              type="text"
-              name="instructor"
-              value={formData.instructor}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              placeholder="Enter Instructor"
-              list="instructor-list"
-              required
-            />
-            <datalist id="instructor-list">
-              {instructors.map((inst) => (
-                <option key={inst._id} value={inst.name}>
-                  {inst.name}
-                </option>
-              ))}
-            </datalist>
-          </div>
+        {/* Category */}
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            Select/Enter Category
+          </label>
+          <input
+            type="text"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            placeholder="Enter Category"
+            list="category-list"
+          />
+          <datalist id="category-list">
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </datalist>
+        </div>
 
-          {/* Slots */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Enter No. of Slots</label>
-            <input
-              type="number"
-              name="slots"
-              value={formData.slots}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              placeholder="No. of Slots"
-              required
-            />
-          </div>
+        {/* Instructor */}
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            Select/Enter Instructor
+          </label>
+          <input
+            type="text"
+            name="instructor"
+            value={formData.instructor}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            placeholder="Enter Instructor"
+            list="instructor-list"
+          />
+          <datalist id="instructor-list">
+            {instructors.map((instructor) => (
+              <option key={instructor} value={instructor}>
+                {instructor}
+              </option>
+            ))}
+          </datalist>
+        </div>
 
-          {/* Date */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Choose Date</label>
-            <input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
+        {/* Slots */}
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            Enter No. of Slots
+          </label>
+          <input
+            type="number"
+            name="slots"
+            value={formData.slots}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            placeholder="No. of Slots"
+          />
+        </div>
 
-          {/* Start Time */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Start Time</label>
-            <input
-              type="time"
-              name="timeIn"
-              value={formData.timeIn}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
+        {/* Date */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Choose Date</label>
+          <input
+            type="date"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
 
-          {/* End Time */}
-          <div>
-            <label className="block text-sm font-medium mb-2">End Time</label>
-            <input
-              type="time"
-              name="timeOut"
-              value={formData.timeOut}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
+        {/* Start Time */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Start Time</label>
+          <input
+            type="time"
+            name="timeIn" // Updated name to timeIn
+            value={formData.timeIn}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
 
-          {/* Category */}
-          <div className="col-span-2">
-            <label className="block text-sm  font-medium mb-2">Select/Enter Category</label>
-            <input
-              type="text"
-              name="category"
-              value={formData.category}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              placeholder="Enter Category"
-              list="category-list"
-              required
-            />
-            <datalist id="category-list">
-              {categories.map((cat) => (
-                <option key={cat._id} value={cat.name}>
-                  {cat.name}
-                </option>
-              ))}
-            </datalist>
-          </div>
+        {/* End Time */}
+        <div>
+          <label className="block text-sm font-medium mb-2">End Time</label>
+          <input
+            type="time"
+            name="timeOut" // Updated name to timeOut
+            value={formData.timeOut}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
 
-          {/* Buttons */}
-          <div className="col-span-2 flex justify-end space-x-4">
-            <button
-              type="button"
-              className="px-6 py-2 border border-gray-400 rounded-md text-gray-500"
-              onClick={onClose}
-            >
-              Discard
-            </button>
-            <button
-              type="submit"
-              className={`px-6 py-2 rounded-md text-white ${isLoading ? 'bg-gray-400' : 'bg-blue-600'}`}
-              disabled={isLoading}
-            >
-              {isLoading ? 'Saving...' : 'Save'}
-            </button>
-          </div>
-        </form>
-      </div>
+        {/* Description */}
+        <div className="col-span-2">
+          <label className="block text-sm font-medium mb-2">Description</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            placeholder="Enter additional message"
+          />
+        </div>
+
+        {/* Buttons */}
+        <div className="col-span-2 flex justify-end space-x-4">
+          <button
+            type="button"
+            className="px-6 py-2 border border-gray-400 rounded-md text-gray-500"
+          >
+            Discard
+          </button>
+          <button
+            type="submit"
+            className={`px-6 py-2 rounded-md text-white ${
+              isLoading ? "bg-gray-400" : "bg-blue-600"
+            }`}
+            disabled={isLoading}
+          >
+            {isLoading ? "Saving..." : "Save"}
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
 
-export default EditEventModal;
+export default AdminClassAdd;
