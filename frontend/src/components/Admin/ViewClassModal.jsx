@@ -44,7 +44,7 @@ function ViewClassModal({ isOpen, onClose, classItem }) {
         </div>
 
         {/* Scrollable Table for Applicants */}
-        <div className="mt-6 overflow-y-scroll max-h-48">
+        <div className="mt-6 overflow-y-scroll border-none max-h-48">
           <table className="min-w-full bg-white rounded-3xl ">
             <thead>
               <tr>
