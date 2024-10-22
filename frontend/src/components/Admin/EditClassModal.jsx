@@ -1,10 +1,17 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import PropTypes from "prop-types";
 import { ToastContainer, toast } from "react-toastify";
+import PropTypes from "prop-types";
 import "react-toastify/dist/ReactToastify.css";
 
-const EditClassModal = ({ isOpen, onClose, classData, onUpdate }) => {
+const EditClassModal = ({
+  isOpen,
+  onClose,
+  classData,
+  onUpdate,
+  categories,
+  instructors,
+}) => {
   const [updatedData, setUpdatedData] = useState(classData);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -19,8 +26,8 @@ const EditClassModal = ({ isOpen, onClose, classData, onUpdate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setIsLoading(true);
+
     try {
       const response = await axios.post(
         `http://localhost:5007/api/admin/update/${updatedData._id}`,
@@ -28,7 +35,7 @@ const EditClassModal = ({ isOpen, onClose, classData, onUpdate }) => {
         { withCredentials: true }
       );
       toast.success("Class successfully updated!");
-      onUpdate(response.data); // Call the onUpdate function to update state in the parent
+      onUpdate(response.data);
     } catch (error) {
       console.error("Error updating class:", error);
       toast.error("An error occurred while updating the class.");
@@ -46,6 +53,7 @@ const EditClassModal = ({ isOpen, onClose, classData, onUpdate }) => {
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg">
         <h2 className="text-2xl font-bold mb-4">Edit Class</h2>
         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+          {/* Class Name */}
           <div className="col-span-2">
             <label className="block text-sm font-medium mb-1">Class Name</label>
             <input
@@ -58,6 +66,49 @@ const EditClassModal = ({ isOpen, onClose, classData, onUpdate }) => {
             />
           </div>
 
+          {/* Category */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Category</label>
+            <input
+              type="text"
+              name="category"
+              value={updatedData.category}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              list="category-list"
+              required
+            />
+            <datalist id="category-list">
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </datalist>
+          </div>
+
+          {/* Instructor */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Instructor</label>
+            <input
+              type="text"
+              name="instructor"
+              value={updatedData.instructor}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              list="instructor-list"
+              required
+            />
+            <datalist id="instructor-list">
+              {instructors.map((instructor) => (
+                <option key={instructor} value={instructor}>
+                  {instructor}
+                </option>
+              ))}
+            </datalist>
+          </div>
+
+          {/* Date */}
           <div>
             <label className="block text-sm font-medium mb-1">Date</label>
             <input
@@ -70,6 +121,7 @@ const EditClassModal = ({ isOpen, onClose, classData, onUpdate }) => {
             />
           </div>
 
+          {/* Start Time */}
           <div>
             <label className="block text-sm font-medium mb-1">Start Time</label>
             <input
@@ -82,6 +134,7 @@ const EditClassModal = ({ isOpen, onClose, classData, onUpdate }) => {
             />
           </div>
 
+          {/* End Time */}
           <div>
             <label className="block text-sm font-medium mb-1">End Time</label>
             <input
@@ -94,6 +147,7 @@ const EditClassModal = ({ isOpen, onClose, classData, onUpdate }) => {
             />
           </div>
 
+          {/* Slots */}
           <div>
             <label className="block text-sm font-medium mb-1">Slots</label>
             <input
@@ -106,6 +160,21 @@ const EditClassModal = ({ isOpen, onClose, classData, onUpdate }) => {
             />
           </div>
 
+          {/* Description */}
+          <div className="col-span-2">
+            <label className="block text-sm font-medium mb-1">
+              Description
+            </label>
+            <textarea
+              name="description"
+              value={updatedData.description}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+
+          {/* Buttons */}
           <div className="col-span-2 flex justify-end space-x-4">
             <button
               type="button"
@@ -134,14 +203,19 @@ EditClassModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   classData: PropTypes.shape({
-    id: PropTypes.string.isRequired, // Assuming ID is a string, adjust if it's a number
+    _id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
+    instructor: PropTypes.string.isRequired,
+    slots: PropTypes.number.isRequired,
     date: PropTypes.string.isRequired,
     timeIn: PropTypes.string.isRequired,
     timeOut: PropTypes.string.isRequired,
-    slots: PropTypes.number.isRequired,
+    description: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
+  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+  instructors: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default EditClassModal;
