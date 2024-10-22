@@ -1,11 +1,13 @@
 import { useState } from "react";
-
+import axios from "axios";
+import { toast } from "sonner";
 const AdminAdd = () => {
   const [adminData, setAdminData] = useState({
     name: "",
     email: "",
     password: "",
     phoneNumber: "",
+    role: "admin",
   });
 
   const handleChange = (e) => {
@@ -13,10 +15,16 @@ const AdminAdd = () => {
     setAdminData({ ...adminData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // Handle form submission logic, e.g., sending data to the backend
-    console.log("Admin added:", adminData);
+    let response = await axios.post("http://localhost:5007/api/admin/addAdmin", adminData, {
+      withCredentials: true,
+    });
+    if(!response.status.ok){
+      toast.error(response.data.message);
+    }else{
+      toast.success(response.data.message);
+    }
   };
 
   return (
@@ -89,7 +97,7 @@ const AdminAdd = () => {
           </button>
           <button
             type="submit"
-            className="px-6 py-2 bg-blue-600 text-white rounded-md"
+            className="px-6 py-2 bg-customYellow text-black font-semibold text-base rounded-md"
           >
             Add Admin
           </button>

@@ -5,6 +5,8 @@ import {
   updateClass,
   deleteClass,
   getAllClasses,
+  addAdmin,
+  viewParticularClass,
 } from "../controllers/adminController.js";
 
 const router = express.Router();
@@ -17,5 +19,8 @@ router.delete("/delete/:id", protectAdmin, deleteClass);
 
 router.get("/all", protectAdmin, getAllClasses);
 
+router.post("/addAdmin", protectAdmin, addAdmin);
+
+router.get("/view/:id", protectAdmin, viewParticularClass);
 
 export default router;

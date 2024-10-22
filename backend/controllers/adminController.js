@@ -1,5 +1,7 @@
 import Class from "../models/classModel.js";
 import moment from "moment"; // Import moment here
+import userModel from "../models/userModel.js";
+import bcrypt from "bcryptjs";
 
 // Admin: Add a class
 export const addClass = async (req, res) => {
@@ -40,7 +42,7 @@ export const updateClass = async (req, res) => {
   const updates = req.body;
 
   try {
-    const updatedClass = await Class.findByIdAndUpdate(id, updates, {
+    const updatedClass = await Class.findByIdAndUpdate({"_id":id}, updates, {
       new: true,
     });
     res.status(200).json(updatedClass);
@@ -83,3 +85,35 @@ export const getAllClasses = async (req, res) => {
       .json({ message: "Failed to retrieve classes", error: error.message });
   }
 };
+
+export const addAdmin = async (req, res) => {
+ 
+  const adminData = req.body;  // Access the body directly
+
+  try {
+    let passwordHash = await bcrypt.hash(adminData.password, 12);
+    adminData.password = passwordHash;
+    let response = await userModel.create(adminData);
+    console.log(response);
+    res.status(200).json({ message: "Admin added successfully", response });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+    console.log(error);
+  }
+};
+
+export const viewParticularClass = async (req, res) => {
+  const {id} = req.params;
+  try {
+    let response = await Class.findById(id).populate({
+      path: 'applicants',
+      select: 'name email phoneNumber',
+      options: { sort: { createdAt: -1 } }
+    });
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({message: error.message});
+  }
+}
+
+

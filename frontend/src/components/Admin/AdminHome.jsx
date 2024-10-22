@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import EditEventModal from "./EditEventModal";
+import ViewClassModal from "./ViewClassModal";
 
 const AdminHome = ({ onViewAllClick }) => {
   const [upcomingArray, setUpcomingArray] = useState([]);
@@ -46,6 +47,11 @@ const AdminHome = ({ onViewAllClick }) => {
     // Optionally re-fetch upcoming and previous classes to reflect updates
   };
 
+  let [viewClass, setViewClass] = useState(null);
+  const handleViewDetails = (_id) => {
+    setIsModalOpen(true);
+    setViewClass(_id);
+  }
   return (
     <div className="space-y-3">
       {/* First Container for Upcoming Classes */}
@@ -68,12 +74,21 @@ const AdminHome = ({ onViewAllClick }) => {
                 <div className="div-content-item flex flex-row gap-2">
                   <span className="text-sm text-white">Booked:</span> <span className="text-sm text-white/80">{classItem.applicants.length}</span>
                 </div>
+                <div className="div-main-button flex flex-row gap-2">
                 <button
                   className="text-sm bg-customYellow p-2 rounded-lg hover:font-semibold mt-5 text-black"
                   onClick={() => handleEditClick(classItem)}
                 >
                   Edit Event
                 </button>
+                <button
+                  className="text-sm bg-customYellow p-2 rounded-lg hover:font-semibold mt-5 text-black"
+                  onClick={() => handleViewDetails(classItem._id)}
+                >
+                  View Details
+                </button>
+                </div>
+               
               </div>
             </div>
           ))}
@@ -109,7 +124,7 @@ const AdminHome = ({ onViewAllClick }) => {
                 </div>
                 <button
                   className="text-sm bg-customYellow p-2 rounded-lg hover:font-semibold mt-5 text-black"
-                  onClick={() => handleEditClick(classItem)}
+                  onClick={() => handleViewDetails(classItem._id)}
                 >
                   View Details
                 </button>
@@ -132,6 +147,11 @@ const AdminHome = ({ onViewAllClick }) => {
         onClose={() => setIsModalOpen(false)}
         classItem={selectedClass}
         onSave={handleSave}
+      />
+      <ViewClassModal
+        isOpen={viewClass}
+        onClose={() => setViewClass(null)}
+        classItem={viewClass}
       />
     </div>
   );
