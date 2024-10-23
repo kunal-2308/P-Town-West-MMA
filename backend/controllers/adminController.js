@@ -130,3 +130,16 @@ export const deleteAdmin = async(req,res)=>{
   await userModel.findByIdAndDelete(id);
   res.status(200).json({message: "Admin deleted successfully"});
 }
+
+export const updatePassword = async(req,res)=>{
+  try {
+    let id = req.params.id;
+    let password = req.body.password;
+
+    let hashedPassword = await bcrypt.hash(password,12);
+    let response = await userModel.findByIdAndUpdate(id,{password:hashedPassword});
+    res.status(200).json({message: "Password updated successfully",response});
+  } catch (error) {
+    res.status(500).json({message: error.message});
+  }
+}

@@ -9,6 +9,7 @@ import {
   viewParticularClass,
   getAllAdminList,
   deleteAdmin,
+  updatePassword,
 } from "../controllers/adminController.js";
 
 const router = express.Router();
@@ -28,4 +29,6 @@ router.get("/view/:id", protectAdmin, viewParticularClass);
 router.get("/allAdmin", protectAdmin, getAllAdminList);
 
 router.delete("/deleteAdmin/:id", protectAdmin, deleteAdmin);
+
+router.put('/update/password/:id',protectAdmin,updatePassword);
 export default router;
