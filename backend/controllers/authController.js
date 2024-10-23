@@ -73,7 +73,6 @@ export const login = async (req, res) => {
 
     // Set cookies for token, userName, and role
     res.cookie("jwt_token", token);
-
     // Send back the user details along with the booked classes
     res.status(200).json({
       token,

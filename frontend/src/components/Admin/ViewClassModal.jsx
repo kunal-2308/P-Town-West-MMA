@@ -5,7 +5,7 @@ function ViewClassModal({ isOpen, onClose, classItem }) {
   const [classDetails, setClassDetails] = useState(null);
 
   useEffect(() => {
-    if (classItem && typeof classItem === 'object') { // Check if classItem is an object
+    if (classItem && typeof classItem === 'object') {
       setClassDetails(classItem);
     } else if (classItem && typeof classItem === 'string') {
       const fetchClassDetails = async () => {
@@ -33,7 +33,7 @@ function ViewClassModal({ isOpen, onClose, classItem }) {
           &times;
         </button>
         <h2 className="text-xl font-bold mb-4">Class Details</h2>
-        
+
         <div className="card">
           <p><strong>Name:</strong> {classDetails.name}</p>
           <p><strong>Date:</strong> {new Date(classDetails.date).toLocaleDateString()}</p>
@@ -45,25 +45,30 @@ function ViewClassModal({ isOpen, onClose, classItem }) {
 
         <div className="mt-6 overflow-y-scroll border-none max-h-48">
           <table className="min-w-full bg-white rounded-3xl">
-            <thead>
+            <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
               <tr>
-                <th className="py-2 px-4 border-b">Name</th>
-                <th className="py-2 px-4 border-b">Email</th>
-                <th className="py-2 px-4 border-b">Phone</th>
+                <th className="py-3 px-6 text-left">Name</th>
+                <th className="py-3 px-6 text-left">Email</th>
+                <th className="py-3 px-6 text-left">Phone</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-gray-700 text-sm">
               {classDetails.applicants && classDetails.applicants.length > 0 ? (
                 classDetails.applicants.map((applicant, index) => (
-                  <tr key={index} className="text-center">
-                    <td className="py-2 px-4 border-b">{applicant.name}</td>
-                    <td className="py-2 px-4 border-b">{applicant.email}</td>
-                    <td className="py-2 px-4 border-b">{applicant.phoneNumber}</td>
+                  <tr
+                    key={applicant._id} // Use applicant._id as the key to ensure uniqueness
+                    className={`border-b border-gray-200 hover:bg-gray-100 ${
+                      index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                    }`}
+                  >
+                    <td className="py-3 px-6 text-left whitespace-nowrap">{applicant.name}</td>
+                    <td className="py-3 px-6 text-left text-black">{applicant.email}</td>
+                    <td className="py-3 px-6 text-left">{applicant.phoneNumber}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="3" className="py-4 text-center">No applicants</td>
+                  <td colSpan="3" className="py-4 text-center text-gray-500">No applicants</td>
                 </tr>
               )}
             </tbody>

@@ -85,7 +85,7 @@ const Login = () => {
         Cookies.set("jwt_token", data.token, { secure: true });
         Cookies.set("userName", data.name, { secure: true });
         Cookies.set("email", formData.email, { secure: true });
-
+        Cookies.set("id", data.userId, { secure: true });
         // Show success toast
         toast.success("Login successful!", { autoClose: 2000 });
 

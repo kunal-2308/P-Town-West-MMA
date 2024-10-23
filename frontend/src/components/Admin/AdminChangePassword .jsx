@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { useParams } from 'react-router-dom';
 
 const AdminChangePassword = () => {
+  const {id} = useParams();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -16,7 +18,7 @@ const AdminChangePassword = () => {
     }
 
     try {
-      await axios.put('http://localhost:5007/api/admin/update/password/671943911b2ee396101ef0bb', {
+      await axios.put(`http://localhost:5007/api/admin/update/password/${id}`, {
         password,
       }, {
         withCredentials: true,
