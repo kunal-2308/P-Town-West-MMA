@@ -7,6 +7,8 @@ const AdminChangePassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [adminId, setAdminId] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     const token = Cookies.get("jwt_token");
@@ -60,7 +62,7 @@ const AdminChangePassword = () => {
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
       <h2 className="text-2xl font-bold mb-6 text-center">Change Password</h2>
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
+        <div className="mb-4 relative">
           <label
             className="block text-gray-700 text-sm font-semibold mb-2"
             htmlFor="password"
@@ -68,16 +70,23 @@ const AdminChangePassword = () => {
             New Password
           </label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="border border-gray-300 rounded-lg w-full py-2 px-4"
             required
           />
+          <button
+            type="button"
+            className="absolute right-3 top-10"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "🙈" : "👁️"}
+          </button>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-6 relative">
           <label
             className="block text-gray-700 text-sm font-semibold mb-2"
             htmlFor="confirmPassword"
@@ -85,13 +94,20 @@ const AdminChangePassword = () => {
             Confirm Password
           </label>
           <input
-            type="password"
+            type={showConfirmPassword ? "text" : "password"}
             id="confirmPassword"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             className="border border-gray-300 rounded-lg w-full py-2 px-4"
             required
           />
+          <button
+            type="button"
+            className="absolute right-3 top-10"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
+            {showConfirmPassword ? "🙈" : "👁️"}
+          </button>
         </div>
 
         <button
