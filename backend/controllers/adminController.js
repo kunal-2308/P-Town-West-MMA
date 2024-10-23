@@ -116,4 +116,17 @@ export const viewParticularClass = async (req, res) => {
   }
 }
 
+export const getAllAdminList = async(req,res)=>{
+  try {
+    let response = await userModel.find({role:'admin'});
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({message: error.message});
+  }
+}
 
+export const deleteAdmin = async(req,res)=>{
+  const {id} = req.params;
+  await userModel.findByIdAndDelete(id);
+  res.status(200).json({message: "Admin deleted successfully"});
+}

@@ -5,7 +5,9 @@ function ViewClassModal({ isOpen, onClose, classItem }) {
   const [classDetails, setClassDetails] = useState(null);
 
   useEffect(() => {
-    if (classItem && typeof classItem === 'string') {
+    if (classItem && typeof classItem === 'object') { // Check if classItem is an object
+      setClassDetails(classItem);
+    } else if (classItem && typeof classItem === 'string') {
       const fetchClassDetails = async () => {
         try {
           const response = await axios.get(`http://localhost:5007/api/admin/view/${classItem}`, {
@@ -17,8 +19,6 @@ function ViewClassModal({ isOpen, onClose, classItem }) {
         }
       };
       fetchClassDetails();
-    } else {
-      setClassDetails(classItem);
     }
   }, [classItem]);
 
@@ -36,16 +36,15 @@ function ViewClassModal({ isOpen, onClose, classItem }) {
         
         <div className="card">
           <p><strong>Name:</strong> {classDetails.name}</p>
-          <p><strong>Date:</strong> {classDetails.date}</p>
-          <p><strong>Time:</strong> {classDetails.time}</p>
+          <p><strong>Date:</strong> {new Date(classDetails.date).toLocaleDateString()}</p>
+          <p><strong>Time:</strong> {classDetails.timeIn} - {classDetails.timeOut}</p>
           <p><strong>Instructor:</strong> {classDetails.instructor}</p>
           <p><strong>Slots:</strong> {classDetails.slots}</p>
           <p><strong>Category:</strong> {classDetails.category}</p>
         </div>
 
-        {/* Scrollable Table for Applicants */}
         <div className="mt-6 overflow-y-scroll border-none max-h-48">
-          <table className="min-w-full bg-white rounded-3xl ">
+          <table className="min-w-full bg-white rounded-3xl">
             <thead>
               <tr>
                 <th className="py-2 px-4 border-b">Name</th>
