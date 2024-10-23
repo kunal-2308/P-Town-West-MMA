@@ -1,12 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { toast } from 'sonner';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { toast } from "sonner";
+import Cookies from "js-cookie";
 
 const AdminChangePassword = () => {
-  const {id} = useParams();
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [adminId, setAdminId] = useState("");
+
+  useEffect(() => {
+    const token = Cookies.get("jwt_token");
+
+    if (token) {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+      const decoded = JSON.parse(jsonPayload);
+      setAdminId(decoded.id);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,15 +37,19 @@ const AdminChangePassword = () => {
     }
 
     try {
-      await axios.put(`http://localhost:5007/api/admin/update/password/${id}`, {
-        password,
-      }, {
-        withCredentials: true,
-      });
+      await axios.put(
+        `http://localhost:5007/api/admin/update/password/${adminId}`,
+        {
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       toast.success("Password updated successfully!");
-      setPassword('');
-      setConfirmPassword('');
+      setPassword("");
+      setConfirmPassword("");
     } catch (error) {
       console.error("Error updating password:", error);
       toast.error("Failed to update password.");
@@ -38,7 +61,10 @@ const AdminChangePassword = () => {
       <h2 className="text-2xl font-bold mb-6 text-center">Change Password</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="password">
+          <label
+            className="block text-gray-700 text-sm font-semibold mb-2"
+            htmlFor="password"
+          >
             New Password
           </label>
           <input
@@ -52,7 +78,10 @@ const AdminChangePassword = () => {
         </div>
 
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="confirmPassword">
+          <label
+            className="block text-gray-700 text-sm font-semibold mb-2"
+            htmlFor="confirmPassword"
+          >
             Confirm Password
           </label>
           <input
