@@ -7,8 +7,8 @@ const EditEventModal = ({
   classId,
   onClose,
   isOpen,
-  categories,
-  instructors,
+  categories = [], // Ensure categories is initialized as an empty array
+  instructors = [], // Ensure instructors is initialized as an empty array
 }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -230,7 +230,8 @@ const EditEventModal = ({
               name="category"
               value={formData.category}
               onChange={handleInputChange}
-            ></input>
+              list="category-list"
+            />
             <datalist id="category-list">
               {categories.map((cat) => (
                 <option key={cat._id} value={cat.name}>

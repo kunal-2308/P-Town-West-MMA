@@ -7,7 +7,7 @@ const AdminUpcoming = () => {
   const [upcomingArray, setUpcomingArray] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [selectedClass, setSelectedClass] = useState(null);
+  const [selectedClassId, setSelectedClassId] = useState(null);
   const [viewClass, setViewClass] = useState(null);
 
   useEffect(() => {
@@ -25,9 +25,8 @@ const AdminUpcoming = () => {
     getUpcomingClasses();
   }, []);
 
-  const handleEditClick = (classItem) => {
-    console.log("Edit clicked for:", classItem);
-    setSelectedClass(classItem);
+  const handleEditClick = (classId) => {
+    setSelectedClassId(classId); // Set only classId
     if (!isViewModalOpen) {
       setIsEditModalOpen(true);
     }
@@ -43,7 +42,7 @@ const AdminUpcoming = () => {
 
   const closeEditModal = () => {
     setIsEditModalOpen(false);
-    setSelectedClass(null);
+    setSelectedClassId(null);
   };
 
   const closeViewModal = () => {
@@ -86,10 +85,6 @@ const AdminUpcoming = () => {
                 <span className="text-sm text-white/80">{classItem.instructor}</span>
               </div>
               <div className="div-content-item flex flex-row gap-2">
-                <span className="text-sm text-white">Description:</span>
-                <span className="text-sm text-white/80">{classItem.description}</span>
-              </div>
-              <div className="div-content-item flex flex-row gap-2">
                 <span className="text-sm text-white">Category:</span>
                 <span className="text-sm text-white/80">{classItem.category}</span>
               </div>
@@ -97,7 +92,7 @@ const AdminUpcoming = () => {
                 <button
                   type="button" // Added type="button"
                   className="text-sm bg-customYellow p-2 rounded-lg hover:font-semibold text-black"
-                  onClick={() => handleEditClick(classItem)}
+                  onClick={() => handleEditClick(classItem._id)} // Pass only classId
                 >
                   Edit Event
                 </button>
@@ -118,7 +113,7 @@ const AdminUpcoming = () => {
         <EditEventModal
           isOpen={isEditModalOpen}
           onClose={closeEditModal}
-          classItem={selectedClass}
+          classId={selectedClassId} // Pass only classId
           onSave={handleSave}
         />
       )}

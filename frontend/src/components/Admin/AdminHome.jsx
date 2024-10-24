@@ -53,6 +53,14 @@ const AdminHome = ({ onViewAllClick }) => {
     fetchCategoriesAndInstructors();
   }, []);
 
+  // Function to convert 24-hour format to 12-hour format with AM/PM
+  const formatTimeTo12Hour = (time) => {
+    const [hours, minutes] = time.split(":");
+    const period = hours >= 12 ? "PM" : "AM";
+    const adjustedHours = hours % 12 || 12; // Convert '0' or '12' to '12' for 12-hour format
+    return `${adjustedHours}:${minutes} ${period}`;
+  };
+
   const handleEditClick = (classId) => {
     setSelectedClassId(classId);
     setIsEditModalOpen(true);
@@ -83,7 +91,9 @@ const AdminHome = ({ onViewAllClick }) => {
                 </div>
                 <div className="flex flex-row gap-2">
                   <span className="text-sm text-white">Time:</span>
-                  <span className="text-sm text-white/80">{classItem.timeIn} - {classItem.timeOut}</span>
+                  <span className="text-sm text-white/80">
+                    {formatTimeTo12Hour(classItem.timeIn)} - {formatTimeTo12Hour(classItem.timeOut)}
+                  </span>
                 </div>
                 <div className="flex flex-row gap-2">
                   <span className="text-sm text-white">Slots:</span>
@@ -136,7 +146,9 @@ const AdminHome = ({ onViewAllClick }) => {
                   </div>
                   <div className="flex flex-row gap-2">
                     <span className="text-sm text-white">Time:</span>
-                    <span className="text-sm text-white/80">{classItem.timeIn} - {classItem.timeOut}</span>
+                    <span className="text-sm text-white/80">
+                      {formatTimeTo12Hour(classItem.timeIn)} - {formatTimeTo12Hour(classItem.timeOut)}
+                    </span>
                   </div>
                   <div className="flex flex-row gap-2">
                     <span className="text-sm text-white">Slots:</span>
