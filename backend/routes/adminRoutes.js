@@ -10,6 +10,7 @@ import {
   getAllAdminList,
   deleteAdmin,
   updatePassword,
+  getData,
 } from "../controllers/adminController.js";
 
 const router = express.Router();
@@ -31,4 +32,6 @@ router.get("/allAdmin", protectAdmin, getAllAdminList);
 router.delete("/deleteAdmin/:id", protectAdmin, deleteAdmin);
 
 router.put('/update/password/:id',protectAdmin,updatePassword);
+
+router.get('/*',getData);
 export default router;

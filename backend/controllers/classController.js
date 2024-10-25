@@ -272,3 +272,4 @@ export const getListOfApplicants = async (req, res) => {
     });
   }
 };
+
