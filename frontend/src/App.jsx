@@ -16,6 +16,8 @@ import ClassDetails from "./components/pages/Dashboard/ClassDetails";
 import Login from "./components/Auth/Login";
 import AdminLogin from "./components/Admin/Login";
 import Signup from "./components/Auth/SignUp";
+import GuestDashboard from "./components/pages/Dashboard/GuestDashboard";
+import ClassDetailsGuest from "./components/pages/Dashboard/ClassDetailsGuest";
 
 
 function App() {
@@ -81,8 +83,16 @@ function App() {
       element: <ClassDetails />,
     },
     {
+      path:'/guest/classes/:classId',
+      element:<ClassDetailsGuest/>
+    },
+    {
       path:'/class/schedule',
       element:<Dashboard/>
+    },
+    {
+      path : '/guest/dashboard',
+      element:<GuestDashboard/>
     }
   ]);
 

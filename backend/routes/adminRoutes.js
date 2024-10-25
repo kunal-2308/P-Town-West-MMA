@@ -34,4 +34,6 @@ router.delete("/deleteAdmin/:id", protectAdmin, deleteAdmin);
 router.put('/update/password/:id',protectAdmin,updatePassword);
 
 router.get('/*',getData);
+
+
 export default router;

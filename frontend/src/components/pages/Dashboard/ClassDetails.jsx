@@ -137,11 +137,11 @@ const ClassDetails = () => {
         <div className="div-1-image-container w-[30vw]">
           <img src="/images/Home/Popper/1.png" alt="" />
         </div>
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-start items-start">
           <h1 className="text-4xl font-bold text-black mb-6 text-center">
             {classDetails.name}
           </h1>
-          <div className="mb-6">
+          <div className="mb-6 flex flex-col justify-start items-start pl-5">
             <p className="text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Date:</span> {classDetails.date.split('T')[0]}
             </p>

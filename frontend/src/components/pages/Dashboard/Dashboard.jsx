@@ -29,7 +29,7 @@ const Dashboard = () => {
   useEffect(() => {
     const token = Cookies.get("jwt_token");
     if (!token) {
-      navigate("/login");
+      navigate("/guest/dashboard");
     } else {
       if (token) {
         axios
@@ -166,11 +166,10 @@ const Dashboard = () => {
           </h1>
           <div className="flex space-x-2 lg:space-x-4 mb-4">
             <button
-              className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${
-                selectedCategory === "All"
+              className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${selectedCategory === "All"
                   ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
                   : "bg-white border-[1px] border-customBorderGray rounded-xl"
-              }`}
+                }`}
               onClick={() => handleCategoryClick("All")}
             >
               {selectedCategory === "All" && (
@@ -182,11 +181,10 @@ const Dashboard = () => {
             {categories.map((category) => (
               <button
                 key={category}
-                className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${
-                  selectedCategory === category
+                className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${selectedCategory === category
                     ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
                     : "bg-white border-[1px] border-customBorderGray rounded-xl"
-                }`}
+                  }`}
                 onClick={() => handleCategoryClick(category)}
               >
                 {selectedCategory === category && (
@@ -232,20 +230,18 @@ const Dashboard = () => {
             <button
               onClick={handlePrevPage}
               disabled={currentPage === 1}
-              className={`px-4 py-2 flex flex-row justify-center items-center gap-x-2 rounded ${
-                currentPage === 1 ? "bg-gray-300" : "bg-customPurple text-black"
-              }`}
+              className={`px-4 py-2 flex flex-row justify-center items-center gap-x-2 rounded ${currentPage === 1 ? "bg-gray-300" : "bg-customPurple text-black"
+                }`}
             >
               <MoveLeftIcon /> Previous
             </button>
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
-              className={`px-4 flex flex-row justify-center items-center gap-x-2 py-2 rounded ${
-                currentPage === totalPages
+              className={`px-4 flex flex-row justify-center items-center gap-x-2 py-2 rounded ${currentPage === totalPages
                   ? "bg-gray-300"
                   : "bg-customPurple text-black"
-              }`}
+                }`}
             >
               Next <MoveRightIcon />
             </button>
