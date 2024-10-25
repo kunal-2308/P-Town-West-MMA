@@ -17,7 +17,7 @@ const AdminAdd = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    let response = await axios.post("http://localhost:5007/api/admin/addAdmin", adminData, {
+    let response = await axios.post("https://p-town-west-mma-api.vercel.app/api/admin/addAdmin", adminData, {
       withCredentials: true,
     });
     if(!response.status.ok){
