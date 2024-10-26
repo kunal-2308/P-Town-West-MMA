@@ -7,6 +7,7 @@ import { MoveRightIcon } from "lucide-react";
 import { IoClose } from "react-icons/io5";
 import { toast } from "sonner";
 import axios from "axios";
+import { FaSpinner } from "react-icons/fa";
 
 function ClassDetailsGuest() {
     const { classId } = useParams();
@@ -43,7 +44,8 @@ function ClassDetailsGuest() {
     
       if (loading) {
         return (
-          <div className="flex justify-center items-center h-screen">
+          <div className="flex justify-center items-center h-screen gap-x-3">
+            <FaSpinner className="animate-spin"/>
             <p className="text-xl font-semibold text-gray-600">
               Loading class details...
             </p>

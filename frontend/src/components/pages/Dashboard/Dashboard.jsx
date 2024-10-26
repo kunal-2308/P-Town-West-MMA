@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Modal from "../../../components/shared/Modal"; // Import the Modal component
-import { FaUserAlt } from "react-icons/fa";
+import { FaSpinner, FaUserAlt } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
 import { MoveLeftIcon, MoveRightIcon } from "lucide-react";
 
@@ -15,7 +15,7 @@ const Dashboard = () => {
   const [userName, setUserName] = useState("");
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
-
+  const [loading, setLoading] = useState(true);
   // Modal states
   const [showModal, setShowModal] = useState(false);
   const [allBookedClasses, setAllBookedClasses] = useState([]);
@@ -32,6 +32,7 @@ const Dashboard = () => {
       navigate("/guest/dashboard");
     } else {
       if (token) {
+        // setLoading(true);
         axios
           .get("http://localhost:5007/api/classes/all-classes", {
             withCredentials: true,
@@ -58,11 +59,13 @@ const Dashboard = () => {
             setUpcomingClasses(bookedClasses);
 
             // Set the user name
-            setUserName(userDetails.name); // Assuming 'name' is the field in user details
+            setUserName(userDetails.name);
+             // Assuming 'name' is the field in user details
           })
           .catch((error) => {
             console.error("Error fetching user details:", error);
           });
+          // setLoading(false);
       }
     }
   }, [navigate]);
@@ -158,7 +161,7 @@ const Dashboard = () => {
       </div>
 
       {/* Main content */}
-      <div className="flex flex-col lg:flex-row lg:h-screen justify-between mt-36 px-6 lg:mt-20">
+      {loading ? <div className="flex flex-col lg:flex-row lg:h-screen justify-between mt-36 px-6 lg:mt-20">
         {/* Left Section - All Classes */}
         <div className="w-full lg:w-3/4 mb-8 lg:mb-0 pl-10 pr-10">
           <h1 className="text-2xl lg:text-2xl font-medium mb-4">
@@ -167,8 +170,8 @@ const Dashboard = () => {
           <div className="flex space-x-2 lg:space-x-4 mb-4">
             <button
               className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${selectedCategory === "All"
-                  ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
-                  : "bg-white border-[1px] border-customBorderGray rounded-xl"
+                ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
+                : "bg-white border-[1px] border-customBorderGray rounded-xl"
                 }`}
               onClick={() => handleCategoryClick("All")}
             >
@@ -182,8 +185,8 @@ const Dashboard = () => {
               <button
                 key={category}
                 className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${selectedCategory === category
-                    ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
-                    : "bg-white border-[1px] border-customBorderGray rounded-xl"
+                  ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
+                  : "bg-white border-[1px] border-customBorderGray rounded-xl"
                   }`}
                 onClick={() => handleCategoryClick(category)}
               >
@@ -239,8 +242,8 @@ const Dashboard = () => {
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
               className={`px-4 flex flex-row justify-center items-center gap-x-2 py-2 rounded ${currentPage === totalPages
-                  ? "bg-gray-300"
-                  : "bg-customPurple text-black"
+                ? "bg-gray-300"
+                : "bg-customPurple text-black"
                 }`}
             >
               Next <MoveRightIcon />
@@ -319,7 +322,13 @@ const Dashboard = () => {
             Logout
           </button>
         </div>
-      </div>
+      </div> : <div className="flex justify-center items-center h-screen gap-x-3">
+        <FaSpinner className="animate-spin" />
+        <p className="text-xl font-semibold text-gray-600">
+          Loading class details...
+        </p>
+      </div>}
+
 
       {/* Modal for showing all booked classes */}
       {showModal && (

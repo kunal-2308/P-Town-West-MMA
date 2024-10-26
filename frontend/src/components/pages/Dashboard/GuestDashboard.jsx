@@ -233,7 +233,7 @@ function GuestDashboard() {
                 </div>
 
                 {/* Right Section - User Info and Class Schedule */}
-                <div className="w-full lg:w-1/4 lg:pl-4">
+                <div className="w-full lg:w-1/4 lg:pl-4 mt-28">
                     {/* details Card */}
                     <div className="div-details-card flex flex-col gap-4 justify-center items-center bg-black p-5 rounded-3xl">
                         <div className="div-user-info-container flex flex-row justify-start items-center gap-x-2 w-full pl-5">
@@ -298,7 +298,7 @@ function GuestDashboard() {
                     {/* Logout Button */}
                     <button
                         onClick={handleLogin}
-                        className="mt-3 w-full bg-green-600 text-white p-2 rounded-md hover:bg-green-800 transition duration-200 hidden sm:block"
+                        className="mt-3 w-full bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition duration-200 hidden sm:block"
                     >
                         Login
                     </button>
