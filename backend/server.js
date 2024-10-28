@@ -16,7 +16,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "https://p-town-west-mma.vercel.app",
+    origin: "*",
     credentials: true,
   })
 );
