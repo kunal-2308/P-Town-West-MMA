@@ -13,7 +13,7 @@ const AdminUpcoming = () => {
   useEffect(() => {
     const getUpcomingClasses = async () => {
       try {
-        let res = await axios.get(`http://localhost:5007/api/classes/admin/upcoming`, {
+        let res = await axios.get(`https://p-town-west-mma-api.vercel.app/api/classes/admin/upcoming`, {
           withCredentials: true,
         });
         setUpcomingArray(res.data.upcomingClasses);

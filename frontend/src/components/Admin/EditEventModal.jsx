@@ -26,7 +26,7 @@ const EditEventModal = ({
     const fetchEventDetails = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5007/api/classes/${classId}`,
+          `https://p-town-west-mma-api.vercel.app/api/classes/${classId}`,
           {
             withCredentials: true,
           }
@@ -101,7 +101,7 @@ const EditEventModal = ({
 
     try {
       await axios.put(
-        `http://localhost:5007/api/admin/update/${classId}`,
+        `https://p-town-west-mma-api.vercel.app/api/admin/update/${classId}`,
         formData,
         {
           withCredentials: true,

@@ -29,7 +29,7 @@ function GuestDashboard() {
   
     useEffect(() => {
           axios
-            .get("http://localhost:5007/api/classes/guest/classes/list")
+            .get("https://p-town-west-mma-api.vercel.app/api/classes/guest/classes/list")
             .then((response) => {
               const classes = response.data;
               setAllClasses(classes);
@@ -71,12 +71,6 @@ function GuestDashboard() {
       startIndex + itemsPerPage
     );
   
-    const handleLogout = () => {
-      Cookies.remove("jwt_token");
-      Cookies.remove("userName");
-      Cookies.remove("email");
-      navigate("/login");
-    };
   
     // Pagination handlers
     const handleNextPage = () => {

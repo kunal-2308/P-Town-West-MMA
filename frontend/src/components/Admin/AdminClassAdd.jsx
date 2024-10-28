@@ -23,7 +23,7 @@ const AdminClassAdd = () => {
     const fetchDetails = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5007/api/admin/all",
+          "https://p-town-west-mma-api.vercel.app/api/admin/all",
           {
             withCredentials: true,
           }

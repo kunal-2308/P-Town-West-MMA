@@ -30,7 +30,7 @@ const EditClassModal = ({
 
     try {
       const response = await axios.post(
-        `http://localhost:5007/api/admin/update/${updatedData._id}`,
+        `https://p-town-west-mma-api.vercel.app/api/admin/update/${updatedData._id}`,
         updatedData,
         { withCredentials: true }
       );

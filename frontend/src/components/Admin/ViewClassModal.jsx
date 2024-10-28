@@ -16,7 +16,7 @@ function ViewClassModal({ isOpen, onClose, classItem }) {
   useEffect(() => {
     let getData = async () => {
       try {
-        let response = await axios.get(`http://localhost:5007/api/admin/view/${classItem._id}`, {
+        let response = await axios.get(`https://p-town-west-mma-api.vercel.app/api/admin/view/${classItem._id}`, {
           withCredentials: true
         });
         setClassDetails(response.data);

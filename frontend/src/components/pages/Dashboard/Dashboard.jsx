@@ -8,6 +8,9 @@ import Modal from "../../../components/shared/Modal"; // Import the Modal compon
 import { FaSpinner, FaUserAlt } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
 import { MoveLeftIcon, MoveRightIcon } from "lucide-react";
+import { MdOutlineCalendarMonth } from "react-icons/md";
+import { FaRegClock } from "react-icons/fa6";
+import { Button } from "../../ui/button";
 
 const Dashboard = () => {
   const [allClasses, setAllClasses] = useState([]);
@@ -34,7 +37,7 @@ const Dashboard = () => {
       if (token) {
         // setLoading(true);
         axios
-          .get("http://localhost:5007/api/classes/all-classes", {
+          .get("https://p-town-west-mma-api.vercel.app/api/classes/all-classes", {
             withCredentials: true,
           })
           .then((response) => {
@@ -50,7 +53,7 @@ const Dashboard = () => {
           });
 
         axios
-          .get("http://localhost:5007/api/auth/user/details", {
+          .get("https://p-town-west-mma-api.vercel.app/api/auth/user/details", {
             withCredentials: true,
           })
           .then((response) => {
@@ -60,12 +63,12 @@ const Dashboard = () => {
 
             // Set the user name
             setUserName(userDetails.name);
-             // Assuming 'name' is the field in user details
+            // Assuming 'name' is the field in user details
           })
           .catch((error) => {
             console.error("Error fetching user details:", error);
           });
-          // setLoading(false);
+        // setLoading(false);
       }
     }
   }, [navigate]);
@@ -150,6 +153,13 @@ const Dashboard = () => {
     return `${day}/${month}/${year}`;
   };
 
+  function convertTo12HourFormat(time24) {
+    const [hours, minutes] = time24.split(":").map(Number);
+    const suffix = hours >= 12 ? "PM" : "AM";
+    const hours12 = ((hours + 11) % 12) + 1; // Converts 24-hour to 12-hour
+    return `${hours12}:${minutes.toString().padStart(2, "0")} ${suffix}`;
+  }
+
   return (
     <>
       <Navbar />
@@ -199,37 +209,49 @@ const Dashboard = () => {
           </div>
 
           {/* Classes Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-6 overflow-hidden p-5">
             {currentClasses.map((cls) => (
               <div
                 key={cls._id}
                 onClick={() => handleClick(cls._id)}
-                className="bg-black  text-white p-7 rounded-3xl shadow-md flex hover:cursor-pointer flex-col justify-start items-start"
+                className="bg-white text-black rounded-3xl shadow-md flex hover:cursor-pointer flex-col justify-start items-start"
               >
-                <div className="div-1 w-full">
-                  <h2 className="text-2xl font-semibold mb-2 text-customYellow">
-                    {cls.name}
-                  </h2>
+                <div className="div-1-container flex justify-between items-center w-full bg-black text-white h-20 rounded-t-3xl p-3">
+                  <div className="div-1-cont flex flex-col justify-start items-start pl-2">
+                    <span className="text-2xl font-medium">{cls.category}</span>
+                    <span className="text-xs font-medium">{cls.instructor}</span>
+                  </div>
+                  <div className="div-2-cont flex flex-col justify-start items-start pr-2">
+                    <div className="badge bg-customYellow text-black rounded-full flex justify-center items-center p-1 px-2">
+                      <span className="text-[12px] font-semibold">{cls.slots == cls.bookedSlots ? "Slots Full" : `Available: ${cls.slots - cls.bookedSlots}`}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="div-2 flex flex-col w-full justify-start items-start">
-                  <span>Date: {formatDate(cls.date)}</span>
-                  <span>
-                    Time: {cls.timeIn} - {cls.timeOut}
-                  </span>
-                  <span>Slots: {cls.slots}</span>
+                <div className="div-content-section bg-white text-black mt-3 flex justify-between items-center w-full px-4">
+                  <div className="div-content-1 flex flex-row justify-start items-center gap-x-2">
+                    <MdOutlineCalendarMonth className="text-sm" />
+                    <span className="text-xs font-semibold">{formatDate(cls.date)}</span>
+                  </div>
+                  <div className="div-time-section flex flex-row justify-start items-center gap-x-2">
+                    <FaRegClock className="text-sm" />
+                    <span className="text-xs font-semibold">
+                      {convertTo12HourFormat(cls.timeIn)} - {convertTo12HourFormat(cls.timeOut)}
+                    </span>
+                  </div>
                 </div>
-
-                <div className="w-full">
-                  <button className="mt-6 p-2 rounded-lg bg-customYellow text-center w-full text-black/80 font-semibold">
-                    Book Now
-                  </button>
+                <div className="div-info-section my-4 px-4 flex flex-col justify-start items-start">
+                  <span className="text-sm font-medium">Please carry following essentials</span>
+                  <span className="text-xs font-semibold">Gloves, Water Bottle, Towel</span>
                 </div>
+                <div className="div-button-section w-full flex justify-center items-center my-4">
+                    <Button className="bg-black text-white text-sm font-semibold hover:animate-pulse">BOOK NOW<FaRegClock className="text-sm ml-2"/></Button>
+                  </div>
               </div>
             ))}
           </div>
 
           {/* Pagination Controls */}
-          <div className="flex justify-between mt-4">
+          <div className="flex justify-between mt-10">
             <button
               onClick={handlePrevPage}
               disabled={currentPage === 1}
@@ -254,9 +276,9 @@ const Dashboard = () => {
         {/* Right Section - User Info and Class Schedule */}
         <div className="w-full lg:w-1/4 lg:pl-4">
           {/* details Card */}
-          <div className="div-details-card flex flex-col gap-4 justify-center items-center bg-black p-5 rounded-3xl">
-            <div className="div-user-info-container flex flex-row justify-start items-center gap-x-2 w-full pl-5">
-              <div className="div-main-image-logo border-2 border-customBlue rounded-full w-10 h-10 flex justify-center items-center">
+          <div className="div-details-card flex flex-col gap-4 justify-center items-center bg-white border-2 border-gray-200 rounded-3xl">
+            <div className="div-user-info-container bg-black text-white flex flex-row justify-start items-center gap-x-4 w-full pl-5 rounded-t-3xl h-16">
+              <div className="div-main-image-logo border-2 border-white border-dotted rounded-full w-10 h-10 flex justify-center items-center">
                 <FaUserAlt className="text-white text-2xl" />
               </div>
               <div className="div-main-user-name flex flex-row gap-x-1b text-white">
@@ -265,10 +287,10 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="bg-customDark w-full mt-3 p-4 flex flex-col justify-center items-center rounded-3xl shadow-md">
-              <div className="div-title w-full bg-customYellow flex flex-row justify-start items-center gap-x-7 p-2 pl-4 rounded-xl mb-2">
-                <div className="black-dot bg-black w-3 h-3 rounded-full"></div>
-                <span className="text-sm font-semibold text-black/75">
+            <div className="w-full px-5 flex flex-col justify-center items-center rounded-3xl shadow-md">
+              <div className="div-title w-full bg-black text-white flex mb-3 flex-row justify-center items-center gap-x-2 p-2 pl-4 rounded-xl">
+                <MdOutlineCalendarMonth className="text-sm" />
+                <span className="text-sm font-semibold text-white">
                   Upcoming Classes
                 </span>
               </div>
@@ -277,9 +299,9 @@ const Dashboard = () => {
                   {upcomingClasses.slice(0, 2).map((cls) => (
                     <div
                       key={cls._id}
-                      className="bg-customGray p-3 w-full rounded-lg mb-2 flex flex-row justify-start items-center gap-x-3"
+                      className="bg-black text-white p-3 w-full rounded-lg mb-2 flex flex-row justify-start items-center gap-x-3"
                     >
-                      <div className="div-calendar-col bg-customYellow w-11 h-11 rounded-lg flex flex-col justify-start items-center p-1">
+                      <div className="div-calendar-col bg-white w-11 h-11 rounded-lg flex flex-col justify-start items-center p-1">
                         <span className="bg-black text-white text-[9px] text-center w-full rounded-xl">
                           {getMonthAbbreviation(cls.date)}
                         </span>
@@ -292,14 +314,14 @@ const Dashboard = () => {
                           {cls.name}
                         </span>
                         <span className="text-[11px] font-light w-full text-start">
-                          {cls.timeIn} - {cls.timeOut}
+                        {convertTo12HourFormat(cls.timeIn)} - {convertTo12HourFormat(cls.timeOut)}
                         </span>
                       </div>
                     </div>
                   ))}
                   {upcomingClasses.length > 2 && (
                     <button
-                      className="text-blue-500 underline"
+                      className="text-black underline font-light text-sm mb-4"
                       onClick={handleShowAllClasses}
                     >
                       +{upcomingClasses.length - 2} more
@@ -359,7 +381,7 @@ const Dashboard = () => {
               <div className="div-content text-white flex flex-col justify-start items-start">
                 <span className="text-lg font-semibold">{cls.name}</span>
                 <span className="text-[11px] font-light w-full text-start">
-                  {cls.timeIn} - {cls.timeOut}
+                {convertTo12HourFormat(cls.timeIn)} - {convertTo12HourFormat(cls.timeOut)}
                 </span>
               </div>
             </div>

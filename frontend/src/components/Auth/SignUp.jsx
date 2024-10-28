@@ -79,7 +79,7 @@ const SignUp = () => {
       setLoading(true); // Show spinner
       try {
         const response = await fetch(
-          "http://localhost:5007/api/auth/register",
+          "https://p-town-west-mma-api.vercel.app/api/auth/register",
           {
             method: "POST",
             headers: {

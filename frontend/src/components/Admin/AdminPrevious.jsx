@@ -12,7 +12,7 @@ const AdminPrevious = () => {
     const getPreviousClasses = async () => {
       try {
         let res = await axios.get(
-          `http://localhost:5007/api/classes/admin/previous`,
+          `https://p-town-west-mma-api.vercel.app/api/classes/admin/previous`,
           {
             withCredentials: true,
           }

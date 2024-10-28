@@ -21,7 +21,7 @@ function ClassDetailsGuest() {
         try {
             let getData = async() =>{
                 setLoading(true);
-                let response = await axios.get(`http://localhost:5007/api/classes/guest/${classId}`);
+                let response = await axios.get(`https://p-town-west-mma-api.vercel.app/api/classes/guest/${classId}`);
                 setClassDetails(response.data);
                 setLoading(false);
             }

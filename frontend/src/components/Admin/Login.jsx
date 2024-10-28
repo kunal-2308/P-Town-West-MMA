@@ -71,7 +71,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:5007/api/auth/admin/login",
+        "https://p-town-west-mma-api.vercel.app/api/auth/admin/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

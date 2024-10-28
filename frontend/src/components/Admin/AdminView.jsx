@@ -13,7 +13,7 @@ const AdminView = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await axios.get('http://localhost:5007/api/admin/allAdmin', {
+        const response = await axios.get('https://p-town-west-mma-api.vercel.app/api/admin/allAdmin', {
           withCredentials: true,
         });
         setAdmin(response.data);
@@ -38,7 +38,7 @@ const AdminView = () => {
   // Handle delete action
   const handleDelete = async (id) => {
     try {
-      let response = await axios.delete(`http://localhost:5007/api/admin/deleteAdmin/${id}`,{
+      let response = await axios.delete(`https://p-town-west-mma-api.vercel.app/api/admin/deleteAdmin/${id}`,{
         withCredentials:true
       });
       toast.success("Account deleted successfully");

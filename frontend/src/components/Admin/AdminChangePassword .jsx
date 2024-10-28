@@ -40,7 +40,7 @@ const AdminChangePassword = () => {
 
     try {
       await axios.put(
-        `http://localhost:5007/api/admin/update/password/${adminId}`,
+        `https://p-town-west-mma-api.vercel.app/api/admin/update/password/${adminId}`,
         {
           password,
         },

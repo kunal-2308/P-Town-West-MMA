@@ -22,7 +22,7 @@ const ClassDetails = () => {
       if (token) {
         try {
           const response = await fetch(
-            `http://localhost:5007/api/classes/${classId}`,
+            `https://p-town-west-mma-api.vercel.app/api/classes/${classId}`,
             {
               method: "GET",
               headers: {
@@ -60,7 +60,7 @@ const ClassDetails = () => {
     if (token) {
       try {
         const response = await fetch(
-          `http://localhost:5007/api/classes/book/${classId}`,
+          `https://p-town-west-mma-api.vercel.app/api/classes/book/${classId}`,
           {
             method: "POST",
             headers: {
@@ -124,6 +124,13 @@ const ClassDetails = () => {
     );
   }
 
+  function convertTo12HourFormat(time24) {
+    const [hours, minutes] = time24.split(":").map(Number);
+    const suffix = hours >= 12 ? "PM" : "AM";
+    const hours12 = ((hours + 11) % 12) + 1; // Converts 24-hour to 12-hour
+    return `${hours12}:${minutes.toString().padStart(2, "0")} ${suffix}`;
+  }
+
   return (
     <>
       <Navbar />
@@ -138,7 +145,7 @@ const ClassDetails = () => {
           <img src="/images/Home/Popper/1.png" alt="" />
         </div>
         <div className="flex flex-col justify-start items-start">
-          <h1 className="text-4xl font-bold text-black mb-6 text-center">
+          <h1 className="text-4xl font-bold text-black mb-6 text-start">
             {classDetails.name}
           </h1>
           <div className="mb-6 flex flex-col justify-start items-start pl-5">
@@ -147,11 +154,11 @@ const ClassDetails = () => {
             </p>
             <p className="text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Time In:</span>{" "}
-              {classDetails.timeIn}
+              {convertTo12HourFormat(classDetails.timeIn)}
             </p>
             <p className="text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Time Out:</span>{" "}
-              {classDetails.timeOut}
+              {convertTo12HourFormat(classDetails.timeOut)}
             </p>
             <p className="text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Slots:</span> {classDetails.slots}
