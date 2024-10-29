@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { API_URL } from "../../../configure";
 
 const AdminView = () => {
   const [admin, setAdmin] = useState([]);
@@ -13,7 +14,7 @@ const AdminView = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await axios.get('https://p-town-west-mma-api.vercel.app/api/admin/allAdmin', {
+        const response = await axios.get(`${API_URL}/api/admin/allAdmin`, {
           withCredentials: true,
         });
         setAdmin(response.data);
@@ -38,7 +39,7 @@ const AdminView = () => {
   // Handle delete action
   const handleDelete = async (id) => {
     try {
-      let response = await axios.delete(`https://p-town-west-mma-api.vercel.app/api/admin/deleteAdmin/${id}`,{
+      let response = await axios.delete(`${API_URL}/api/admin/deleteAdmin/${id}`,{
         withCredentials:true
       });
       toast.success("Account deleted successfully");

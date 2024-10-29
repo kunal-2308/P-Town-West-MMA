@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../../configure';
 
 // Utility function to convert 24-hour format time to 12-hour format with AM/PM
 const convertTo12HourFormat = (time24) => {
@@ -14,19 +15,21 @@ function ViewClassModal({ isOpen, onClose, classItem }) {
   const [classDetails, setClassDetails] = useState(null);
 
   useEffect(() => {
-    let getData = async () => {
-      try {
-        let response = await axios.get(`https://p-town-west-mma-api.vercel.app/api/admin/view/${classItem._id}`, {
-          withCredentials: true
-        });
-        setClassDetails(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getData();
+    if (classItem) {  // Ensure classItem is defined
+      let getData = async () => {
+        try {
+          let response = await axios.get(`${API_URL}/api/admin/view/${classItem._id}`, {
+            withCredentials: true
+          });
+          setClassDetails(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getData();
+    }
   }, [classItem]);
-
+  
   if (!isOpen || !classDetails) {
     return null;
   }

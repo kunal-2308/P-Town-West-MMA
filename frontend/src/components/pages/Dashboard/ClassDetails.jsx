@@ -6,6 +6,7 @@ import Footer from "../../../components/shared/Footer";
 import { MoveRightIcon } from "lucide-react";
 import { IoClose } from "react-icons/io5";
 import { toast } from "sonner";
+import { API_URL } from "../../../../configure";
 const ClassDetails = () => {
   const { classId } = useParams();
   const navigate = useNavigate(); // Initialize useNavigate
@@ -22,7 +23,7 @@ const ClassDetails = () => {
       if (token) {
         try {
           const response = await fetch(
-            `https://p-town-west-mma-api.vercel.app/api/classes/${classId}`,
+            `${API_URL}/api/classes/${classId}`,
             {
               method: "GET",
               headers: {
@@ -60,7 +61,7 @@ const ClassDetails = () => {
     if (token) {
       try {
         const response = await fetch(
-          `https://p-town-west-mma-api.vercel.app/api/classes/book/${classId}`,
+          `${API_URL}/api/classes/book/${classId}`,
           {
             method: "POST",
             headers: {

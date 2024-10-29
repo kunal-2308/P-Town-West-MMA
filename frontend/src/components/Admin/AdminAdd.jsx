@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
+import { API_URL } from "../../../configure";
 const AdminAdd = () => {
   const [adminData, setAdminData] = useState({
     name: "",
@@ -17,7 +18,7 @@ const AdminAdd = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    let response = await axios.post("https://p-town-west-mma-api.vercel.app/api/admin/addAdmin", adminData, {
+    let response = await axios.post(`${API_URL}/api/admin/addAdmin`, adminData, {
       withCredentials: true,
     });
     if(!response.status.ok){

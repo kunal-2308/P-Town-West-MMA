@@ -3,6 +3,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
 import "react-toastify/dist/ReactToastify.css";
+import { API_URL } from "../../../configure";
 
 const EditClassModal = ({
   isOpen,
@@ -30,7 +31,7 @@ const EditClassModal = ({
 
     try {
       const response = await axios.post(
-        `https://p-town-west-mma-api.vercel.app/api/admin/update/${updatedData._id}`,
+        `${API_URL}/api/admin/update/${updatedData._id}`,
         updatedData,
         { withCredentials: true }
       );

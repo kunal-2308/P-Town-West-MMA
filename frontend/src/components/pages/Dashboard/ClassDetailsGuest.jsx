@@ -8,6 +8,7 @@ import { IoClose } from "react-icons/io5";
 import { toast } from "sonner";
 import axios from "axios";
 import { FaSpinner } from "react-icons/fa";
+import { API_URL } from "../../../../configure";
 
 function ClassDetailsGuest() {
     const { classId } = useParams();
@@ -21,7 +22,7 @@ function ClassDetailsGuest() {
         try {
             let getData = async() =>{
                 setLoading(true);
-                let response = await axios.get(`https://p-town-west-mma-api.vercel.app/api/classes/guest/${classId}`);
+                let response = await axios.get(`${API_URL}/api/classes/guest/${classId}`);
                 setClassDetails(response.data);
                 setLoading(false);
             }

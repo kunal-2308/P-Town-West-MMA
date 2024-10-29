@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
+import { API_URL } from "../../../configure";
 
 const Login = () => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -70,7 +71,7 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch("https://p-town-west-mma-api.vercel.app/api/auth/login", {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -82,13 +83,20 @@ const Login = () => {
         Cookies.set("jwt_token", data.token, { secure: true });
         Cookies.set("userName", data.name, { secure: true });
         Cookies.set("email", formData.email, { secure: true });
-
+        console.log(data.user.role);
         // Show success toast
         toast.success("Login successful!", { autoClose: 2000 });
-
+        
         // Redirect to the dashboard after a slight delay
         setTimeout(() => {
-          navigate("/dashboard");
+          if(data.user.role=='admin'){
+            navigate('/admin/dashboard');
+            localStorage.setItem('role','admin');
+          }
+          else{
+            navigate('/dashboard');
+            localStorage.setItem('role','user');
+          }
         }, 2000);
       } else {
         setApiError(data.message || "Login failed. Please try again.");

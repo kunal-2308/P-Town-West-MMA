@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ViewClassModal from "./ViewClassModal"; // Import the ViewClassModal component
+import { API_URL } from "../../../configure";
 
 const AdminPrevious = () => {
   const [previousArray, setPreviousArray] = useState([]);
@@ -12,7 +13,7 @@ const AdminPrevious = () => {
     const getPreviousClasses = async () => {
       try {
         let res = await axios.get(
-          `https://p-town-west-mma-api.vercel.app/api/classes/admin/previous`,
+          `${API_URL}/api/classes/admin/previous`,
           {
             withCredentials: true,
           }

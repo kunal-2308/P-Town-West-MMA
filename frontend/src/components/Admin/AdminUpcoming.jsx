@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import EditEventModal from "./EditEventModal";
 import ViewClassModal from "./ViewClassModal";
+import { API_URL } from "../../../configure";
 
 const AdminUpcoming = () => {
   const [upcomingArray, setUpcomingArray] = useState([]);
@@ -13,7 +14,7 @@ const AdminUpcoming = () => {
   useEffect(() => {
     const getUpcomingClasses = async () => {
       try {
-        let res = await axios.get(`https://p-town-west-mma-api.vercel.app/api/classes/admin/upcoming`, {
+        let res = await axios.get(`${API_URL}/api/classes/admin/upcoming`, {
           withCredentials: true,
         });
         setUpcomingArray(res.data.upcomingClasses);

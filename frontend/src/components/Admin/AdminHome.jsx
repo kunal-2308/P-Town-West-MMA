@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import EditEventModal from "./EditEventModal";
 import ViewClassModal from "./ViewClassModal";
+import { API_URL } from "../../../configure";
 
 const AdminHome = ({ onViewAllClick }) => {
   const [upcomingArray, setUpcomingArray] = useState([]);
@@ -16,7 +17,7 @@ const AdminHome = ({ onViewAllClick }) => {
   useEffect(() => {
     const getPreviousClasses = async () => {
       try {
-        const res = await axios.get(`https://p-town-west-mma-api.vercel.app/api/classes/admin/previous`, {
+        const res = await axios.get(`${API_URL}/api/classes/admin/previous`, {
           withCredentials: true,
         });
         setPreviousArray(res.data.previousClasses);
@@ -27,7 +28,7 @@ const AdminHome = ({ onViewAllClick }) => {
 
     const getUpcomingClasses = async () => {
       try {
-        const res = await axios.get(`https://p-town-west-mma-api.vercel.app/api/classes/admin/upcoming`, {
+        const res = await axios.get(`${API_URL}/api/classes/admin/upcoming`, {
           withCredentials: true,
         });
         setUpcomingArray(res.data.upcomingClasses);
@@ -38,7 +39,7 @@ const AdminHome = ({ onViewAllClick }) => {
 
     const fetchCategoriesAndInstructors = async () => {
       try {
-        const res = await axios.get('https://p-town-west-mma-api.vercel.app/api/admin/all', {
+        const res = await axios.get(`${API_URL}/api/admin/all`, {
           withCredentials: true,
         });
         setCategories(res.data.categories);

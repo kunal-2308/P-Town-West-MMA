@@ -9,6 +9,7 @@ import { FaUserAlt } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
 import { MoveLeftIcon, MoveRightIcon } from "lucide-react";
 import { toast } from "sonner";
+import { API_URL } from "../../../../configure";
 
 function GuestDashboard() {
     const [allClasses, setAllClasses] = useState([]);
@@ -29,7 +30,7 @@ function GuestDashboard() {
   
     useEffect(() => {
           axios
-            .get("https://p-town-west-mma-api.vercel.app/api/classes/guest/classes/list")
+            .get(`${API_URL}/api/classes/guest/list`)
             .then((response) => {
               const classes = response.data;
               setAllClasses(classes);

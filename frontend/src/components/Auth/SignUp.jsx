@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { API_URL } from "../../../configure";
 
 const SignUp = () => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -79,7 +80,7 @@ const SignUp = () => {
       setLoading(true); // Show spinner
       try {
         const response = await fetch(
-          "https://p-town-west-mma-api.vercel.app/api/auth/register",
+          `${API_URL}/api/auth/register`,
           {
             method: "POST",
             headers: {

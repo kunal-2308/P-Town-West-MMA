@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { API_URL } from "../../../configure";
 
 const AdminClassAdd = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ const AdminClassAdd = () => {
     const fetchDetails = async () => {
       try {
         const response = await axios.get(
-          "https://p-town-west-mma-api.vercel.app/api/admin/all",
+          `${API_URL}/api/admin/all`,
           {
             withCredentials: true,
           }
@@ -67,7 +68,7 @@ const AdminClassAdd = () => {
     setIsLoading(true); // Show loading state when submitting
 
     try {
-      await axios.post("http://localhost:5007/api/admin/add", formData, {
+      await axios.post(`${API_URL}/api/admin/add`, formData, {
         withCredentials: true,
       });
 

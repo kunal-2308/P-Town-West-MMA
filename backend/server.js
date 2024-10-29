@@ -16,12 +16,12 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "https://p-town-west-mma.vercel.app", // Your frontend origin
+    origin: "http://localhost:5173", // Your frontend origin
     credentials: true,
   })
 );
 
-// Define routes
+// Define routes:
 app.use("/api/classes", classRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);

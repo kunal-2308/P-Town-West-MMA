@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { API_URL } from "../../../configure";
 
 const EditEventModal = ({
   classId,
   onClose,
   isOpen,
-  categories = [], // Ensure categories is initialized as an empty array
-  instructors = [], // Ensure instructors is initialized as an empty array
+  categories = [],
+  instructors = [],
 }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -26,7 +27,7 @@ const EditEventModal = ({
     const fetchEventDetails = async () => {
       try {
         const res = await axios.get(
-          `https://p-town-west-mma-api.vercel.app/api/classes/${classId}`,
+          `${API_URL}/api/classes/${classId}`,
           {
             withCredentials: true,
           }
@@ -34,8 +35,7 @@ const EditEventModal = ({
 
         const eventDetails = res.data;
 
-        // Convert the date to the required format
-        const formattedDate = eventDetails.date.split("T")[0]; // Get the 'YYYY-MM-DD' part
+        const formattedDate = eventDetails.date.split("T")[0];
         const formattedTimeIn = new Date(
           eventDetails.timeIn
         ).toLocaleTimeString("en-GB", {
@@ -83,7 +83,6 @@ const EditEventModal = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
     if (
       !formData.name ||
       !formData.instructor ||
@@ -97,11 +96,11 @@ const EditEventModal = ({
       return;
     }
 
-    setIsLoading(true); // Show loading state when submitting
+    setIsLoading(true);
 
     try {
       await axios.put(
-        `https://p-town-west-mma-api.vercel.app/api/admin/update/${classId}`,
+        `${API_URL}/api/admin/update/${classId}`,
         formData,
         {
           withCredentials: true,
@@ -113,7 +112,7 @@ const EditEventModal = ({
       console.error("Error updating event:", error);
       toast.error("Failed to update the event.");
     } finally {
-      setIsLoading(false); // Stop loading once done
+      setIsLoading(false);
     }
   };
 
@@ -181,9 +180,7 @@ const EditEventModal = ({
 
           {/* Date */}
           <div>
-            <label className="block text-sm font-medium mb-2">
-              Choose Date
-            </label>
+            <label className="block text-sm font-medium mb-2">Choose Date</label>
             <input
               type="date"
               name="date"

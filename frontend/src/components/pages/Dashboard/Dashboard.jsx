@@ -7,10 +7,13 @@ import axios from "axios";
 import Modal from "../../../components/shared/Modal"; // Import the Modal component
 import { FaSpinner, FaUserAlt } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
-import { MoveLeftIcon, MoveRightIcon } from "lucide-react";
+import { CrossIcon, MoveLeftIcon, MoveRightIcon } from "lucide-react";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 import { FaRegClock } from "react-icons/fa6";
 import { Button } from "../../ui/button";
+import { ImCancelCircle } from "react-icons/im";
+import { API_URL } from "../../../../configure";
+
 
 const Dashboard = () => {
   const [allClasses, setAllClasses] = useState([]);
@@ -37,7 +40,7 @@ const Dashboard = () => {
       if (token) {
         // setLoading(true);
         axios
-          .get("https://p-town-west-mma-api.vercel.app/api/classes/all-classes", {
+          .get(`${API_URL}/api/classes/all-classes`, {
             withCredentials: true,
           })
           .then((response) => {
@@ -53,7 +56,7 @@ const Dashboard = () => {
           });
 
         axios
-          .get("https://p-town-west-mma-api.vercel.app/api/auth/user/details", {
+          .get(`${API_URL}/api/auth/user/details`, {
             withCredentials: true,
           })
           .then((response) => {
@@ -102,6 +105,7 @@ const Dashboard = () => {
     Cookies.remove("userName");
     Cookies.remove("email");
     navigate("/login");
+    localStorage.clear();
   };
 
   // Pagination handlers
@@ -355,20 +359,17 @@ const Dashboard = () => {
       {/* Modal for showing all booked classes */}
       {showModal && (
         <Modal
-          title="All Upcoming Classes"
-          className="bg-black"
-          onClose={() => setShowModal(false)}
+          // title="All Upcoming Classes"
+          // className="bg-black"
         >
+          <div className="div-main-container w-full text-black mb-4 rounded-3xl flex justify-between items-center">
+            <span className="text-2xl font-semibold">All Upcoming Classes</span>
+            <span><ImCancelCircle className="text-xl cursor-pointer" onClick={()=>setShowModal(false)}/></span>
+          </div>
           {allBookedClasses.map((cls) => (
-            // <div key={cls._id} className="bg-gray-100 p-2 rounded-lg mb-2">
-            //   <p>{cls.name}</p>
-            //   <p>{cls.date}</p>
-            //   <p>{cls.time}</p>
-            //   <p>{cls.category}</p>
-            // </div>
             <div
               key={cls._id}
-              className="bg-customGray p-3 w-full rounded-lg mb-2 flex flex-row justify-start items-center gap-x-3"
+              className="bg-black p-2 text-white w-full rounded-lg mb-2 flex flex-row justify-start items-center gap-x-3"
             >
               <div className="div-calendar-col bg-customYellow w-11 h-11 rounded-lg flex flex-col justify-start items-center p-1">
                 <span className="bg-black text-white text-[9px] text-center w-full rounded-xl">
@@ -388,7 +389,6 @@ const Dashboard = () => {
           ))}
         </Modal>
       )}
-      <div className="mt-20"></div>
       <Footer />
     </>
   );

@@ -7,7 +7,7 @@ function Navbar() {
   let [navStatus, setNavStatus] = useState(false);
   let [dropdownClick, setDropDownClick] = useState(false);
   let [mobileDropdownClick, setMobileDropdownClick] = useState(false); // For mobile view
-
+  
   const menuBarClick = (e) => {
     e.preventDefault();
     setNavStatus(!navStatus);
@@ -89,7 +89,7 @@ function Navbar() {
                 <Link to="/about">About Us</Link>
               </li>
               <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
-                <Link to="/class/schedule">Class Schedule</Link>
+                {localStorage.getItem('role')=='admin'?<Link to="/admin/dashboard">Class Schedule</Link>:<Link to="/class/schedule">Class Schedule</Link>}
               </li>
               <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
                 <Link to="/contact">Contact Us</Link>

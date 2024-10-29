@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
+import { API_URL } from "../../../configure";
 
 const Login = () => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -71,7 +72,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "https://p-town-west-mma-api.vercel.app/api/auth/admin/login",
+        `${API_URL}/api/auth/admin/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

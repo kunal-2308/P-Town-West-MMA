@@ -76,7 +76,7 @@ function HeroSection2() {
             </div>
 
             {/* Mobile View */}
-            <div className="block md:hidden bg-white w-screen flex flex-col pb-10">
+            <div className="flex md:hidden bg-white w-screen flex-col pb-10">
                 {/* Top Section */}
                 <div className="flex justify-start items-start px-6 mt-10">
                     <span className="text-3xl font-bold text-gray-400 mr-4">////</span>

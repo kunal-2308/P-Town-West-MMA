@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
+import { API_URL } from "../../../configure";
 
 const AdminChangePassword = () => {
   const [password, setPassword] = useState("");
@@ -40,7 +41,7 @@ const AdminChangePassword = () => {
 
     try {
       await axios.put(
-        `https://p-town-west-mma-api.vercel.app/api/admin/update/password/${adminId}`,
+        `${API_URL}/api/admin/update/password/${adminId}`,
         {
           password,
         },
