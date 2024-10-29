@@ -5,6 +5,7 @@ import classRoutes from "./routes/classRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import cookieParser from "cookie-parser";
+import { sendMail } from "./controllers/emailController.js";
 import cors from "cors";
 
 dotenv.config();
@@ -25,6 +26,7 @@ app.use(
 app.use("/api/classes", classRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
+app.post("/api/send-email", sendMail);
 
 const PORT = process.env.PORT || 5007;
 app.listen(PORT, () => {
