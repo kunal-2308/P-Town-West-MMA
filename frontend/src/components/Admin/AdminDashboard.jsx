@@ -12,7 +12,7 @@ import AdminChangePassword from "./AdminChangePassword ";
 import AdminAdd from "./AdminAdd";
 import { GoHomeFill } from "react-icons/go";
 import { FaRegCalendarAlt, FaClipboardList, FaUserPlus } from "react-icons/fa";
-import { IoLogOut } from "react-icons/io5";
+import { IoLogOut, IoMenu, IoClose } from "react-icons/io5";
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -55,109 +55,67 @@ const AdminDashboard = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col md:flex-row sm:mt-20 text-white mt-16 p-20 md:gap-x-3">
+      <div className="flex flex-col md:flex-row sm:mt-20 text-white mt-16 md:p-6 lg:p-20 gap-x-3">
         <button
-          className="md:hidden px-4 py-2 bg-gray-800 text-white z-[999]"
+          className="md:hidden flex items-center px-4 py-2 text-black mt-4 z-[999] mb-20 hover:from-blue-500 hover:to-purple-600 transition duration-300 group"
           onClick={toggleSidebar}
         >
-          {isSidebarOpen ? "Close Menu" : "Open Menu"}
+          {isSidebarOpen ? (
+            <IoClose size={20} className="text-white" />
+          ) : (
+            <IoMenu size={20} />
+          )}
+          <span>
+            {isSidebarOpen ? (
+              <span className="text-white ml-2">
+                Close to view selected tab
+              </span>
+            ) : (
+              <span className="text-black ml-2">Open to switch tabs</span>
+            )}
+          </span>
         </button>
 
         <div
           className={`${
             isSidebarOpen ? "block" : "hidden"
-          } md:block w-[20vw] bg-black text-white p-6 md:static absolute z-50 h-screen md:h-auto rounded-3xl flex flex-col justify-start items-center`}
+          } md:block w-[70vw] md:w-[20vw] bg-black text-white p-6 md:static absolute z-50 h-screen md:h-auto flex flex-col items-center transform transition-transform duration-300 ease-in-out`}
         >
-         <ul className="space-y-4 mt-10">
-  <li
-    className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${
-      selectedTab === "Home"
-        ? "bg-customYellow text-black"
-        : "hover:bg-customYellow hover:text-black"
-    }`}
-    onClick={() => setSelectedTab("Home")}
-  >
-    <GoHomeFill className="text-2xl" />
-    <span>Home</span>
-  </li>
-  <li
-    className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${
-      selectedTab === "Upcoming Class"
-        ? "bg-customYellow text-black"
-        : "hover:bg-customYellow hover:text-black"
-    }`}
-    onClick={() => setSelectedTab("Upcoming Class")}
-  >
-    <FaRegCalendarAlt className="text-2xl" />
-    <span>Upcoming Class</span>
-  </li>
-  <li
-    className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${
-      selectedTab === "Previous Class"
-        ? "bg-customYellow text-black"
-        : "hover:bg-customYellow hover:text-black"
-    }`}
-    onClick={() => setSelectedTab("Previous Class")}
-  >
-    <FaClipboardList className="text-2xl" />
-    <span>Previous Class</span>
-  </li>
-  <li
-    className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${
-      selectedTab === "Schedule Class"
-        ? "bg-customYellow text-black"
-        : "hover:bg-customYellow hover:text-black"
-    }`}
-    onClick={() => setSelectedTab("Schedule Class")}
-  >
-    <FaRegCalendarAlt className="text-2xl" />
-    <span>Schedule Class</span>
-  </li>
-  <li
-    className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${
-      selectedTab === "Add Admin"
-        ? "bg-customYellow text-black"
-        : "hover:bg-customYellow hover:text-black"
-    }`}
-    onClick={() => setSelectedTab("Add Admin")}
-  >
-    <FaUserPlus className="text-2xl" />
-    <span>Add Admin</span>
-  </li>
-  <li
-    className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${
-      selectedTab === "View Admins"
-        ? "bg-customYellow text-black"
-        : "hover:bg-customYellow hover:text-black"
-    }`}
-    onClick={() => setSelectedTab("View Admins")}  
-  >
-    <FaUserPlus className="text-2xl" />
-    <span>View Admins</span>
-  </li>
-  <li
-    className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${
-      selectedTab === "Change Password"
-        ? "bg-customYellow text-black"
-        : "hover:bg-customYellow hover:text-black"
-    }`}
-    onClick={() => setSelectedTab("Change Password")}  
-  >
-    <FaUserPlus className="text-2xl" />
-    <span>Change Password</span>
-  </li>
-  <li
-    className="flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer hover:bg-red-500 hover:text-white text-white"
-    onClick={handleLogout}
-  >
-    <IoLogOut className="text-2xl" />
-    <span>Logout</span>
-  </li>
-</ul>
+          <ul className="space-y-4 mt-10 w-full">
+            {[
+              { label: "Home", icon: <GoHomeFill /> },
+              { label: "Upcoming Class", icon: <FaRegCalendarAlt /> },
+              { label: "Previous Class", icon: <FaClipboardList /> },
+              { label: "Schedule Class", icon: <FaRegCalendarAlt /> },
+              { label: "Add Admin", icon: <FaUserPlus /> },
+              { label: "View Admins", icon: <FaUserPlus /> },
+              { label: "Change Password", icon: <FaUserPlus /> },
+            ].map((item, index) => (
+              <li
+                key={index}
+                className={`flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer ${
+                  selectedTab === item.label
+                    ? "bg-customYellow text-black"
+                    : "hover:bg-customYellow hover:text-black"
+                }`}
+                onClick={() => setSelectedTab(item.label)}
+              >
+                <span className="text-2xl">{item.icon}</span>
+                <span>{item.label}</span>
+              </li>
+            ))}
+            <li
+              className="flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer hover:bg-red-500 hover:text-white text-white"
+              onClick={handleLogout}
+            >
+              <IoLogOut className="text-2xl" />
+              <span>Logout</span>
+            </li>
+          </ul>
         </div>
 
-        <div className="flex-1 bg-white rounded-lg">
-          <div className="mt-4 text-lg text-gray-600">{renderContent()}</div>
+        <div className="flex-1 bg-white rounded-lg mt-6 md:mt-0 p-4 sm:p-6 md:p-8 lg:p-10">
+          <div className="text-lg text-gray-600">{renderContent()}</div>
         </div>
       </div>
       <Footer />
