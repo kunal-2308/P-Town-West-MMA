@@ -22,17 +22,14 @@ const ClassDetails = () => {
     const fetchClassDetails = async () => {
       if (token) {
         try {
-          const response = await fetch(
-            `${API_URL}/api/classes/${classId}`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-              credentials: "include",
-            }
-          );
+          const response = await fetch(`${API_URL}/api/classes/${classId}`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          });
 
           if (!response.ok) {
             const errorMessage = await response.text(); // Get the response body as text
@@ -56,44 +53,41 @@ const ClassDetails = () => {
     fetchClassDetails();
   }, [classId, token]);
 
-
   const handleBookClass = async () => {
     if (token) {
       try {
-        const response = await fetch(
-          `${API_URL}/api/classes/book/${classId}`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          }
-        );
-  
+        const response = await fetch(`${API_URL}/api/classes/book/${classId}`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
         if (!response.ok) {
           const errorMessage = await response.json();
           // Ensure a readable message
-          const formattedErrorMessage = errorMessage.message || "An error occurred while booking.";
+          const formattedErrorMessage =
+            errorMessage.message || "An error occurred while booking.";
           // toast.error(`Error booking class: ${formattedErrorMessage}`);
           throw new Error(`${formattedErrorMessage}`);
         }
-  
+
         setBookingSuccess(true);
         toast.success("Class booked successfully!");
       } catch (err) {
         // Log and show readable error message
         console.error("Error booking class:", err);
-        const readableError = err.message.length > 100 
-          ? "Something went wrong. Please try again later." 
-          : err.message;
+        const readableError =
+          err.message.length > 100
+            ? "Something went wrong. Please try again later."
+            : err.message;
         toast.error(`${readableError}`);
         setBookingError(readableError);
       }
     }
   };
-  
 
   const handleClose = () => {
     navigate("/dashboard");
@@ -135,62 +129,66 @@ const ClassDetails = () => {
   return (
     <>
       <Navbar />
-      <div className="div-1-herosection relative mt-20">
-        <img src='/images/Training/3.png' alt="" className="w-screen h-[400px]" />
-        <div className="absolute inset-y-1/2 left-0 transform -translate-y-1/2 text-customYellow text-7xl  font-medium pl-40 pb-40 w-[50%]">
+      <div className="div-1-herosection relative mt-10 mb-20 overflow-hidden">
+        <img src="/images/Training/3.png" alt="" className="w-screen" />
+        <div className="absolute inset-y-1/2 left-0 transform -translate-y-1/2 text-customYellow text-2xl md:text-5xl sm:text-6xl font-medium sm:pl-40 pl-10 w-[50%] sm:w-full">
           Schedule an Appointment
         </div>
       </div>
-      <div className=" bg-white w-[70%] h-auto shadow-lg mb-20 rounded-lg p-8 mt-20 mx-auto py-12 px-4 sm:px-6 lg:px-8 flex flex-row justify-start items-center gap-x-20">
-        <div className="div-1-image-container w-[30vw]">
-          <img src="/images/Home/Popper/1.png" alt="" />
+      <div className="bg-white w-full max-w-[90%] md:max-w-[70%] h-auto shadow-lg mb-20 rounded-lg p-8 mt-20 mx-auto py-12 px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row justify-start items-center gap-y-10 lg:gap-x-20">
+        <div className="w-full lg:w-[30vw] flex-shrink-0">
+          <img
+            src="/images/Home/Popper/1.png"
+            alt=""
+            className="w-full h-auto"
+          />
         </div>
-        <div className="flex flex-col justify-start items-start">
-          <h1 className="text-4xl font-bold text-black mb-6 text-start">
+        <div className="flex flex-col justify-start items-start text-center lg:text-left">
+          <h1 className="text-2xl md:text-4xl font-bold text-black mb-6">
             {classDetails.name}
           </h1>
-          <div className="mb-6 flex flex-col justify-start items-start pl-5">
-            <p className="text-lg font-medium text-gray-700 mb-2">
-              <span className="font-semibold">Date:</span> {classDetails.date.split('T')[0]}
+          <div className="mb-6 flex flex-col justify-start items-start lg:pl-5">
+            <p className="text-base md:text-lg font-medium text-gray-700 mb-2">
+              <span className="font-semibold">Date:</span>{" "}
+              {classDetails.date.split("T")[0]}
             </p>
-            <p className="text-lg font-medium text-gray-700 mb-2">
+            <p className="text-base md:text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Time In:</span>{" "}
               {convertTo12HourFormat(classDetails.timeIn)}
             </p>
-            <p className="text-lg font-medium text-gray-700 mb-2">
+            <p className="text-base md:text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Time Out:</span>{" "}
               {convertTo12HourFormat(classDetails.timeOut)}
             </p>
-            <p className="text-lg font-medium text-gray-700 mb-2">
+            <p className="text-base md:text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Slots:</span> {classDetails.slots}
             </p>
-            <p className="text-lg font-medium text-gray-700 mb-2">
+            <p className="text-base md:text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Booked Slots:</span>{" "}
               {classDetails.bookedSlots}
             </p>
-            <p className="text-lg font-medium text-gray-700 mb-2">
+            <p className="text-base md:text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Category:</span>{" "}
               {classDetails.category}
             </p>
           </div>
-          <div className="div flex flex-row justify-center items-center gap-x-10">
-            <div className="flex flex-row justify-center items-center gap-x-4">
-              <button
-                className="px-5 py-2 text-base flex flex-row gap-x-2 bg-customYellow  text-black font-light rounded-full transition duration-300 ease-in-out"
-                onClick={handleBookClass}
-              >
-                Book Your Slot <MoveRightIcon />
-              </button>
-              <button
-                className="px-5 py-2 text-base flex flex-row justify-center items-center gap-x-2 bg-customYellow  text-black font-light rounded-full transition duration-300 ease-in-out"
-                onClick={handleClose}
-              >
-                Close <IoClose className="font-semibold" />
-              </button>
-            </div>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-10">
+            <button
+              className="px-5 py-2 text-base flex items-center gap-x-2 bg-customYellow text-black font-light rounded-full transition duration-300 ease-in-out"
+              onClick={handleBookClass}
+            >
+              Book Your Slot <MoveRightIcon />
+            </button>
+            <button
+              className="px-5 py-2 text-base flex items-center gap-x-2 bg-customYellow text-black font-light rounded-full transition duration-300 ease-in-out"
+              onClick={handleClose}
+            >
+              Close <IoClose className="font-semibold" />
+            </button>
           </div>
         </div>
       </div>
+
       <Footer />
     </>
   );
