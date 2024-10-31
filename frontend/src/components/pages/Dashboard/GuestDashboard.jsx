@@ -137,10 +137,10 @@ function GuestDashboard() {
       </div>
 
       {/* Main content */}
-      <div className="flex flex-col lg:flex-row lg:h-screen justify-between mt-36 px-6 lg:mt-20">
+      <div className="flex flex-col-reverse lg:flex-row lg:h-screen justify-between mt-5 px-6 lg:mt-20 gap-y-20">
         {/* Left Section - All Classes */}
         <div className="w-full lg:w-3/4 mb-8 lg:mb-0 pl-10 pr-10">
-          <h1 className="text-2xl lg:text-2xl font-medium mb-4">
+          <h1 className="text-2xl lg:text-2xl font-medium mb-4 md:text-start text-center">
             Available Classes
           </h1>
           <div className="flex space-x-2 lg:space-x-4 mb-4 overflow-x-auto">
@@ -232,7 +232,7 @@ function GuestDashboard() {
         </div>
 
         {/* Right Section - User Info and Class Schedule */}
-        <div className="w-full lg:w-1/4 lg:pl-4 mt-28">
+        <div className="w-full lg:w-1/4 lg:pl-4 sm:mt-5 md:mt-10">
           {/* details Card */}
           <div className="div-details-card flex flex-col gap-4 justify-center items-center bg-black p-5 rounded-3xl">
             <div className="div-user-info-container flex flex-row justify-start items-center gap-x-2 w-full pl-5">

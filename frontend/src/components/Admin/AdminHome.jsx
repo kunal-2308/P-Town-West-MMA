@@ -129,9 +129,9 @@ const AdminHome = ({ onViewAllClick }) => {
                     {classItem.category}
                   </span>
                 </div>
-                <div className="flex flex-row gap-2 mt-5">
+                <div className="flex flex-row gap-2 pt-5">
                   <button
-                    className="text-sm bg-customYellow px-3 py-2 rounded-lg text-black w-full"
+                    className="text-sm bg-customYellow rounded-lg text-black w-full"
                     onClick={() => handleEditClick(classItem._id)}
                   >
                     Edit Event
@@ -201,12 +201,14 @@ const AdminHome = ({ onViewAllClick }) => {
                     {classItem.category}
                   </span>
                 </div>
+                <div className="div-button-section">
                 <button
                   className="text-sm bg-customYellow px-3 py-2 rounded-lg text-black w-full mt-5"
                   onClick={() => handleViewDetails(classItem)}
                 >
                   View Details
                 </button>
+                </div>
               </div>
             </div>
           ))}
