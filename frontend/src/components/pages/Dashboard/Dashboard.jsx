@@ -62,7 +62,7 @@ const Dashboard = () => {
             const { userDetails } = response.data;
             const bookedClasses = userDetails.bookedClasses;
             setUpcomingClasses(bookedClasses);
-
+            console.log(bookedClasses);
             // Set the user name
             setUserName(userDetails.name);
             // Assuming 'name' is the field in user details
@@ -183,11 +183,10 @@ const Dashboard = () => {
             </h1>
             <div className="flex space-x-2 lg:space-x-4 mb-4 overflow-x-auto">
               <button
-                className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${
-                  selectedCategory === "All"
+                className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${selectedCategory === "All"
                     ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
                     : "bg-white border-[1px] border-customBorderGray rounded-xl"
-                }`}
+                  }`}
                 onClick={() => handleCategoryClick("All")}
               >
                 {selectedCategory === "All" && (
@@ -199,11 +198,10 @@ const Dashboard = () => {
               {categories.map((category) => (
                 <button
                   key={category}
-                  className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${
-                    selectedCategory === category
+                  className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${selectedCategory === category
                       ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
                       : "bg-white border-[1px] border-customBorderGray rounded-xl"
-                  }`}
+                    }`}
                   onClick={() => handleCategoryClick(category)}
                 >
                   {selectedCategory === category && (
@@ -216,62 +214,68 @@ const Dashboard = () => {
 
             {/* Classes Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-6 overflow-hidden p-5">
-              {currentClasses.map((cls) => (
-                <div
-                  key={cls._id}
-                  onClick={() => handleClick(cls._id)}
-                  className="bg-white text-black rounded-3xl shadow-md flex hover:cursor-pointer flex-col justify-start items-start"
-                >
-                  <div className="div-1-container flex justify-between items-center w-full bg-black text-white h-20 rounded-t-3xl p-3">
-                    <div className="div-1-cont flex flex-col justify-start items-start pl-2">
-                      <span className="text-2xl font-medium">
-                        {cls.category}
-                      </span>
-                      <span className="text-xs font-medium">
-                        {cls.instructor}
-                      </span>
+              {currentClasses.length !== 0 ? (
+                currentClasses.map((cls) => (
+                  <div
+                    key={cls._id}
+                    onClick={() => handleClick(cls._id)}
+                    className="bg-white text-black rounded-3xl shadow-md flex hover:cursor-pointer flex-col justify-start items-start mb-6"
+                  >
+                    <div className="div-1-container flex justify-between items-center w-full bg-black text-white h-20 rounded-t-3xl p-3">
+                      <div className="div-1-cont flex flex-col justify-start items-start pl-2">
+                        <span className="text-2xl font-medium">
+                          {cls.category}
+                        </span>
+                        <span className="text-xs font-medium">
+                          {cls.instructor}
+                        </span>
+                      </div>
+                      <div className="div-2-cont flex flex-col justify-start items-start pr-2">
+                        <div className="badge bg-customYellow text-black rounded-full flex justify-center items-center p-1 px-2">
+                          <span className="text-[12px] font-semibold">
+                            {cls.slots === cls.bookedSlots
+                              ? "Slots Full"
+                              : `Available: ${cls.slots - cls.bookedSlots}`}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="div-2-cont flex flex-col justify-start items-start pr-2">
-                      <div className="badge bg-customYellow text-black rounded-full flex justify-center items-center p-1 px-2">
-                        <span className="text-[12px] font-semibold">
-                          {cls.slots == cls.bookedSlots
-                            ? "Slots Full"
-                            : `Available: ${cls.slots - cls.bookedSlots}`}
+                    <div className="div-content-section bg-white text-black mt-3 flex justify-between items-center w-full px-4">
+                      <div className="div-content-1 flex flex-row justify-start items-center gap-x-2">
+                        <MdOutlineCalendarMonth className="text-sm" />
+                        <span className="text-xs font-semibold">
+                          {formatDate(cls.date)}
+                        </span>
+                      </div>
+                      <div className="div-time-section flex flex-row justify-start items-center gap-x-2">
+                        <FaRegClock className="text-sm" />
+                        <span className="text-xs font-semibold">
+                          {convertTo12HourFormat(cls.timeIn)} - {convertTo12HourFormat(cls.timeOut)}
                         </span>
                       </div>
                     </div>
-                  </div>
-                  <div className="div-content-section bg-white text-black mt-3 flex justify-between items-center w-full px-4">
-                    <div className="div-content-1 flex flex-row justify-start items-center gap-x-2">
-                      <MdOutlineCalendarMonth className="text-sm" />
+                    <div className="div-info-section my-4 px-4 flex flex-col justify-start items-start">
+                      <span className="text-sm font-medium">
+                        Please carry the following essentials:
+                      </span>
                       <span className="text-xs font-semibold">
-                        {formatDate(cls.date)}
+                        Gloves, Water Bottle, Towel
                       </span>
                     </div>
-                    <div className="div-time-section flex flex-row justify-start items-center gap-x-2">
-                      <FaRegClock className="text-sm" />
-                      <span className="text-xs font-semibold">
-                        {convertTo12HourFormat(cls.timeIn)} -{" "}
-                        {convertTo12HourFormat(cls.timeOut)}
-                      </span>
+                    <div className="div-button-section w-full flex justify-center items-center my-4">
+                      <Button className="bg-black text-white text-sm font-semibold hover:animate-pulse">
+                        BOOK NOW
+                        <FaRegClock className="text-sm ml-2" />
+                      </Button>
                     </div>
                   </div>
-                  <div className="div-info-section my-4 px-4 flex flex-col justify-start items-start">
-                    <span className="text-sm font-medium">
-                      Please carry following essentials
-                    </span>
-                    <span className="text-xs font-semibold">
-                      Gloves, Water Bottle, Towel
-                    </span>
-                  </div>
-                  <div className="div-button-section w-full flex justify-center items-center my-4">
-                    <Button className="bg-black text-white text-sm font-semibold hover:animate-pulse">
-                      BOOK NOW
-                      <FaRegClock className="text-sm ml-2" />
-                    </Button>
-                  </div>
+                ))
+              ) : (
+                <div className="flex justify-center items-center mt-6 w-full">
+                  <span className="text-lg font-medium text-gray-500">No classes available</span>
                 </div>
-              ))}
+              )}
+
             </div>
 
             {/* Pagination Controls */}
@@ -279,22 +283,20 @@ const Dashboard = () => {
               <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
-                className={`px-4 py-2 flex flex-row justify-center items-center gap-x-2 rounded ${
-                  currentPage === 1
+                className={`px-4 py-2 flex flex-row justify-center items-center gap-x-2 rounded ${currentPage === 1
                     ? "bg-gray-300"
                     : "bg-customPurple text-black"
-                }`}
+                  }`}
               >
                 <MoveLeftIcon /> Previous
               </button>
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className={`px-4 flex flex-row justify-center items-center gap-x-2 py-2 rounded ${
-                  currentPage === totalPages
+                className={`px-4 flex flex-row justify-center items-center gap-x-2 py-2 rounded ${currentPage === totalPages
                     ? "bg-gray-300"
                     : "bg-customPurple text-black"
-                }`}
+                  }`}
               >
                 Next <MoveRightIcon />
               </button>
@@ -322,7 +324,7 @@ const Dashboard = () => {
                     Upcoming Classes
                   </span>
                 </div>
-                {upcomingClasses.length > 0 ? (
+                {upcomingClasses.length != 0 ? (
                   <>
                     {upcomingClasses.slice(0, 2).map((cls) => (
                       <div

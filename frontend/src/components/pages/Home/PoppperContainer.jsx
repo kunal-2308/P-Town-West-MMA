@@ -7,7 +7,7 @@ function PoppperContainer() {
     return (
         <>
             <div className="main-popper-container bg-white m-4 flex flex-wrap justify-center items-center gap-5">
-                <div className="div-info md:hidden block flex-col justify-center items-center  font-light text-sm pl-7 pr-7 pt-3 gap-y-5">
+                <div className="div-info md:hidden flex flex-col justify-center items-center  font-light text-sm pl-7 pr-7 pt-3 gap-y-5">
                     <span className='text-center'>P Town West is proud to offer the best coaches in Pune, Baner, providing live training to help you achieve your goals. Our team is dedicated to helping you succeed and reach your full potential. Join us today and experience the difference for yourself.</span>
                     <Button className="bg-customYellow text-black rounded-full flex items-center px-6 sm:px-8 md:px-5 lg:px-10 hover:bg-customYellow">
                         <Link to="/contact" className="flex items-center font-semibold text-sm sm:text-base lg:text-base">

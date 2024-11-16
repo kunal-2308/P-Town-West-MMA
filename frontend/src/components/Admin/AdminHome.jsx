@@ -74,6 +74,7 @@ const AdminHome = ({ onViewAllClick }) => {
     setViewClassItem(classItem);
     setIsViewModalOpen(true);
   };
+  
 
   return (
     <div className="space-y-3 p-4 sm:p-6 lg:p-8">

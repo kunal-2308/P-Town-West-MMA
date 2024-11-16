@@ -5,9 +5,9 @@ function VideoSection() {
     return (
         <>
             <div className="div-main-container bg-black p-8 sm:p-10 md:p-16">
-                <div className="div-1-title flex justify-start items-center gap-x-3 ml-10 md:ml-20">
+                <div className="div-1-title flex justify-start items-center gap-x-3 ml-2 md:ml-20">
                     <span className='font-semibold text-gray-400 text-2xl sm:text-3xl'>////</span>
-                    <span className='text-3xl sm:text-4xl text-white font-medium'>LIFE@ P-TOWN MMA</span>
+                    <span className='md:text-3xl text-2xl text-white font-medium'>LIFE@ P-TOWN MMA</span>
                 </div>
 
                 {/* Video or Thumbnail Section */}

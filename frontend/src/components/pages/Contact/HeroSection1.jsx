@@ -125,9 +125,6 @@ function HeroSection1() {
                         <span className="text-customYellow text-3xl font-medium">Connect With Us</span>
                     </div>
                 </div>
-                <div className="div-form-section">
-                    <Form />
-                </div>
                 <div className="div-content-section w-screen flex flex-col justify-start items-start gap-y-4 bg-black text-white p-6">
                     <span className='text-customYellow text-3xl font-medium'>Get in Touch</span>
                     <span className='text-white text-sm font-light'>We're here to help you on your fitness journey, whether you're interested in joining one of our programs, have questions about our services, or need more information. Our dedicated team is ready to assist you with any inquiries you may have.</span>
@@ -145,6 +142,9 @@ function HeroSection1() {
                         <img src="/images/contact/mail.png" alt="" className='h-5' />
                         <span className='text-white text-sm hover:cursor-pointer' onClick={() => window.location = 'mailto:PTOWNWESTMMA@GMAIL.COM'}>PTOWNWESTMMA@GMAIL.COM</span>
                     </div>
+                </div>
+                <div className="div-form-section">
+                    <Form />
                 </div>
             </div>
 
