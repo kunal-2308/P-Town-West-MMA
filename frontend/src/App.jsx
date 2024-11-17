@@ -1,6 +1,6 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ScrollToTop from "../src/components/shared/ScrollToTop"; // Adjust the path if needed
+import ScrollToTop from "./components/shared/ScrollToTop"; // Adjust the path if needed
 import Home from "./components/pages/Home/Home";
 import KickBoxing from "./components/pages/KickBoxing/KickBoxing";
 import Jitsu from "./components/pages/Jitsu/Jitsu";
@@ -44,11 +44,14 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={createRouter}>
-        <ScrollToTop />
-      </RouterProvider>
+     <RouterProvider router={createRouter}>
+      {/* This should be inside RouterProvider */}
       <Toaster />
+      <ScrollToTop/>
+      
+    </RouterProvider>
     </>
+   
   );
 }
 

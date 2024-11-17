@@ -236,15 +236,14 @@ export const getListOfApplicants = async (req, res) => {
 
     let classWithApplicants = await Class.findById(classId).populate({
       path: "applicants",
-      select: "name email phoneNumber bookedClasses", 
+      select: "name email phoneNumber bookedClasses",
       populate: {
         path: "bookedClasses",
-        model: "Class", 
+        model: "Class",
         select: "name date",
       },
     });
 
-    
     if (!classWithApplicants) {
       return res.status(404).json({ message: "Class not found" });
     }
@@ -262,7 +261,7 @@ export const getListOfApplicants = async (req, res) => {
 
     res.status(200).json({
       message: "Applicants fetched successfully",
-      applicants: applicants, 
+      applicants: applicants,
     });
   } catch (error) {
     console.log(error);
@@ -273,16 +272,78 @@ export const getListOfApplicants = async (req, res) => {
   }
 };
 
-export const guestClassDetails = async(req,res) =>{
+export const guestClassDetails = async (req, res) => {
   try {
     let id = req.params.classId;
-    let classDetails = await Class.findById({"_id":id});
+    let classDetails = await Class.findById({ _id: id });
     if (!classDetails) {
       return res.status(404).json({ message: "Class not found" });
-    }else{
+    } else {
       res.status(200).json(classDetails);
     }
   } catch (error) {
     res.status(400).json(error);
   }
-}
+};
+
+export const bookGuestClasses = async (req, res) => {
+  let { name, email, phoneNumber } = req.body;
+  const classId = req.params.classId;
+
+  try {
+    // Step 1: Check if the user already exists in the database
+    let findUser = await User.findOne({ email: email }, { _id: 1, bookedClasses: 1 });
+    
+    if (findUser) {
+      // If user exists, check if they have already booked the class
+      if (findUser.bookedClasses.includes(classId)) {
+        // If classId is already in the bookedClasses array, send a message
+        return res.status(400).json({ message: "Class already booked" });
+      }
+
+      // If the user has not booked the class, proceed to add the classId
+      let _id = findUser._id;
+      let updatedUser = await User.findByIdAndUpdate(_id, 
+        { $push: { bookedClasses: classId } },
+        { new: true }
+      );
+
+      // Add the user's ID to the class's applicants array
+      let updatedClass = await Class.findByIdAndUpdate(classId, 
+        { $push: { applicants: _id } },
+        { new: true }
+      );
+
+      // Return updated user and class
+      return res.status(200).json([{ user: updatedUser }, { class: updatedClass }]);
+
+    } else {
+      // If the user doesn't exist, create a new user
+      let newUser = await User.create({
+        name,
+        email,
+        phoneNumber
+      });
+
+      // Once the new user is created, add the classId to their bookedClasses
+      let updatedUser = await User.findByIdAndUpdate(newUser._id, 
+        { $push: { bookedClasses: classId } },
+        { new: true }
+      );
+
+      // Add the new user's ID to the class's applicants array
+      let updatedClass = await Class.findByIdAndUpdate(classId, 
+        { $push: { applicants: newUser._id } },
+        { new: true }
+      );
+
+      // Return the newly created user and updated class
+      return res.status(200).json([{ user: updatedUser }, { class: updatedClass }]);
+    }
+
+  } catch (error) {
+    console.error("Error booking class:", error);
+    res.status(500).json({ message: "An error occurred while booking the class" });
+  }
+};
+

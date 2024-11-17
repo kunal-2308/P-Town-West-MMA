@@ -34,7 +34,7 @@ const DisplayUploadedImage = () => {
     <div className="w-full max-w-md mx-auto mt-8">
       {uploadedImage ? (
         <div className="text-center">
-          <h2 className="text-lg font-semibold">Uploaded Image:</h2>
+          <h2 className="text-lg font-semibold">Updated Schedule:</h2>
           <img
             src={`${API_URL}/${uploadedImage.filepath}`}
             alt={uploadedImage.filename}

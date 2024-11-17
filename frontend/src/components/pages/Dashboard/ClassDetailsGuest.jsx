@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import Navbar from "../../../components/shared/Navbar";
@@ -12,36 +12,67 @@ import { API_URL } from "../../../../configure";
 
 function ClassDetailsGuest() {
   const { classId } = useParams();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
   const [classDetails, setClassDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [bookingError, setBookingError] = useState(null);
-  const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [viewModal, setViewModal] = useState(false);
+  const [formData,setFormData] = useState({
+    name : "",
+    email : "",
+    phoneNumber : "",
+  });
+
+
   useEffect(() => {
-    try {
-      let getData = async () => {
+    const getData = async () => {
+      try {
         setLoading(true);
-        let response = await axios.get(
-          `${API_URL}/api/classes/guest/${classId}`
-        );
+        const response = await axios.get(`${API_URL}/api/classes/guest/${classId}`);
         setClassDetails(response.data);
+      } catch (e) {
+        setError("Failed to load class details.");
+      } finally {
         setLoading(false);
-      };
-      getData();
-    } catch (e) {
-      setError(e);
-    }
+      }
+    };
+
+    getData();
   }, [classId]);
 
-  const handleBookClass = async () => {
-    navigate("/login");
+  const handleBookClass = () => {
+    setViewModal(true);
     toast.error("To Book A Class, Please Signup / Login");
   };
 
   const handleClose = () => {
     navigate("/guest/dashboard");
   };
+
+  const onClose = () => {
+    setViewModal(false);
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Post the data to the 'bookclass' route with classId in the URL
+      let response = await axios.post(`${API_URL}/api/classes/guest/book/class/${classId}`,formData);
+      toast('Class Booked Successfully');
+      console.log(response.data);
+      setViewModal(false);
+    } catch (error) {
+      toast("Error occured booking a class");
+      setViewModal(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData((prevData)=>({
+      ...prevData,
+      [e.target.name]:e.target.value,
+    }));
+  }
 
   if (loading) {
     return (
@@ -70,10 +101,94 @@ function ClassDetailsGuest() {
     );
   }
 
+  if (viewModal) {
+    return (
+      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Contact Form</h2>
+            <button
+              className="text-gray-500 hover:text-gray-700 focus:outline-none"
+              onClick={onClose}
+            >
+              &times;
+            </button>
+          </div>
+          <form onSubmit={onSubmit}>
+            <div className="mb-4">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm  sm:text-sm pl-2"
+                required
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm  sm:text-sm pl-2"
+                required
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm pl-2"
+                required
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="cr" className="block text-sm font-medium text-gray-700">
+                Custom Request
+              </label>
+              <textarea
+                id="cr"
+                name="cr"
+                rows="3"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm  sm:text-sm pl-2 pt-1"
+              ></textarea>
+            </div>
+            <div className="flex justify-end space-x-2">
+              <button
+                type="button"
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                onClick={onClose}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <Navbar />
-
       <div className="div-1-herosection relative mt-10 mb-20 overflow-hidden">
         <img src="/images/Training/3.png" alt="" className="w-screen" />
         <div className="absolute inset-y-1/2 left-0 transform -translate-y-1/2 text-customYellow text-2xl md:text-5xl sm:text-6xl font-medium sm:pl-40 pl-10 w-[50%] sm:w-full">
@@ -133,7 +248,6 @@ function ClassDetailsGuest() {
           </div>
         </div>
       </div>
-
       <Footer />
     </>
   );

@@ -11,6 +11,7 @@ import {
   getListOfPreviousClasses,
   getListOfApplicants,
   guestClassDetails,
+  bookGuestClasses,
 } from "../controllers/classController.js";
 import { protectAdmin, protectUser } from "../middleware/authMiddleware.js";
 
@@ -29,5 +30,5 @@ router.get("/admin/previous", getListOfPreviousClasses);
 router.get("/admin/upcoming", getListOfUpcomingClasses); 
 router.get('/applicants/:classId',protectAdmin,getListOfApplicants);
 router.get('/guest/:classId',guestClassDetails);
-
+router.post('/guest/book/class/:classId',bookGuestClasses);
 export default router;

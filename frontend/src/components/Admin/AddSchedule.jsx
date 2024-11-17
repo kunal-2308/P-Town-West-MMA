@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { API_URL } from "../../../configure";
-
+import { toast} from "sonner";
 const AddSchedule = () => {
   const [preview, setPreview] = useState("");
   const [isDragging, setIsDragging] = useState(false);
@@ -51,8 +51,9 @@ const AddSchedule = () => {
       if (response.ok) {
         // On successful upload, set the uploaded file details
         setUploadedFile(data.file);
+        toast("Schedule updated successfully!");
       } else {
-        alert("Error uploading file");
+        toast("error while uploading a schedule!");
       }
     } catch (error) {
       console.error("Upload failed", error);
