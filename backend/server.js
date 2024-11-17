@@ -77,6 +77,7 @@ app.post("/api/upload", upload.single("profileImage"), async (req, res) => {
       message: "File uploaded and saved successfully",
       file: savedFile,
     });
+
   } catch (error) {
     console.error("Error saving file:", error.message);
     res.status(500).json({ message: "Error saving file", error });
