@@ -7,17 +7,24 @@ import authRoutes from "./routes/authRoutes.js";
 import cookieParser from "cookie-parser";
 import { sendMail } from "./controllers/emailController.js";
 import cors from "cors";
+import multer from "multer";
+import Upload from "./models/uploadModel.js";
 
 dotenv.config();
 connectDB();
 
 const app = express();
-app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: false,
+  })
+);
+
 app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // Your frontend origin
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
@@ -43,3 +50,47 @@ process.on("unhandledRejection", (error) => {
   console.error(`Unhandled Rejection: ${error.message}`);
   process.exit(1);
 });
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    return cb(null, "./uploads");
+  },
+  filename: function (req, file, cb) {
+    return cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage: storage });
+app.post("/api/upload", upload.single("profileImage"), async (req, res) => {
+  try {
+    const file = new Upload({
+      filename: req.file.filename,
+      filepath: req.file.path,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+    });
+
+    const savedFile = await file.save();
+    console.log("Saved File:", savedFile);
+
+    res.status(201).json({
+      message: "File uploaded and saved successfully",
+      file: savedFile,
+    });
+  } catch (error) {
+    console.error("Error saving file:", error.message);
+    res.status(500).json({ message: "Error saving file", error });
+  }
+});
+
+app.get("/api/uploads", async (req, res) => {
+  try {
+    const files = await Upload.find(); // Fetch all files
+    res.status(200).json(files);
+  } catch (error) {
+    console.error("Error fetching files:", error.message);
+    res.status(500).json({ message: "Error fetching files", error });
+  }
+});
+
+app.use("/uploads", express.static("uploads"));

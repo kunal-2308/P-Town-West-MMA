@@ -10,9 +10,12 @@ import AdminClassAdd from "./AdminClassAdd";
 import AdminView from "./AdminView";
 import AdminChangePassword from "./AdminChangePassword ";
 import AdminAdd from "./AdminAdd";
+import AddSchedule from "./AddSchedule";
+import { MdSchedule } from "react-icons/md";
 import { GoHomeFill } from "react-icons/go";
 import { FaRegCalendarAlt, FaClipboardList, FaUserPlus } from "react-icons/fa";
 import { IoLogOut, IoMenu, IoClose } from "react-icons/io5";
+import DisplayUploadedImage from "./DisplaySchedule";
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -39,6 +42,10 @@ const AdminDashboard = () => {
         return <AdminView />;
       case "Change Password":
         return <AdminChangePassword />;
+      case "Add Schedule":
+        return <AddSchedule />;
+      case "Display Schedule":
+        return <DisplayUploadedImage />;
       default:
         return <p>Welcome to the admin dashboard.</p>;
     }
@@ -90,6 +97,8 @@ const AdminDashboard = () => {
               { label: "Add Admin", icon: <FaUserPlus /> },
               { label: "View Admins", icon: <FaUserPlus /> },
               { label: "Change Password", icon: <FaUserPlus /> },
+              { label: "Add Schedule", icon: <MdSchedule /> },
+              { label: "Display Schedule", icon: <MdSchedule /> },
             ].map((item, index) => (
               <li
                 key={index}

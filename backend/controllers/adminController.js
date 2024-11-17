@@ -1,5 +1,4 @@
 import Class from "../models/classModel.js";
-import moment from "moment"; // Import moment here
 import userModel from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 
@@ -42,7 +41,7 @@ export const updateClass = async (req, res) => {
   const updates = req.body;
 
   try {
-    const updatedClass = await Class.findByIdAndUpdate({"_id":id}, updates, {
+    const updatedClass = await Class.findByIdAndUpdate({ _id: id }, updates, {
       new: true,
     });
     res.status(200).json(updatedClass);
@@ -87,8 +86,7 @@ export const getAllClasses = async (req, res) => {
 };
 
 export const addAdmin = async (req, res) => {
- 
-  const adminData = req.body;  // Access the body directly
+  const adminData = req.body; // Access the body directly
 
   try {
     let passwordHash = await bcrypt.hash(adminData.password, 12);
@@ -103,55 +101,59 @@ export const addAdmin = async (req, res) => {
 };
 
 export const viewParticularClass = async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   try {
     let response = await Class.findById(id).populate({
-      path: 'applicants',
-      select: 'name email phoneNumber',
-      options: { sort: { createdAt: -1 } }
+      path: "applicants",
+      select: "name email phoneNumber",
+      options: { sort: { createdAt: -1 } },
     });
     res.status(200).json(response);
   } catch (error) {
-    res.status(500).json({message: error.message});
+    res.status(500).json({ message: error.message });
   }
-}
+};
 
-export const getAllAdminList = async(req,res)=>{
+export const getAllAdminList = async (req, res) => {
   try {
-    let response = await userModel.find({role:'admin'});
+    let response = await userModel.find({ role: "admin" });
     res.status(200).json(response);
   } catch (error) {
-    res.status(500).json({message: error.message});
+    res.status(500).json({ message: error.message });
   }
-}
+};
 
-export const deleteAdmin = async(req,res)=>{
-  const {id} = req.params;
+export const deleteAdmin = async (req, res) => {
+  const { id } = req.params;
   await userModel.findByIdAndDelete(id);
-  res.status(200).json({message: "Admin deleted successfully"});
-}
+  res.status(200).json({ message: "Admin deleted successfully" });
+};
 
-export const updatePassword = async(req,res)=>{
+export const updatePassword = async (req, res) => {
   try {
     let id = req.params.id;
     let password = req.body.password;
 
-    let hashedPassword = await bcrypt.hash(password,12);
-    let response = await userModel.findByIdAndUpdate(id,{password:hashedPassword});
-    res.status(200).json({message: "Password updated successfully",response});
+    let hashedPassword = await bcrypt.hash(password, 12);
+    let response = await userModel.findByIdAndUpdate(id, {
+      password: hashedPassword,
+    });
+    res
+      .status(200)
+      .json({ message: "Password updated successfully", response });
   } catch (error) {
-    res.status(500).json({message: error.message});
+    res.status(500).json({ message: error.message });
   }
-}
+};
 
-export const getData = async(req,res)=>{
+export const getData = async (req, res) => {
   try {
     res.status(200).json({
-      message : "succcess"
-    })
+      message: "succcess",
+    });
   } catch (error) {
     res.status(500).json({
-      message : error
-    })
+      message: error,
+    });
   }
-}
+};
