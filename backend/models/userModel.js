@@ -4,9 +4,9 @@ const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    // password: { type: String, required: true }, //guest feature remove this
+    password: { type: String, required: true }, //guest feature remove this
     phoneNumber: {
-      type: Number,
+      type: String,
       required: true,
       match: [/^\d{10}$/, "Phone number must be exactly 10 digits"],
     },
