@@ -9,12 +9,9 @@ connectDB();
 
 const seedAdmin = async () => {
   try {
-    const hashedPassword = await bcrypt.hash("adminpassword", 12);
-
     const admin = await User.create({
       name: "Admin",
       email: "ayushmanmishra094@gmail.com",
-      password: hashedPassword,
       role: "admin",
       phoneNumber: "9324051808",
     });
