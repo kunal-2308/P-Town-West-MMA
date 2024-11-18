@@ -58,16 +58,12 @@ export const register = async (req, res) => {
 
 // Login
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email} = req.body;
 
   try {
     const user = await User.findOne({ email }).populate("bookedClasses"); // Populate booked classes
 
     if (!user) return res.status(404).json({ message: "User not found" });
-
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
-    if (!isPasswordCorrect)
-      return res.status(400).json({ message: "Invalid credentials" });
 
     const token = createToken(user._id, user.role);
 
@@ -87,15 +83,11 @@ export const login = async (req, res) => {
 
 // Admin Login
 export const adminLogin = async (req, res) => {
-  const { email, password } = req.body;
+  const { email} = req.body;
 
   try {
     const admin = await User.findOne({ email, role: "admin" });
     if (!admin) return res.status(404).json({ message: "Admin not found" });
-
-    const isPasswordCorrect = await bcrypt.compare(password, admin.password);
-    if (!isPasswordCorrect)
-      return res.status(400).json({ message: "Invalid credentials" });
 
     const token = createToken(admin._id, admin.role);
 

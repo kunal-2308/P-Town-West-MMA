@@ -11,10 +11,10 @@ const Login = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
+    // password: "",
   });
   const [errors, setErrors] = useState({});
-  const [showPassword, setShowPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
   const [apiError, setApiError] = useState(""); // For showing API-related errors
   const [loading, setLoading] = useState(false); // For showing loading spinner
   const navigate = useNavigate(); // For redirection after login
@@ -51,9 +51,9 @@ const Login = () => {
       }
     }
 
-    if (!formData.password) {
-      newErrors.password = "Password is required.";
-    }
+    // if (!formData.password) {
+    //   newErrors.password = "Password is required.";
+    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -160,7 +160,7 @@ const Login = () => {
                   )}
                 </div>
 
-                <div className="relative">
+                {/* <div className="relative">
                   <label className="block text-gray-700">Password</label>
                   <input
                     type={showPassword ? "text" : "password"}
@@ -184,7 +184,7 @@ const Login = () => {
                       {errors.password}
                     </p>
                   )}
-                </div>
+                </div> */}
 
                 <button
                   type="submit"

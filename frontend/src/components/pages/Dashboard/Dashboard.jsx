@@ -62,7 +62,6 @@ const Dashboard = () => {
             const { userDetails } = response.data;
             const bookedClasses = userDetails.bookedClasses;
             setUpcomingClasses(bookedClasses);
-            console.log(bookedClasses);
             // Set the user name
             setUserName(userDetails.name);
             // Assuming 'name' is the field in user details

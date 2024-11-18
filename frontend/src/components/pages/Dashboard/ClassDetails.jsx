@@ -75,7 +75,8 @@ const ClassDetails = () => {
         }
 
         setBookingSuccess(true);
-        toast.success("Class booked successfully!");
+        toast("Class booked successfully!");
+        console.log('class booked successfully');
       } catch (err) {
         // Log and show readable error message
         console.error("Error booking class:", err);
