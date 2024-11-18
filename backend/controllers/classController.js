@@ -7,6 +7,9 @@ const generateToken = (userId, role) => {
 };
 
 // User: Book a class
+export const generateToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET);
+};
 
 export const bookClass = async (req, res) => {
   const { id: classId } = req.params;
