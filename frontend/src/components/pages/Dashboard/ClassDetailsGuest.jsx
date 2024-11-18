@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-// import Cookies from "js-cookie";
 import Navbar from "../../../components/shared/Navbar";
 import Footer from "../../../components/shared/Footer";
 import { MoveRightIcon } from "lucide-react";
@@ -32,7 +31,7 @@ function ClassDetailsGuest() {
         );
         setClassDetails(response.data);
       } catch (error) {
-        setError("Failed to load class details.", error);
+        setError("Failed to load class details.");
       } finally {
         setLoading(false);
       }
@@ -43,7 +42,6 @@ function ClassDetailsGuest() {
 
   const handleBookClass = () => {
     setViewModal(true);
-    toast.error("To Book A Class, Please Signup / Login");
   };
 
   const handleClose = () => {
@@ -69,11 +67,10 @@ function ClassDetailsGuest() {
       if (token) {
         localStorage.setItem("jwt_token", token);
 
-        // Redirect based on whether the user is new or existing
         if (isNewUser) {
-          navigate("/guest/dashboard"); // For new users
+          navigate("/guest/dashboard");
         } else {
-          navigate("/dashboard"); // For existing users
+          navigate("/dashboard");
         }
       }
 
@@ -145,7 +142,7 @@ function ClassDetailsGuest() {
                 type="text"
                 id="name"
                 name="name"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm  sm:text-sm pl-2"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm pl-2"
                 required
                 onChange={handleChange}
               />
@@ -161,22 +158,6 @@ function ClassDetailsGuest() {
                 type="email"
                 id="email"
                 name="email"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm  sm:text-sm pl-2"
-                required
-                onChange={handleChange}
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="phone"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm pl-2"
                 required
                 onChange={handleChange}
@@ -184,17 +165,19 @@ function ClassDetailsGuest() {
             </div>
             <div className="mb-4">
               <label
-                htmlFor="cr"
+                htmlFor="phoneNumber"
                 className="block text-sm font-medium text-gray-700"
               >
-                Custom Request
+                Phone Number
               </label>
-              <textarea
-                id="cr"
-                name="cr"
-                rows="3"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm  sm:text-sm pl-2 pt-1"
-              ></textarea>
+              <input
+                type="text"
+                id="phoneNumber"
+                name="phoneNumber"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm pl-2"
+                required
+                onChange={handleChange}
+              />
             </div>
             <div className="flex justify-end space-x-2">
               <button
@@ -265,16 +248,16 @@ function ClassDetailsGuest() {
           </div>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-y-4 sm:gap-y-0 sm:gap-x-4">
             <button
-              className="px-5 py-2 text-base flex flex-row gap-x-2 bg-customYellow text-black font-light rounded-full transition duration-300 ease-in-out"
+              className="px-5 py-2 text-base flex flex-row gap-x-2 bg-customYellow text-black font-light rounded-full shadow-md hover:bg-gray-900 hover:text-white duration-300 ease-linear"
               onClick={handleBookClass}
             >
-              Book Your Slot <MoveRightIcon />
+              Book Now <MoveRightIcon />
             </button>
             <button
-              className="px-5 py-2 text-base flex flex-row justify-center items-center gap-x-2 bg-customYellow text-black font-light rounded-full transition duration-300 ease-in-out"
+              className="px-5 py-2 text-base flex flex-row gap-x-2 bg-white text-gray-800 font-light rounded-full shadow-md hover:bg-gray-900 hover:text-white duration-300 ease-linear"
               onClick={handleClose}
             >
-              Close <IoClose className="font-semibold" />
+              Close
             </button>
           </div>
         </div>
