@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import Navbar from "../../../components/shared/Navbar";
 import Footer from "../../../components/shared/Footer";
 import { MoveRightIcon } from "lucide-react";
@@ -17,21 +17,22 @@ function ClassDetailsGuest() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [viewModal, setViewModal] = useState(false);
-  const [formData,setFormData] = useState({
-    name : "",
-    email : "",
-    phoneNumber : "",
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phoneNumber: "",
   });
-
 
   useEffect(() => {
     const getData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${API_URL}/api/classes/guest/${classId}`);
+        const response = await axios.get(
+          `${API_URL}/api/classes/guest/${classId}`
+        );
         setClassDetails(response.data);
-      } catch (e) {
-        setError("Failed to load class details.");
+      } catch (error) {
+        setError("Failed to load class details.", error);
       } finally {
         setLoading(false);
       }
@@ -55,24 +56,42 @@ function ClassDetailsGuest() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      // Post the data to the 'bookclass' route with classId in the URL
-      let response = await axios.post(`${API_URL}/api/classes/guest/book/class/${classId}`,formData);
-      toast('Class Booked Successfully');
-      console.log(response.data);
+      const response = await axios.post(
+        `${API_URL}/api/classes/guest/book/class/${classId}`,
+        formData
+      );
+
+      const { token, message, isNewUser } = response.data;
+      toast.success(message);
+
+      if (token) {
+        localStorage.setItem("jwt_token", token);
+
+        // Redirect based on whether the user is new or existing
+        if (isNewUser) {
+          navigate("/guest/dashboard"); // For new users
+        } else {
+          navigate("/dashboard"); // For existing users
+        }
+      }
+
       setViewModal(false);
     } catch (error) {
-      toast("Error occured booking a class");
+      toast.error(
+        error.response?.data?.message || "An error occurred while booking."
+      );
       setViewModal(false);
     }
   };
 
   const handleChange = (e) => {
-    setFormData((prevData)=>({
+    setFormData((prevData) => ({
       ...prevData,
-      [e.target.name]:e.target.value,
+      [e.target.name]: e.target.value,
     }));
-  }
+  };
 
   if (loading) {
     return (
@@ -116,7 +135,10 @@ function ClassDetailsGuest() {
           </div>
           <form onSubmit={onSubmit}>
             <div className="mb-4">
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Name
               </label>
               <input
@@ -129,7 +151,10 @@ function ClassDetailsGuest() {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email
               </label>
               <input
@@ -142,7 +167,10 @@ function ClassDetailsGuest() {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Phone Number
               </label>
               <input
@@ -155,7 +183,10 @@ function ClassDetailsGuest() {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="cr" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="cr"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Custom Request
               </label>
               <textarea

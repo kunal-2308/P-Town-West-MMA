@@ -287,63 +287,55 @@ export const guestClassDetails = async (req, res) => {
 };
 
 export const bookGuestClasses = async (req, res) => {
-  let { name, email, phoneNumber } = req.body;
+  const { name, email, phoneNumber } = req.body;
   const classId = req.params.classId;
 
   try {
-    // Step 1: Check if the user already exists in the database
-    let findUser = await User.findOne({ email: email }, { _id: 1, bookedClasses: 1 });
-    
+    let findUser = await User.findOne({ email });
+
     if (findUser) {
-      // If user exists, check if they have already booked the class
       if (findUser.bookedClasses.includes(classId)) {
-        // If classId is already in the bookedClasses array, send a message
         return res.status(400).json({ message: "Class already booked" });
       }
 
-      // If the user has not booked the class, proceed to add the classId
-      let _id = findUser._id;
-      let updatedUser = await User.findByIdAndUpdate(_id, 
-        { $push: { bookedClasses: classId } },
-        { new: true }
-      );
+      findUser.bookedClasses.push(classId);
+      await findUser.save();
 
-      // Add the user's ID to the class's applicants array
-      let updatedClass = await Class.findByIdAndUpdate(classId, 
-        { $push: { applicants: _id } },
-        { new: true }
-      );
-
-      // Return updated user and class
-      return res.status(200).json([{ user: updatedUser }, { class: updatedClass }]);
-
-    } else {
-      // If the user doesn't exist, create a new user
-      let newUser = await User.create({
-        name,
-        email,
-        phoneNumber
+      await Class.findByIdAndUpdate(classId, {
+        $push: { applicants: findUser._id },
       });
 
-      // Once the new user is created, add the classId to their bookedClasses
-      let updatedUser = await User.findByIdAndUpdate(newUser._id, 
-        { $push: { bookedClasses: classId } },
-        { new: true }
-      );
+      const token = generateToken(findUser._id);
+      return res.status(200).json({
+        message: "Class booked successfully",
+        token,
+        user: findUser,
+        isNewUser: false,
+      });
+    } else {
+      const newUser = await User.create({
+        name,
+        email,
+        phoneNumber,
+        bookedClasses: [classId],
+      });
 
-      // Add the new user's ID to the class's applicants array
-      let updatedClass = await Class.findByIdAndUpdate(classId, 
-        { $push: { applicants: newUser._id } },
-        { new: true }
-      );
+      await Class.findByIdAndUpdate(classId, {
+        $push: { applicants: newUser._id },
+      });
 
-      // Return the newly created user and updated class
-      return res.status(200).json([{ user: updatedUser }, { class: updatedClass }]);
+      const token = generateToken(newUser._id);
+      return res.status(201).json({
+        message: "User created and class booked successfully",
+        token,
+        user: newUser,
+        isNewUser: true,
+      });
     }
-
   } catch (error) {
     console.error("Error booking class:", error);
-    res.status(500).json({ message: "An error occurred while booking the class" });
+    res
+      .status(500)
+      .json({ message: "An error occurred while booking the class" });
   }
 };
-

@@ -5,9 +5,7 @@ import User from "../models/userModel.js";
 
 // Helper function to create token
 const createToken = (userId, role) => {
-  return jwt.sign({ id: userId, role }, process.env.JWT_SECRET, {
-    expiresIn: "5d", // 5 days token expiry
-  });
+  return jwt.sign({ id: userId, role }, process.env.JWT_SECRET);
 };
 
 // Register :
@@ -58,7 +56,7 @@ export const register = async (req, res) => {
 
 // Login
 export const login = async (req, res) => {
-  const { email} = req.body;
+  const { email } = req.body;
 
   try {
     const user = await User.findOne({ email }).populate("bookedClasses"); // Populate booked classes
@@ -83,7 +81,7 @@ export const login = async (req, res) => {
 
 // Admin Login
 export const adminLogin = async (req, res) => {
-  const { email} = req.body;
+  const { email } = req.body;
 
   try {
     const admin = await User.findOne({ email, role: "admin" });
