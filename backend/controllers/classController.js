@@ -1,5 +1,11 @@
 import Class from "../models/classModel.js";
 import User from "../models/userModel.js";
+import jwt from "jsonwebtoken";
+
+const generateToken = (userId, role) => {
+  return jwt.sign({ id: userId, role }, process.env.JWT_SECRET);
+};
+
 // User: Book a class
 
 export const bookClass = async (req, res) => {
