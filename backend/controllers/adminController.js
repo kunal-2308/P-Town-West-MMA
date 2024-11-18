@@ -89,8 +89,6 @@ export const addAdmin = async (req, res) => {
   const adminData = req.body; // Access the body directly
 
   try {
-    let passwordHash = await bcrypt.hash(adminData.password, 12);
-    adminData.password = passwordHash;
     let response = await userModel.create(adminData);
     console.log(response);
     res.status(200).json({ message: "Admin added successfully", response });

@@ -6,7 +6,6 @@ const AdminAdd = () => {
   const [adminData, setAdminData] = useState({
     name: "",
     email: "",
-    password: "",
     phoneNumber: "",
     role: "admin",
   });
@@ -59,21 +58,7 @@ const AdminAdd = () => {
             required
           />
         </div>
-
-        {/* Password */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={adminData.password}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="Enter password"
-            required
-          />
-        </div>
-
+        
         {/* Phone Number */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">Phone Number</label>
