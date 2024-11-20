@@ -19,6 +19,7 @@ import AdminLogin from "./components/Admin/Login";
 import Signup from "./components/Auth/SignUp";
 import GuestDashboard from "./components/pages/Dashboard/GuestDashboard";
 import ClassDetailsGuest from "./components/pages/Dashboard/ClassDetailsGuest";
+import TimeTable from "./components/pages/Timetable/TimeTable";
 
 function App() {
   const createRouter = createBrowserRouter([
@@ -40,19 +41,18 @@ function App() {
     { path: "/guest/classes/:classId", element: <ClassDetailsGuest /> },
     { path: "/class/schedule", element: <Dashboard /> },
     { path: "/guest/dashboard", element: <GuestDashboard /> },
+    { path: "/timetable", element: <TimeTable /> },
   ]);
 
   return (
     <>
-      <Toaster position='bottom-right' />
+      <Toaster position="bottom-right" />
       <RouterProvider router={createRouter}>
         {/* This should be inside RouterProvider */}
 
         <ScrollToTop />
-
       </RouterProvider>
     </>
-
   );
 }
 
