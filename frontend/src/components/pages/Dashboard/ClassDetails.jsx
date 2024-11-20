@@ -38,6 +38,7 @@ const ClassDetails = () => {
 
           const data = await response.json();
           setClassDetails(data);
+          console.log(data);
         } catch (err) {
           console.error("Error fetching class details:", err);
           setError(err.message);

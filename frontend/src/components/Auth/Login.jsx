@@ -2,8 +2,7 @@ import Navbar from "../shared/Navbar";
 import Footer from "../shared/Footer";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { API_URL } from "../../../configure";
 
@@ -11,13 +10,11 @@ const Login = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [formData, setFormData] = useState({
     email: "",
-    // password: "",
   });
   const [errors, setErrors] = useState({});
-  // const [showPassword, setShowPassword] = useState(false);
-  const [apiError, setApiError] = useState(""); // For showing API-related errors
-  const [loading, setLoading] = useState(false); // For showing loading spinner
-  const navigate = useNavigate(); // For redirection after login
+  const [apiError, setApiError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const images = [
     "/images/Home/Trainings/12.png",
@@ -32,13 +29,11 @@ const Login = () => {
     return () => clearInterval(interval);
   }, [images.length]);
 
-  // Handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Validate form fields
   const validateForm = () => {
     const newErrors = {};
 
@@ -51,22 +46,17 @@ const Login = () => {
       }
     }
 
-    // if (!formData.password) {
-    //   newErrors.password = "Password is required.";
-    // }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setApiError("");
-    setLoading(true); // Set loading state to true
+    setLoading(true);
 
     if (!validateForm()) {
-      setLoading(false); // Stop loading if validation fails
+      setLoading(false);
       return;
     }
 
@@ -83,33 +73,28 @@ const Login = () => {
         Cookies.set("jwt_token", data.token, { secure: true });
         Cookies.set("userName", data.name, { secure: true });
         Cookies.set("email", formData.email, { secure: true });
-        console.log(data.user.role);
-        // Show success toast
-        toast.success("Login successful!", { autoClose: 2000 });
-        
-        // Redirect to the dashboard after a slight delay
+
+        toast.success("Login successful!");
+
         setTimeout(() => {
-          if(data.user.role=='admin'){
-            navigate('/admin/dashboard');
-            localStorage.setItem('role','admin');
-          }
-          else{
-            navigate('/dashboard');
-            localStorage.setItem('role','user');
+          if (data.user.role === "admin") {
+            navigate("/admin/dashboard");
+            localStorage.setItem("role", "admin");
+          } else {
+            navigate("/dashboard");
+            localStorage.setItem("role", "user");
           }
         }, 2000);
       } else {
         setApiError(data.message || "Login failed. Please try again.");
-        toast.error(data.message || "Login failed.", { autoClose: 2000 });
+        toast.error(data.message || "Login failed.");
       }
     } catch (error) {
       console.error("Login error:", error);
       setApiError("An error occurred. Please try again later.");
-      toast.error("An error occurred. Please try again later.", {
-        autoClose: 2000,
-      });
+      toast.error("An error occurred. Please try again later.");
     } finally {
-      setLoading(false); // Stop loading after the response
+      setLoading(false);
     }
   };
 
@@ -118,7 +103,6 @@ const Login = () => {
       <Navbar />
       <div className="flex items-center justify-center h-screen bg-gray-100 mt-20">
         <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl w-full">
-          {/* Left Carousel Section */}
           <div className="hidden md:flex md:w-1/2 relative">
             <img
               src={images[currentImage]}
@@ -128,7 +112,6 @@ const Login = () => {
             <div className="absolute inset-0 bg-black bg-opacity-40"></div>
           </div>
 
-          {/* Right Form Section */}
           <div className="flex items-center justify-center w-full md:w-1/2 p-8">
             <div className="w-full max-w-md">
               <h2 className="text-3xl font-semibold mb-6 text-center">
@@ -141,7 +124,6 @@ const Login = () => {
                 </p>
               )}
 
-              {/* Form */}
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
                   <label className="block text-gray-700">Email Address</label>
@@ -159,32 +141,6 @@ const Login = () => {
                     <p className="text-red-500 text-sm mt-1">{errors.email}</p>
                   )}
                 </div>
-
-                {/* <div className="relative">
-                  <label className="block text-gray-700">Password</label>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    className={`w-full p-3 border ${
-                      errors.password ? "border-red-500" : "border-gray-300"
-                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-3 top-3"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? "🙈" : "👁️"}
-                  </button>
-                  {errors.password && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.password}
-                    </p>
-                  )}
-                </div> */}
 
                 <button
                   type="submit"
@@ -218,7 +174,6 @@ const Login = () => {
                 </button>
               </form>
 
-              {/* Don't have an account? */}
               <div className="mt-4 text-center">
                 <p>
                   Don&apos;t have an account?{" "}
@@ -232,7 +187,6 @@ const Login = () => {
         </div>
       </div>
       <Footer />
-      <ToastContainer />
     </>
   );
 };

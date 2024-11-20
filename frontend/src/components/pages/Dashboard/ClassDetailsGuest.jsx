@@ -4,10 +4,11 @@ import Navbar from "../../../components/shared/Navbar";
 import Footer from "../../../components/shared/Footer";
 import { MoveRightIcon } from "lucide-react";
 import { IoClose } from "react-icons/io5";
-import { toast } from "sonner";
 import axios from "axios";
 import { FaSpinner } from "react-icons/fa";
 import { API_URL } from "../../../../configure";
+import { toast } from "sonner";
+
 
 function ClassDetailsGuest() {
   const { classId } = useParams();
@@ -54,24 +55,20 @@ function ClassDetailsGuest() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(formData);
     try {
       const response = await axios.post(
         `${API_URL}/api/classes/guest/book/class/${classId}`,
         formData
       );
 
-      const { token, message, isNewUser } = response.data;
-      toast.success(message);
-
+      const { token} = response.data;
+     
+      debugger
       if (token) {
         localStorage.setItem("jwt_token", token);
-
-        if (isNewUser) {
-          navigate("/guest/dashboard");
-        } else {
-          navigate("/dashboard");
-        }
+        toast.success('Class booked successfully');
+       navigate('/dashboard');
       }
 
       setViewModal(false);

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 import { API_URL } from "../../../configure";
 
 const AdminClassAdd = () => {
@@ -93,7 +92,6 @@ const AdminClassAdd = () => {
 
   return (
     <div className="p-8 max-w-4xl mx-auto bg-white border border-gray-300 rounded-lg shadow-md">
-      <ToastContainer />
       <h2 className="text-2xl font-bold mb-6">Schedule a Class</h2>
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
         {/* Class Name */}

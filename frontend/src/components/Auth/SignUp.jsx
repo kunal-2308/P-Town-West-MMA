@@ -2,8 +2,7 @@ import Navbar from "../shared/Navbar";
 import Footer from "../shared/Footer";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 import { API_URL } from "../../../configure";
 
 const SignUp = () => {

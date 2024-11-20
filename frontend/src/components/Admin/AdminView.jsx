@@ -42,7 +42,8 @@ const AdminView = () => {
       let response = await axios.delete(`${API_URL}/api/admin/deleteAdmin/${id}`,{
         withCredentials:true
       });
-      toast.success("Account deleted successfully");
+      console.log("Admin Deleted Successfully");
+      toast.success("Admin deleted successfully");
     } catch (error) {
       toast.error("Error deleting admin");
       console.error("Error deleting admin:", error);

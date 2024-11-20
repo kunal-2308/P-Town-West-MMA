@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 import { API_URL } from "../../../configure";
 
 const EditEventModal = ({
@@ -26,23 +25,21 @@ const EditEventModal = ({
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
-        const res = await axios.get(
-          `${API_URL}/api/classes/${classId}`,
-          {
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get(`${API_URL}/api/classes/${classId}`, {
+          withCredentials: true,
+        });
 
         const eventDetails = res.data;
 
         const formattedDate = eventDetails.date.split("T")[0];
-        const formattedTimeIn = new Date(
-          eventDetails.timeIn
-        ).toLocaleTimeString("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        });
+        const formattedTimeIn = new Date(eventDetails.timeIn).toLocaleTimeString(
+          "en-GB",
+          {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          }
+        );
         const formattedTimeOut = new Date(
           eventDetails.timeOut
         ).toLocaleTimeString("en-GB", {
@@ -99,13 +96,9 @@ const EditEventModal = ({
     setIsLoading(true);
 
     try {
-      await axios.put(
-        `${API_URL}/api/admin/update/${classId}`,
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.put(`${API_URL}/api/admin/update/${classId}`, formData, {
+        withCredentials: true,
+      });
       toast.success("Event updated successfully.");
       onClose();
     } catch (error) {
@@ -119,7 +112,6 @@ const EditEventModal = ({
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-[99999]">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl overflow-y-auto max-h-[90vh]">
-        <ToastContainer />
         <h2 className="text-2xl font-bold mb-6">
           Edit Event: {formData.name || "Unnamed Event"}
         </h2>

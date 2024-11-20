@@ -2,10 +2,6 @@ import Class from "../models/classModel.js";
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 
-const generateToken = (userId, role) => {
-  return jwt.sign({ id: userId, role }, process.env.JWT_SECRET);
-};
-
 // User: Book a class
 export const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET);
@@ -16,56 +12,43 @@ export const bookClass = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const classToBook = await Class.findById(classId);
+    // Atomic operation to check and update class availability
+    const classToBook = await Class.findOneAndUpdate(
+      {
+        _id: classId,
+        isFull: false,
+        $expr: { $lt: ["$bookedSlots", "$slots"] }, // Ensure booked slots < total slots
+        applicants: { $nin: [userId] }, // Ensure user has not already booked
+      },
+      {
+        $inc: { bookedSlots: 1 }, // Increment booked slots atomically
+        $addToSet: { applicants: userId }, // Add user atomically to applicants
+        $set: { isFull: true }, // Mark class as full if this is the last slot
+      },
+      { new: true } // Return updated document
+    );
 
     if (!classToBook) {
-      return res.status(404).json({ message: "Class not found" });
-    }
-
-    // Check if the class date is in the past
-    const classDate = new Date(classToBook.date);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set time to midnight for accurate comparison
-
-    if (classDate < today) {
-      return res.status(400).json({ message: "Cannot book a previous class." });
-    }
-
-    // Check if the class is full
-    if (classToBook.isFull || classToBook.bookedSlots >= classToBook.slots) {
-      return res
-        .status(400)
-        .json({ message: "Class is fully booked. Please try another class." });
-    }
-
-    // Check if the user has already booked the class
-    if (classToBook.applicants.includes(userId)) {
-      return res
-        .status(400)
-        .json({ message: "You have already booked this class." });
-    }
-
-    // Increment booked slots
-    classToBook.bookedSlots += 1;
-    if (classToBook.bookedSlots >= classToBook.slots) {
-      classToBook.isFull = true;
+      return res.status(400).json({
+        message: "Class is fully booked, already booked, or does not exist.",
+      });
     }
 
     // Associate the class with the user
-    const user = await User.findById(userId);
-    user.bookedClasses = user.bookedClasses || [];
-    user.bookedClasses.push(classToBook._id);
-    classToBook.applicants.push(userId);
-    await user.save();
-    await classToBook.save();
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        $addToSet: { bookedClasses: classToBook._id }, // Avoid duplicate bookings
+      },
+      { new: true }
+    );
 
     res.status(200).json({ message: "Class booked successfully", classToBook });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Failed to book class", error: error.message });
+    res.status(500).json({ message: "Failed to book class", error: error.message });
   }
 };
+
 
 export const cancelBooking = async (req, res) => {
   const { id: classId } = req.params;
@@ -300,19 +283,42 @@ export const bookGuestClasses = async (req, res) => {
   const classId = req.params.classId;
 
   try {
+    const classToBook = await Class.findById(classId);
+
+    if (!classToBook) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    // Check if the class is full
+    if (classToBook.isFull || classToBook.bookedSlots >= classToBook.slots) {
+      return res
+        .status(400)
+        .json({ message: "Class is fully booked. Please try another class." });
+    }
+
     let findUser = await User.findOne({ email });
 
     if (findUser) {
+      // Check if the user has already booked the class
       if (findUser.bookedClasses.includes(classId)) {
+        
         return res.status(400).json({ message: "Class already booked" });
       }
 
+      // Add the class to the user's bookings
       findUser.bookedClasses.push(classId);
       await findUser.save();
 
-      await Class.findByIdAndUpdate(classId, {
-        $push: { applicants: findUser._id },
-      });
+      // Add the user to the class applicants
+      classToBook.applicants.push(findUser._id);
+      classToBook.bookedSlots += 1;
+
+      // Mark the class as full if slots are exhausted
+      if (classToBook.bookedSlots >= classToBook.slots) {
+        classToBook.isFull = true;
+      }
+
+      await classToBook.save();
 
       const token = generateToken(findUser._id);
       return res.status(200).json({
@@ -322,6 +328,7 @@ export const bookGuestClasses = async (req, res) => {
         isNewUser: false,
       });
     } else {
+      // Create a new user and book the class
       const newUser = await User.create({
         name,
         email,
@@ -329,9 +336,16 @@ export const bookGuestClasses = async (req, res) => {
         bookedClasses: [classId],
       });
 
-      await Class.findByIdAndUpdate(classId, {
-        $push: { applicants: newUser._id },
-      });
+      // Add the new user to the class applicants
+      classToBook.applicants.push(newUser._id);
+      classToBook.bookedSlots += 1;
+
+      // Mark the class as full if slots are exhausted
+      if (classToBook.bookedSlots >= classToBook.slots) {
+        classToBook.isFull = true;
+      }
+
+      await classToBook.save();
 
       const token = generateToken(newUser._id);
       return res.status(201).json({
@@ -348,3 +362,4 @@ export const bookGuestClasses = async (req, res) => {
       .json({ message: "An error occurred while booking the class" });
   }
 };
+

@@ -44,14 +44,15 @@ function App() {
 
   return (
     <>
-     <RouterProvider router={createRouter}>
-      {/* This should be inside RouterProvider */}
-      <Toaster />
-      <ScrollToTop/>
-      
-    </RouterProvider>
+      <Toaster position='bottom-right' />
+      <RouterProvider router={createRouter}>
+        {/* This should be inside RouterProvider */}
+
+        <ScrollToTop />
+
+      </RouterProvider>
     </>
-   
+
   );
 }
 

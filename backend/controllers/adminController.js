@@ -41,9 +41,21 @@ export const updateClass = async (req, res) => {
   const updates = req.body;
 
   try {
-    const updatedClass = await Class.findByIdAndUpdate({ _id: id }, updates, {
+    // Find the class to check current values
+    const existingClass = await Class.findById(id);
+    if (!existingClass) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    // Check if `slots` is being updated
+    if (updates.slots && updates.slots > existingClass.bookedSlots) {
+      updates.isFull = false; // Set isFull to false if slots > bookedSlots
+    }
+
+    const updatedClass = await Class.findByIdAndUpdate(id, updates, {
       new: true,
     });
+
     res.status(200).json(updatedClass);
   } catch (error) {
     res
@@ -51,6 +63,7 @@ export const updateClass = async (req, res) => {
       .json({ message: "Failed to update class", error: error.message });
   }
 };
+
 
 // Admin: Delete a class
 export const deleteClass = async (req, res) => {
@@ -90,7 +103,7 @@ export const addAdmin = async (req, res) => {
 
   try {
     let response = await userModel.create(adminData);
-    console.log(response);
+    console.log("Admin Added Successfully");
     res.status(200).json({ message: "Admin added successfully", response });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -124,25 +137,11 @@ export const getAllAdminList = async (req, res) => {
 export const deleteAdmin = async (req, res) => {
   const { id } = req.params;
   await userModel.findByIdAndDelete(id);
+  console.log("Admin Deleted Successfully");
   res.status(200).json({ message: "Admin deleted successfully" });
 };
 
-export const updatePassword = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let password = req.body.password;
 
-    let hashedPassword = await bcrypt.hash(password, 12);
-    let response = await userModel.findByIdAndUpdate(id, {
-      password: hashedPassword,
-    });
-    res
-      .status(200)
-      .json({ message: "Password updated successfully", response });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
 
 export const getData = async (req, res) => {
   try {
