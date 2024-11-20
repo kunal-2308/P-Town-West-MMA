@@ -10,9 +10,9 @@ const createToken = (userId, role) => {
 
 // Register :
 export const register = async (req, res) => {
-  const { name, email, password, phoneNumber } = req.body;
+  const { name, email, phoneNumber } = req.body;
 
-  if (!name || !email || !password || !phoneNumber) {
+  if (!name || !email || !phoneNumber) {
     return res.status(400).json({
       message: "Something is missing",
     });
@@ -24,12 +24,9 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
-
     const user = await User.create({
       name,
       email,
-      password: hashedPassword,
       phoneNumber,
     });
 
@@ -61,7 +58,9 @@ export const login = async (req, res) => {
   try {
     const user = await User.findOne({ email }).populate("bookedClasses"); // Populate booked classes
 
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user){ 
+      return res.status(404).json({ message: "User not found" });
+    }
 
     const token = createToken(user._id, user.role);
 
@@ -142,3 +141,4 @@ export const getUserDetails = async (req, res) => {
     });
   }
 };
+

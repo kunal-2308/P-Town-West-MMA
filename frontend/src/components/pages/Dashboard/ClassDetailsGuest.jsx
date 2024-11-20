@@ -8,7 +8,7 @@ import axios from "axios";
 import { FaSpinner } from "react-icons/fa";
 import { API_URL } from "../../../../configure";
 import { toast } from "sonner";
-
+import Cookies from "js-cookie";
 
 function ClassDetailsGuest() {
   const { classId } = useParams();
@@ -56,29 +56,59 @@ function ClassDetailsGuest() {
   const onSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
+  
     try {
-      const response = await axios.post(
+      // Book the class
+      const bookingResponse = await axios.post(
         `${API_URL}/api/classes/guest/book/class/${classId}`,
         formData
       );
-
-      const { token} = response.data;
-     
-      debugger
+      const { token } = bookingResponse.data;
+  
       if (token) {
         localStorage.setItem("jwt_token", token);
-        toast.success('Class booked successfully');
-       navigate('/dashboard');
+        toast.success("Class booked successfully");
+        debugger
+        // Login after booking
+        const loginResponse = await axios.post(
+          "http://localhost:5007/api/auth/login",
+          {"email":formData.email}
+        );
+  
+        if (loginResponse.status === 200) {
+          const { token, user } = loginResponse.data;
+  
+          Cookies.set("jwt_token", token, { secure: true });
+          Cookies.set("userName", user.name, { secure: true });
+          Cookies.set("email", user.email, { secure: true });
+  
+          toast.success("Login successful!");
+  
+          setTimeout(() => {
+            if (user.role === "admin") {
+              navigate("/admin/dashboard");
+              localStorage.setItem("role", "admin");
+            } else {
+              navigate("/dashboard");
+              localStorage.setItem("role", "user");
+            }
+          }, 2000);
+        } else {
+          toast.error(
+            loginResponse.data.message || "Login failed. Please try again."
+          );
+        }
       }
-
-      setViewModal(false);
     } catch (error) {
       toast.error(
         error.response?.data?.message || "An error occurred while booking."
       );
+    } finally {
       setViewModal(false);
     }
   };
+  
+
 
   const handleChange = (e) => {
     setFormData((prevData) => ({
