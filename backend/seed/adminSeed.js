@@ -14,6 +14,7 @@ const seedAdmin = async () => {
       email: "ayushmanmishra094@gmail.com",
       role: "admin",
       phoneNumber: "9324051808",
+      CR : 'admin'
     });
 
     console.log("Admin user created:", admin);

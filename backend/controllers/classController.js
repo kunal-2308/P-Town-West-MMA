@@ -1,7 +1,7 @@
 import Class from "../models/classModel.js";
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
-
+import Customer from '../models/customerRepresentativeModel.js'
 // User: Book a class
 export const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET);
@@ -279,10 +279,11 @@ export const guestClassDetails = async (req, res) => {
 };
 
 export const bookGuestClasses = async (req, res) => {
-  const { name, email, phoneNumber } = req.body;
+  const { name, email, phoneNumber, CR } = req.body;  // CR is passed in the body
   const classId = req.params.classId;
 
   try {
+    // Fetch the class to be booked
     const classToBook = await Class.findById(classId);
 
     if (!classToBook) {
@@ -291,17 +292,17 @@ export const bookGuestClasses = async (req, res) => {
 
     // Check if the class is full
     if (classToBook.isFull || classToBook.bookedSlots >= classToBook.slots) {
-      return res
-        .status(400)
-        .json({ message: "Class is fully booked. Please try another class." });
+      return res.status(400).json({
+        message: "Class is fully booked. Please try another class.",
+      });
     }
 
+    // Search for an existing user by email
     let findUser = await User.findOne({ email });
 
     if (findUser) {
       // Check if the user has already booked the class
       if (findUser.bookedClasses.includes(classId)) {
-        
         return res.status(400).json({ message: "Class already booked" });
       }
 
@@ -318,8 +319,18 @@ export const bookGuestClasses = async (req, res) => {
         classToBook.isFull = true;
       }
 
+      // Add the user to the customer representative's clients array
+      const customerRep = await Customer.findById(CR); // Assuming CR is the customer representative ID
+      if (customerRep) {
+        customerRep.clients.push(findUser._id); // Add the user ID to the client's array
+        await customerRep.save(); // Save the updated customer representative document
+      } else {
+        return res.status(400).json({ message: "Invalid Customer Representative" });
+      }
+
       await classToBook.save();
 
+      // Generate a token for the user
       const token = generateToken(findUser._id);
       return res.status(200).json({
         message: "Class booked successfully",
@@ -334,6 +345,7 @@ export const bookGuestClasses = async (req, res) => {
         email,
         phoneNumber,
         bookedClasses: [classId],
+        CR, // Store the customer representative ID
       });
 
       // Add the new user to the class applicants
@@ -345,8 +357,18 @@ export const bookGuestClasses = async (req, res) => {
         classToBook.isFull = true;
       }
 
+      // Add the new user to the customer representative's clients array
+      const customerRep = await Customer.findById(CR); // Assuming CR is the customer representative ID
+      if (customerRep) {
+        customerRep.clients.push(newUser._id); // Add the new user ID to the clients array
+        await customerRep.save(); // Save the updated customer representative document
+      } else {
+        return res.status(400).json({ message: "Invalid Customer Representative" });
+      }
+
       await classToBook.save();
 
+      // Generate a token for the new user
       const token = generateToken(newUser._id);
       return res.status(201).json({
         message: "User created and class booked successfully",
@@ -357,9 +379,8 @@ export const bookGuestClasses = async (req, res) => {
     }
   } catch (error) {
     console.error("Error booking class:", error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while booking the class" });
+    res.status(500).json({ message: "An error occurred while booking the class" });
   }
 };
+
 

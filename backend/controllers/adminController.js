@@ -1,7 +1,7 @@
 import Class from "../models/classModel.js";
 import userModel from "../models/userModel.js";
 import bcrypt from "bcryptjs";
-
+import customerModel from "../models/customerRepresentativeModel.js";
 // Admin: Add a class
 export const addClass = async (req, res) => {
   const {
@@ -63,7 +63,6 @@ export const updateClass = async (req, res) => {
       .json({ message: "Failed to update class", error: error.message });
   }
 };
-
 
 // Admin: Delete a class
 export const deleteClass = async (req, res) => {
@@ -141,8 +140,6 @@ export const deleteAdmin = async (req, res) => {
   res.status(200).json({ message: "Admin deleted successfully" });
 };
 
-
-
 export const getData = async (req, res) => {
   try {
     res.status(200).json({
@@ -151,6 +148,54 @@ export const getData = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: error,
+    });
+  }
+};
+
+export const addCustomerRepresentative = async (req, res) => {
+  try {
+    let { name } = req.body;
+
+    let newUser = new customerModel({ name: name });
+
+    let response = await newUser.save();
+
+    if (response) {
+      return res.status(200).json({
+        message: "Customer respresentative added successfully",
+      });
+    }
+  } catch (error) {
+    return res.status(400).json({
+      error: "An error occured",
+    });
+  }
+};
+
+export const getRepresentativeList = async (req, res) => {
+  try {
+    let list = await customerModel.find();
+    return res.status(200).json({
+      list: list,
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error,
+    });
+  }
+};
+
+export const getparticularRepresentative = async (req, res) => {
+  try {
+    let { name } = req.body;
+    let List = await customerModel.findOne({ name }, { "clients": 1 }).populate({path:'clients'});
+
+    return res.status(200).json({
+      "List" : List.clients
+    });
+  } catch (error) {
+    return res.status(400).json({
+      error: error,
     });
   }
 };

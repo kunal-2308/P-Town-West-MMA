@@ -16,6 +16,8 @@ import { GoHomeFill } from "react-icons/go";
 import { FaRegCalendarAlt, FaClipboardList, FaUserPlus } from "react-icons/fa";
 import { IoLogOut, IoMenu, IoClose } from "react-icons/io5";
 import DisplayUploadedImage from "./DisplaySchedule";
+import CustomerRelationship from "./CustomerRelationship";
+import { FaUsers } from "react-icons/fa";
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -46,6 +48,8 @@ const AdminDashboard = () => {
         return <AddSchedule />;
       case "Display Schedule":
         return <DisplayUploadedImage />;
+      case "Customer Relationship":
+        return <CustomerRelationship/>
       default:
         return <p>Welcome to the admin dashboard.</p>;
     }
@@ -99,6 +103,7 @@ const AdminDashboard = () => {
               { label: "Change Password", icon: <FaUserPlus /> },
               { label: "Add Schedule", icon: <MdSchedule /> },
               { label: "Display Schedule", icon: <MdSchedule /> },
+              { label: "Customer Relationship", icon: <FaUsers/>},
             ].map((item, index) => (
               <li
                 key={index}
