@@ -16,7 +16,6 @@ import AdminDashboard from "./components/Admin/AdminDashboard";
 import ClassDetails from "./components/pages/Dashboard/ClassDetails";
 import Login from "./components/Auth/Login";
 import AdminLogin from "./components/Admin/Login";
-import Signup from "./components/Auth/SignUp";
 import GuestDashboard from "./components/pages/Dashboard/GuestDashboard";
 import ClassDetailsGuest from "./components/pages/Dashboard/ClassDetailsGuest";
 import TimeTable from "./components/pages/Timetable/TimeTable";
@@ -36,7 +35,6 @@ function App() {
     { path: "/admin/dashboard", element: <AdminDashboard /> },
     { path: "/login", element: <Login /> },
     { path: "/admin/login", element: <AdminLogin /> },
-    { path: "/signup", element: <Signup /> },
     { path: "/classes/:classId", element: <ClassDetails /> },
     { path: "/guest/classes/:classId", element: <ClassDetailsGuest /> },
     { path: "/class/schedule", element: <Dashboard /> },

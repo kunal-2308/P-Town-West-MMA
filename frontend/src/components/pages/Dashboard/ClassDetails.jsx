@@ -7,6 +7,7 @@ import { MoveRightIcon } from "lucide-react";
 import { IoClose } from "react-icons/io5";
 import { toast } from "sonner";
 import { API_URL } from "../../../../configure";
+import axios from "axios";
 const ClassDetails = () => {
   const { classId } = useParams();
   const navigate = useNavigate(); // Initialize useNavigate
@@ -22,16 +23,18 @@ const ClassDetails = () => {
     const fetchClassDetails = async () => {
       if (token) {
         try {
-          const response = await fetch(`${API_URL}/api/classes/${classId}`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          });
+          // const response = await fetch(`${API_URL}/api/classes/${classId}`, {
+          //   method: "GET",
+          //   headers: {
+          //     Authorization: `Bearer ${token}`,
+          //     "Content-Type": "application/json",
+          //   },
+          //   credentials: "include",
+          // });
 
-          if (!response.ok) {
+          const response = await axios.get(`${API_URL}/api/classes/${classId}`,{withCredentials:true});
+
+          if (response.status!=200) {
             const errorMessage = await response.text(); // Get the response body as text
             throw new Error(`Error ${response.status}: ${errorMessage}`);
           }

@@ -7,6 +7,7 @@ const AdminAdd = () => {
     name: "",
     email: "",
     phoneNumber: "",
+    password:"adminpassword",
     role: "admin",
   });
 
@@ -17,7 +18,7 @@ const AdminAdd = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    let response = await axios.post(`${API_URL}/api/admin/addAdmin`, adminData, {
+    let response = await axios.post(`${API_URL}/api/admin/add/admin`, adminData, {
       withCredentials: true,
     });
     if(!response.status.ok){

@@ -2,7 +2,59 @@ import Class from "../models/classModel.js";
 import userModel from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import customerModel from "../models/customerRepresentativeModel.js";
+import adminModel from "../models/adminModel.js";
+import jwt from "jsonwebtoken";
 // Admin: Add a class
+
+const createToken = (userId, role) => {
+  return jwt.sign({ id: userId, role }, process.env.JWT_SECRET);
+};
+
+export const adminLogin = async (req, res) => {
+  try {
+    let { email, password } = req.body;
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
+    }
+
+    let admin = await adminModel.findOne({ email }).select("+password");
+    if (!admin) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    let isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    const token = createToken(admin._id, admin.role);
+
+    res.cookie("jwt_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Set this to true in production (HTTPS)
+      sameSite: "strict",
+      // Omit maxAge for an indefinite cookie, or set a large value in ms (e.g., 5 years)
+      maxAge: 5 * 365 * 24 * 60 * 60 * 1000, // 5 years in milliseconds
+    });
+
+    return res.status(200).json({
+      token,
+      userId: admin._id,
+      role: admin.role,
+      name: admin.name,
+      email: admin.email,
+      message: "Login Successful!",
+    });
+  } catch (error) {
+    console.error("Error during login:", error);
+    return res
+      .status(400)
+      .json({ message: "Error occurred, please try again!" });
+  }
+};
+
 export const addClass = async (req, res) => {
   const {
     name,
@@ -98,15 +150,28 @@ export const getAllClasses = async (req, res) => {
 };
 
 export const addAdmin = async (req, res) => {
-  const adminData = req.body; // Access the body directly
-
   try {
-    let response = await userModel.create(adminData);
-    console.log("Admin Added Successfully");
+    const { name, email, password, phoneNumber, role } = req.body;
+
+    if (!name || !email || !password || !phoneNumber || !role) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    let hashedPassword = await bcrypt.hash(password, 12);
+    let adminData = {
+      name,
+      email,
+      password: hashedPassword,
+      phoneNumber,
+      role,
+    };
+
+    let response = await adminModel.create(adminData);
+
     res.status(200).json({ message: "Admin added successfully", response });
   } catch (error) {
-    res.status(500).json({ message: error.message });
-    console.log(error);
+    console.error("Error adding admin:", error.message);
+    res.status(500).json({ message: "Error occurred while adding admin" });
   }
 };
 
@@ -126,7 +191,7 @@ export const viewParticularClass = async (req, res) => {
 
 export const getAllAdminList = async (req, res) => {
   try {
-    let response = await userModel.find({ role: "admin" });
+    let response = await adminModel.find({ role: "admin" });
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -134,10 +199,17 @@ export const getAllAdminList = async (req, res) => {
 };
 
 export const deleteAdmin = async (req, res) => {
-  const { id } = req.params;
-  await userModel.findByIdAndDelete(id);
-  console.log("Admin Deleted Successfully");
-  res.status(200).json({ message: "Admin deleted successfully" });
+  try {
+    const { id } = req.params;
+    await adminModel.findByIdAndDelete(id);
+    console.log("Admin Deleted Successfully");
+    res.status(200).json({ message: "Admin deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      message: "Error occured",
+    });
+  }
 };
 
 export const getData = async (req, res) => {
@@ -188,14 +260,39 @@ export const getRepresentativeList = async (req, res) => {
 export const getparticularRepresentative = async (req, res) => {
   try {
     let { name } = req.body;
-    let List = await customerModel.findOne({ name }, { "clients": 1 }).populate({path:'clients'});
+    let List = await customerModel
+      .findOne({ name }, { clients: 1 })
+      .populate({ path: "clients" });
 
     return res.status(200).json({
-      "List" : List.clients
+      List: List.clients,
     });
   } catch (error) {
     return res.status(400).json({
       error: error,
+    });
+  }
+};
+
+export const updatePassword = async (req, res) => {
+  try {
+    let { password } = req.body;
+    let id = req.params.id;
+    let hashedPassword = await bcrypt.hash(password, 12);
+
+    let updatedAdmin = await adminModel.findByIdAndUpdate(
+      id,
+      { password: hashedPassword },
+      { new: true }
+    );
+    return res.status(200).json({
+      message : "Password updated successfully",
+      updatedAdmin
+    });
+  } catch (error) {
+    console.log('Error :',error);
+    return res.status(400).json({
+      message : "Error updating the password"
     });
   }
 };

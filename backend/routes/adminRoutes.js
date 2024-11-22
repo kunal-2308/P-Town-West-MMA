@@ -5,7 +5,6 @@ import {
   updateClass,
   deleteClass,
   getAllClasses,
-  addAdmin,
   viewParticularClass,
   getAllAdminList,
   deleteAdmin,
@@ -13,9 +12,14 @@ import {
   addCustomerRepresentative,
   getRepresentativeList,
   getparticularRepresentative,
+  adminLogin,
+  addAdmin,
+  updatePassword,
 } from "../controllers/adminController.js";
 
 const router = express.Router();
+
+router.post('/admin/login',adminLogin);
 
 router.post("/add", protectAdmin, addClass);
 
@@ -25,11 +29,13 @@ router.delete("/delete/:id", protectAdmin, deleteClass);
 
 router.get("/all", protectAdmin, getAllClasses);
 
-router.post("/addAdmin", protectAdmin, addAdmin);
+router.post('/add/admin',protectAdmin,addAdmin);
 
 router.get("/view/:id", protectAdmin, viewParticularClass);
 
 router.get("/allAdmin", protectAdmin, getAllAdminList);
+
+router.put('/update/password/:id',protectAdmin,updatePassword)
 
 router.delete("/deleteAdmin/:id", protectAdmin, deleteAdmin);
 

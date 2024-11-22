@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
-import User from "../models/userModel.js";
+import adminModel from "../models/adminModel.js";
 import { connectDB } from "../config/db.js";
 
 dotenv.config();
@@ -9,12 +9,15 @@ connectDB();
 
 const seedAdmin = async () => {
   try {
-    const admin = await User.create({
+    let password = "adminpassword";
+    let hashedPassword = await bcrypt.hash(password,12);
+    console.log('hashed password : ',hashedPassword);
+    const admin = await adminModel.create({
       name: "Admin",
       email: "ayushmanmishra094@gmail.com",
       role: "admin",
-      phoneNumber: "9324051808",
-      CR : 'admin'
+      password: hashedPassword,
+      phoneNumber: "9324051808"
     });
 
     console.log("Admin user created:", admin);

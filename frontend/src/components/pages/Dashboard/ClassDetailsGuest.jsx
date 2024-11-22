@@ -88,21 +88,27 @@ function ClassDetailsGuest() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    console.log(formData);
 
     try {
       const bookingResponse = await axios.post(
         `${API_URL}/api/classes/guest/book/class/${classId}`,
         formData
       );
-      const { token } = bookingResponse.data;
-
-      if (token) {
-        // Store the token in cookies for session handling
-        Cookies.set("jwt_token", token, { expires: 3 }); // Token expires in 3 days
-
+      
+      //take his all the details and hit a post req on register
+      if(bookingResponse){
+          let loginResponse = await axios.post(
+            `${API_URL}/api/auth/login`,{
+              "email":formData.email,
+            }
+          );
+           //then after success hit the req onto login
         toast.success("Class booked successfully");
         navigate("/dashboard");
       }
+     
+      
     } catch (error) {
       toast.error(
         error.response?.data?.message || "An error occurred while booking."
@@ -115,10 +121,8 @@ function ClassDetailsGuest() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen gap-x-3">
-        <FaSpinner className="animate-spin" />
-        <p className="text-xl font-semibold text-gray-600">
-          Loading class details...
-        </p>
+        <FaSpinner className="animate-spin text-indigo-600" />
+        <p className="text-xl font-semibold text-gray-600">Loading class details...</p>
       </div>
     );
   }
@@ -142,18 +146,18 @@ function ClassDetailsGuest() {
   if (viewModal) {
     return (
       <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Contact Form</h2>
+        <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold text-gray-800">Contact Form</h2>
             <button
               className="text-gray-500 hover:text-gray-700 focus:outline-none"
               onClick={onClose}
             >
-              &times;
+              <IoClose className="text-xl" />
             </button>
           </div>
           <form onSubmit={onSubmit}>
-            <div className="mb-4">
+            <div className="mb-6">
               <label
                 htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
@@ -164,13 +168,13 @@ function ClassDetailsGuest() {
                 type="text"
                 id="name"
                 name="name"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm pl-2"
+                className="mt-2 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm px-4 py-2"
                 value={formData.name}
                 required
                 onChange={handleChange}
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-6">
               <label
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
@@ -181,13 +185,13 @@ function ClassDetailsGuest() {
                 type="email"
                 id="email"
                 name="email"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm pl-2"
+                className="mt-2 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm px-4 py-2"
                 value={formData.email}
                 required
                 onChange={handleChange}
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-6">
               <label
                 htmlFor="phoneNumber"
                 className="block text-sm font-medium text-gray-700"
@@ -198,13 +202,13 @@ function ClassDetailsGuest() {
                 type="text"
                 id="phoneNumber"
                 name="phoneNumber"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm pl-2"
+                className="mt-2 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm px-4 py-2"
                 value={formData.phoneNumber}
                 required
                 onChange={handleChange}
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-6">
               <label
                 htmlFor="CR"
                 className="block text-sm font-medium text-gray-700"
@@ -214,7 +218,7 @@ function ClassDetailsGuest() {
               <select
                 id="CR"
                 name="CR"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"
+                className="mt-2 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm px-4 py-2"
                 value={formData.CR}
                 required
                 onChange={handleChange}
@@ -227,17 +231,17 @@ function ClassDetailsGuest() {
                 ))}
               </select>
             </div>
-            <div className="flex justify-end space-x-2">
+            <div className="flex justify-end space-x-4">
               <button
                 type="button"
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
                 onClick={onClose}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
               >
                 Submit
               </button>
@@ -251,15 +255,15 @@ function ClassDetailsGuest() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center py-12">
-        <h1 className="text-2xl font-bold text-gray-800">{classDetails.name}</h1>
-        <p className="mt-2 text-gray-600">{classDetails.description}</p>
+      <div className="flex flex-col items-center py-12 bg-gray-50 mt-40">
+        <h1 className="text-3xl font-semibold text-gray-800">{classDetails.name}</h1>
+        <p className="mt-4 text-lg text-gray-600">{classDetails.description}</p>
         <button
           onClick={handleBookClass}
-          className="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+          className="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 flex items-center"
         >
           Book Class
-          <MoveRightIcon className="ml-2" />
+          <MoveRightIcon className="ml-2 text-lg" />
         </button>
       </div>
       <Footer />

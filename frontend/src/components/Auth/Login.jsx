@@ -173,15 +173,6 @@ const Login = () => {
                   )}
                 </button>
               </form>
-
-              <div className="mt-4 text-center">
-                <p>
-                  Don&apos;t have an account?{" "}
-                  <a href="/signup" className="text-blue-600 hover:underline">
-                    Sign up
-                  </a>
-                </p>
-              </div>
             </div>
           </div>
         </div>

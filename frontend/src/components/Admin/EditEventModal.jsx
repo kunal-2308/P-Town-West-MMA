@@ -56,6 +56,16 @@ const EditEventModal = ({
         });
       } catch (error) {
         console.error("Error fetching event details:", error);
+        if (error.response) {
+          // Server responded with a status other than 2xx
+          console.error("Response error:", error.response.data);
+        } else if (error.request) {
+          // No response was received
+          console.error("Request error:", error.request);
+        } else {
+          // Something went wrong setting up the request
+          console.error("Error message:", error.message);
+        }
         toast.error("Failed to load event details.");
       }
     };
@@ -124,9 +134,10 @@ const EditEventModal = ({
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className={`w-full p-2 border rounded-md ${!formData.name && 'border-red-500'}`}
               placeholder="Event Name"
               required
+              disabled={isLoading}
             />
           </div>
 
@@ -140,10 +151,11 @@ const EditEventModal = ({
               name="instructor"
               value={formData.instructor}
               onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className={`w-full p-2 border rounded-md ${!formData.instructor && 'border-red-500'}`}
               placeholder="Enter Instructor"
               list="instructor-list"
               required
+              disabled={isLoading}
             />
             <datalist id="instructor-list">
               {instructors.map((inst) => (
@@ -164,9 +176,10 @@ const EditEventModal = ({
               name="slots"
               value={formData.slots}
               onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className={`w-full p-2 border rounded-md ${!formData.slots && 'border-red-500'}`}
               placeholder="No. of Slots"
               required
+              disabled={isLoading}
             />
           </div>
 
@@ -178,8 +191,9 @@ const EditEventModal = ({
               name="date"
               value={formData.date}
               onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className={`w-full p-2 border rounded-md ${!formData.date && 'border-red-500'}`}
               required
+              disabled={isLoading}
             />
           </div>
 
@@ -191,8 +205,9 @@ const EditEventModal = ({
               name="timeIn"
               value={formData.timeIn}
               onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className={`w-full p-2 border rounded-md ${!formData.timeIn && 'border-red-500'}`}
               required
+              disabled={isLoading}
             />
           </div>
 
@@ -204,8 +219,9 @@ const EditEventModal = ({
               name="timeOut"
               value={formData.timeOut}
               onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className={`w-full p-2 border rounded-md ${!formData.timeOut && 'border-red-500'}`}
               required
+              disabled={isLoading}
             />
           </div>
 
@@ -220,6 +236,8 @@ const EditEventModal = ({
               value={formData.category}
               onChange={handleInputChange}
               list="category-list"
+              className={`w-full p-2 border rounded-md ${!formData.category && 'border-red-500'}`}
+              disabled={isLoading}
             />
             <datalist id="category-list">
               {categories.map((cat) => (
@@ -236,6 +254,7 @@ const EditEventModal = ({
               type="button"
               className="px-6 py-2 border border-gray-400 rounded-md text-gray-500"
               onClick={onClose}
+              disabled={isLoading}
             >
               Discard
             </button>

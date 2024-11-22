@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
-
+import adminModel from "../models/adminModel.js";
 // Helper function to verify token and fetch user
 const verifyTokenAndFetchUser = async (token) => {
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -17,17 +17,29 @@ export const protectUser = async (req, res, next) => {
   }
 
   try {
-    const { user } = await verifyTokenAndFetchUser(token);
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+    console.log(userId);
+    // Fetch user from database
+    const user = await User.find({"_id":userId});
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.role !== "user") {
+      return res.status(403).json({ message: "user access only" });
     }
 
     req.user = user; // Attach user to request
     next();
   } catch (error) {
-    res
-      .status(401)
-      .json({ message: "Token verification failed", error: error.message });
+    console.error("Error in userMiddleware:", error);
+    res.status(401).json({
+      message: "Token verification failed",
+      error: error.message,
+    });
   }
 };
 
@@ -40,7 +52,13 @@ export const protectAdmin = async (req, res, next) => {
   }
 
   try {
-    const { user } = await verifyTokenAndFetchUser(token);
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    // Fetch user from database
+    const user = await adminModel.findById(userId);
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -52,8 +70,10 @@ export const protectAdmin = async (req, res, next) => {
     req.user = user; // Attach user to request
     next();
   } catch (error) {
-    res
-      .status(401)
-      .json({ message: "Token verification failed", error: error.message });
+    console.error("Error in protectAdmin:", error);
+    res.status(401).json({
+      message: "Token verification failed",
+      error: error.message,
+    });
   }
 };

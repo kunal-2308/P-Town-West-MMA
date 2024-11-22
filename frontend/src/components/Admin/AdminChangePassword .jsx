@@ -43,7 +43,7 @@ const AdminChangePassword = () => {
       await axios.put(
         `${API_URL}/api/admin/update/password/${adminId}`,
         {
-          password,
+          "password": confirmPassword,
         },
         {
           withCredentials: true,

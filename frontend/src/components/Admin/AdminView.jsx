@@ -39,6 +39,7 @@ const AdminView = () => {
   // Handle delete action
   const handleDelete = async (id) => {
     try {
+      console.log(id);
       let response = await axios.delete(`${API_URL}/api/admin/deleteAdmin/${id}`,{
         withCredentials:true
       });

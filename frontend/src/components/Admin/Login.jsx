@@ -71,7 +71,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        `${API_URL}/api/auth/admin/login`,
+        `${API_URL}/api/admin/admin/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -227,7 +227,7 @@ const Login = () => {
         </div>
       </div>
       <Footer />
-      <ToastContainer />
+      
     </>
   );
 };

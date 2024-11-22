@@ -177,7 +177,7 @@ export const getClassById = async (req, res) => {
     if (!classDetails) {
       return res.status(404).json({ message: "Class not found" });
     }
-    res.json(classDetails);
+    res.statu(200).json(classDetails);
   } catch (error) {
     console.error("Error fetching class details:", error);
     res.status(500).json({ message: "Server error" });

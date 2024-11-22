@@ -10,9 +10,9 @@ const createToken = (userId, role) => {
 
 // Register :
 export const register = async (req, res) => {
-  const { name, email, phoneNumber } = req.body;
+  const { name, email, phoneNumber, CR } = req.body;
 
-  if (!name || !email || !phoneNumber) {
+  if (!name || !email || !phoneNumber || !CR) {
     return res.status(400).json({
       message: "Something is missing",
     });
@@ -28,14 +28,15 @@ export const register = async (req, res) => {
       name,
       email,
       phoneNumber,
+      CR
     });
 
     const token = createToken(user._id, user.role);
 
     // Set token and userName in cookies
-    // setCookie(res, "token", token);
-    // setCookie(res, "userName", user.name);
-    // setCookie(res, "role", user.role); // Ensure role is also set for the user
+    res.cookie("token", token);
+    res.cookie("userName", user.name);
+    res.cookie("role", user.role); // Ensure role is also set for the user
 
     res.status(201).json({
       message: "User registered successfully",
@@ -58,18 +59,27 @@ export const login = async (req, res) => {
   try {
     const user = await User.findOne({ email }).populate("bookedClasses"); // Populate booked classes
 
-    if (!user){ 
+    if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Generate JWT token
     const token = createToken(user._id, user.role);
 
-    // Set cookies for token, userName, and role
-    res.cookie("jwt_token", token);
-    // Send back the user details along with the booked classes
+    // Set the token and user details in cookies
+    res.cookie("jwt_token", token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 }); // 3 days expiry
+    res.cookie("userName", user.name, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
+    res.cookie("role", user.role, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
+
+    // Send the token and user details back (excluding password for security)
     res.status(200).json({
       token,
-      user,
+      user: {
+        _id: user._id,
+        name: user.name,
+        role: user.role,
+        bookedClasses: user.bookedClasses, // Include booked classes if needed
+      },
     });
   } catch (error) {
     return res
@@ -77,6 +87,7 @@ export const login = async (req, res) => {
       .json({ message: "Something went wrong", error: error.message });
   }
 };
+
 
 // Admin Login
 export const adminLogin = async (req, res) => {
