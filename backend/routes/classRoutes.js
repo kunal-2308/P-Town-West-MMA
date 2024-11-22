@@ -23,7 +23,7 @@ router.get("/booked", protectUser, getBookedClasses);
 router.get("/available", protectUser, getAvailableClasses);
 router.get("/previous", protectUser, getPreviousClasses);
 router.get("/all-classes", protectUser, getAllClasses);
-router.get("/:classId", protectUser, getClassById); 
+router.get("/view/:classId",protectUser, getClassById); 
 router.get('/guest/list',getAllClasses);
 //Admin routes:
 router.get("/admin/previous", getListOfPreviousClasses);

@@ -8,7 +8,7 @@ export const generateToken = (userId) => {
 };
 
 export const bookClass = async (req, res) => {
-  const { id: classId } = req.params;
+  const {classId} = req.params.id;
   const userId = req.user.id;
 
   try {
@@ -173,11 +173,11 @@ export const getAllClasses = async (req, res) => {
 export const getClassById = async (req, res) => {
   try {
     const classId = req.params.classId; // Correct the parameter name
-    const classDetails = await Class.findById(classId);
+    const classDetails = await Class.findOne({"_id":classId});
     if (!classDetails) {
       return res.status(404).json({ message: "Class not found" });
     }
-    res.statu(200).json(classDetails);
+    res.status(200).json(classDetails);
   } catch (error) {
     console.error("Error fetching class details:", error);
     res.status(500).json({ message: "Server error" });

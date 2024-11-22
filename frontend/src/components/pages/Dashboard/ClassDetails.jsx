@@ -32,14 +32,14 @@ const ClassDetails = () => {
           //   credentials: "include",
           // });
 
-          const response = await axios.get(`${API_URL}/api/classes/${classId}`,{withCredentials:true});
+          const response = await axios.get(`${API_URL}/api/classes/view/${classId}`,{withCredentials:true});
 
-          if (response.status!=200) {
+          if (response.status>200 && response.status<600) {
             const errorMessage = await response.text(); // Get the response body as text
             throw new Error(`Error ${response.status}: ${errorMessage}`);
           }
 
-          const data = await response.json();
+          const data = response.data;
           setClassDetails(data);
           console.log(data);
         } catch (err) {
@@ -60,15 +60,16 @@ const ClassDetails = () => {
   const handleBookClass = async () => {
     if (token) {
       try {
-        const response = await fetch(`${API_URL}/api/classes/book/${classId}`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+        // const response = await fetch(`${API_URL}/api/classes/book/${classId}`, {
+        //   method: "POST",
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //     "Content-Type": "application/json",
+        //   },
+        //   credentials: "include",
+        // });
 
+        const response = await axios.post(`${API_URL}/api/classes/book/${classId}`,{})
         if (!response.ok) {
           const errorMessage = await response.json();
           // Ensure a readable message

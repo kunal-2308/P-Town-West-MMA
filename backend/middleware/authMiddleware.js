@@ -17,29 +17,17 @@ export const protectUser = async (req, res, next) => {
   }
 
   try {
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
-    console.log(userId);
-    // Fetch user from database
-    const user = await User.find({"_id":userId});
-
+    const { user } = await verifyTokenAndFetchUser(token);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
-    }
-
-    if (user.role !== "user") {
-      return res.status(403).json({ message: "user access only" });
     }
 
     req.user = user; // Attach user to request
     next();
   } catch (error) {
-    console.error("Error in userMiddleware:", error);
-    res.status(401).json({
-      message: "Token verification failed",
-      error: error.message,
-    });
+    res
+      .status(401)
+      .json({ message: "Token verification failed", error: error.message });
   }
 };
 
