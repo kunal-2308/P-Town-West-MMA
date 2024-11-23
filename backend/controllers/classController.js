@@ -8,9 +8,8 @@ export const generateToken = (userId) => {
 };
 
 export const bookClass = async (req, res) => {
-  const {classId} = req.params.id;
+  const classId = req.params.id;
   const userId = req.user.id;
-
   try {
     // Atomic operation to check and update class availability
     const classToBook = await Class.findOneAndUpdate(

@@ -32,9 +32,9 @@ const ClassDetails = () => {
           //   credentials: "include",
           // });
 
-          const response = await axios.get(`${API_URL}/api/classes/view/${classId}`,{withCredentials:true});
+          const response = await axios.get(`${API_URL}/api/classes/view/${classId}`, { withCredentials: true });
 
-          if (response.status>200 && response.status<600) {
+          if (response.status > 200 && response.status < 600) {
             const errorMessage = await response.text(); // Get the response body as text
             throw new Error(`Error ${response.status}: ${errorMessage}`);
           }
@@ -60,28 +60,28 @@ const ClassDetails = () => {
   const handleBookClass = async () => {
     if (token) {
       try {
-        // const response = await fetch(`${API_URL}/api/classes/book/${classId}`, {
-        //   method: "POST",
-        //   headers: {
-        //     Authorization: `Bearer ${token}`,
-        //     "Content-Type": "application/json",
-        //   },
-        //   credentials: "include",
-        // });
+        console.log(classId);
+        const response = await fetch(`${API_URL}/api/classes/book/${classId}`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
 
-        const response = await axios.post(`${API_URL}/api/classes/book/${classId}`,{})
-        if (!response.ok) {
+        // const response = await axios.post(`${API_URL}/api/classes/book/${classId}`,{withCredentials:true});
+        if (response.status < 200 && response.status > 600) {
           const errorMessage = await response.json();
           // Ensure a readable message
-          const formattedErrorMessage =
-            errorMessage.message || "An error occurred while booking.";
+          const formattedErrorMessage = errorMessage.message || "An error occurred while booking.";
           // toast.error(`Error booking class: ${formattedErrorMessage}`);
           throw new Error(`${formattedErrorMessage}`);
+        }else{
+          setBookingSuccess(true);
+          toast("Class booked successfully!");
+          console.log('class booked successfully');
         }
-
-        setBookingSuccess(true);
-        toast("Class booked successfully!");
-        console.log('class booked successfully');
       } catch (err) {
         // Log and show readable error message
         console.error("Error booking class:", err);
