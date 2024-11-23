@@ -10,6 +10,7 @@ import Trainers from "./Trainers";
 import MmaClub from "./MmaClub";
 import Form from "../../shared/Form";
 import Footer from "../../shared/Footer";
+import Unstop from "./Unstop";
 
 function Home() {
   return (
@@ -34,6 +35,7 @@ function Home() {
         </div>
         <MmaClub />
         <Form />
+        <Unstop />
         <Footer />
       </div>
     </>

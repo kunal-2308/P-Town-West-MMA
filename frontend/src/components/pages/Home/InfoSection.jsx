@@ -10,7 +10,7 @@ function InfoSection() {
           {/* Left Image */}
           <div className="div-1-image flex-shrink-0">
             <img
-              src="/images/Home/Trainings/21.png"
+              src="/Photos_Ptown/Home/4Card.png"
               alt="image"
               className="h-[240px] sm:h-[300px] md:h-[360px] lg:h-[500px] xl:h-[535px] object-cover w-full md:w-[420px] rounded-lg"
             />
@@ -32,8 +32,8 @@ function InfoSection() {
             </div>
             <div className="div-2-2-content bg-black flex flex-col w-full max-w-[360px] sm:max-w-[440px] h-auto md:h-[260px] rounded-lg p-4 md:p-6 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-105">
               <span className="text-white font-semibold text-lg sm:text-xl md:text-2xl">
-                Top Tier Coaches {"–"} One of the Five Gyms in India with a Black
-                BJJ Coach
+                Top Tier Coaches {"–"} One of the Five Gyms in India with a
+                Black BJJ Coach
               </span>
               <span className="font-thin text-xs sm:text-sm md:text-sm text-white mt-6">
                 One of the five gyms in India with a black BJJ coach. Our
