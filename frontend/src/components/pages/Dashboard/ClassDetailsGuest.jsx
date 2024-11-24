@@ -55,7 +55,7 @@ function ClassDetailsGuest() {
         toast.error("Failed to load customer representatives.");
       }
     };
-    
+
 
     fetchClassDetails();
     fetchRepresentatives();
@@ -91,32 +91,52 @@ function ClassDetailsGuest() {
     console.log(formData);
 
     try {
+      // Book the class
       const bookingResponse = await axios.post(
         `${API_URL}/api/classes/guest/book/class/${classId}`,
         formData
       );
-      
-      //take his all the details and hit a post req on register
-      if(bookingResponse){
-          let loginResponse = await axios.post(
-            `${API_URL}/api/auth/login`,{
-              "email":formData.email,
-            }
-          );
-           //then after success hit the req onto login
+      const { token } = bookingResponse.data;
+
+      if (token) {
+        localStorage.setItem("jwt_token", token);
         toast.success("Class booked successfully");
-        navigate("/dashboard");
+        // Login after booking
+        debugger
+        const loginResponse = await axios.post(
+          `${API_URL}/api/auth/login`,
+          { "email": formData.email }
+        );
+
+        if (loginResponse.status == 200) {
+          const { token, user } = loginResponse.data;
+
+          Cookies.set("jwt_token", token, { secure: true });
+          Cookies.set("userName", user.name, { secure: true });
+          Cookies.set("email", user.email, { secure: true });
+
+          toast.success("Login successful!");
+
+          setTimeout(() => {
+            if (user.role === "admin") {
+              navigate("/admin/dashboard");
+              localStorage.setItem("role", "admin");
+            } else {
+              navigate("/dashboard");
+              localStorage.setItem("role", "user");
+            }
+          }, 1000);
+        } else {
+          toast.error(
+            loginResponse.data.message || "Login failed. Please try again."
+          );
+        }
       }
-     
-      
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "An error occurred while booking."
-      );
-    } finally {
+      toast.error('error occured');
       setViewModal(false);
     }
-  };
+  }
 
   if (loading) {
     return (
@@ -255,16 +275,64 @@ function ClassDetailsGuest() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center py-12 bg-gray-50 mt-40">
-        <h1 className="text-3xl font-semibold text-gray-800">{classDetails.name}</h1>
-        <p className="mt-4 text-lg text-gray-600">{classDetails.description}</p>
-        <button
-          onClick={handleBookClass}
-          className="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 flex items-center"
-        >
-          Book Class
-          <MoveRightIcon className="ml-2 text-lg" />
-        </button>
+      <div className="div-1-herosection relative mt-10 mb-20 overflow-hidden">
+        <img src="/images/Training/3.png" alt="" className="w-screen" />
+        <div className="absolute inset-y-1/2 left-0 transform -translate-y-1/2 text-customYellow text-2xl md:text-5xl sm:text-6xl font-medium sm:pl-40 pl-10 w-[50%] sm:w-full">
+          Schedule an Appointment
+        </div>
+      </div>
+      <div className="bg-white w-full max-w-[70%] h-auto shadow-lg mb-20 rounded-lg p-8 mt-20 mx-auto py-12 px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row justify-start items-center gap-y-10 lg:gap-x-20">
+        <div className="div-1-image-container w-full lg:w-[30vw]">
+          <img
+            src="/images/Home/Popper/1.png"
+            alt=""
+            className="w-full h-auto"
+          />
+        </div>
+        <div className="flex flex-col justify-start items-start text-center lg:text-left">
+          <h1 className="text-2xl lg:text-4xl font-bold text-black mb-6">
+            {classDetails.name}
+          </h1>
+          <div className="mb-6 flex flex-col justify-start items-start lg:pl-5">
+            <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
+              <span className="font-semibold">Date:</span>{" "}
+              {classDetails.date.split("T")[0]}
+            </p>
+            <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
+              <span className="font-semibold">Time In:</span>{" "}
+              {classDetails.timeIn}
+            </p>
+            <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
+              <span className="font-semibold">Time Out:</span>{" "}
+              {classDetails.timeOut}
+            </p>
+            <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
+              <span className="font-semibold">Slots:</span> {classDetails.slots}
+            </p>
+            <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
+              <span className="font-semibold">Booked Slots:</span>{" "}
+              {classDetails.bookedSlots}
+            </p>
+            <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
+              <span className="font-semibold">Category:</span>{" "}
+              {classDetails.category}
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-y-4 sm:gap-y-0 sm:gap-x-4">
+            <button
+              className="px-5 py-2 text-base flex flex-row gap-x-2 bg-customYellow text-black font-light rounded-full shadow-md hover:bg-gray-900 hover:text-white duration-300 ease-linear"
+              onClick={handleBookClass}
+            >
+              Book Now <MoveRightIcon />
+            </button>
+            <button
+              className="px-5 py-2 text-base flex flex-row gap-x-2 bg-white text-gray-800 font-light rounded-full shadow-md hover:bg-gray-900 hover:text-white duration-300 ease-linear"
+              onClick={handleClose}
+            >
+              Close
+            </button>
+          </div>
+        </div>
       </div>
       <Footer />
     </>

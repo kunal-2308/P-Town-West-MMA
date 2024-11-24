@@ -10,43 +10,50 @@ export const generateToken = (userId) => {
 export const bookClass = async (req, res) => {
   const classId = req.params.id;
   const userId = req.user.id;
-  try {
-    // Atomic operation to check and update class availability
-    const classToBook = await Class.findOneAndUpdate(
-      {
-        _id: classId,
-        isFull: false,
-        $expr: { $lt: ["$bookedSlots", "$slots"] }, // Ensure booked slots < total slots
-        applicants: { $nin: [userId] }, // Ensure user has not already booked
-      },
-      {
-        $inc: { bookedSlots: 1 }, // Increment booked slots atomically
-        $addToSet: { applicants: userId }, // Add user atomically to applicants
-        $set: { isFull: true }, // Mark class as full if this is the last slot
-      },
-      { new: true } // Return updated document
-    );
 
+  try {
+    // Find the class first
+    const classToBook = await Class.findById(classId);
+    console.log(classToBook);
     if (!classToBook) {
+      return res.status(404).json({ message: "Class not found." });
+    }
+
+    // Check if class is full or already booked
+    if (
+      classToBook.isFull ||
+      classToBook.bookedSlots >= classToBook.slots ||
+      classToBook.applicants.includes(userId)
+    ) {
       return res.status(400).json({
-        message: "Class is fully booked, already booked, or does not exist.",
+        message: "Error occurred while booking: Class is full or already booked.",
       });
     }
 
-    // Associate the class with the user
-    const user = await User.findByIdAndUpdate(
+    // Perform the update
+    classToBook.bookedSlots += 1;
+    classToBook.applicants.push(userId);
+    if(classToBook.bookedSlots>=classToBook.slots){
+      classToBook.isFull=true;
+    }else{
+      classToBook.isFull=false;
+    }
+    await classToBook.save();
+
+    // Update the user's booked classes
+    await User.findByIdAndUpdate(
       userId,
-      {
-        $addToSet: { bookedClasses: classToBook._id }, // Avoid duplicate bookings
-      },
+      { $addToSet: { bookedClasses: classToBook._id } },
       { new: true }
     );
 
     res.status(200).json({ message: "Class booked successfully", classToBook });
   } catch (error) {
+    console.error("Error booking class:", error);
     res.status(500).json({ message: "Failed to book class", error: error.message });
   }
 };
+
 
 
 export const cancelBooking = async (req, res) => {

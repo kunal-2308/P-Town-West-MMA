@@ -60,7 +60,6 @@ const ClassDetails = () => {
   const handleBookClass = async () => {
     if (token) {
       try {
-        console.log(classId);
         const response = await fetch(`${API_URL}/api/classes/book/${classId}`, {
           method: "POST",
           headers: {
@@ -69,29 +68,17 @@ const ClassDetails = () => {
           },
           credentials: "include",
         });
-
-        // const response = await axios.post(`${API_URL}/api/classes/book/${classId}`,{withCredentials:true});
-        if (response.status < 200 && response.status > 600) {
-          const errorMessage = await response.json();
-          // Ensure a readable message
-          const formattedErrorMessage = errorMessage.message || "An error occurred while booking.";
-          // toast.error(`Error booking class: ${formattedErrorMessage}`);
-          throw new Error(`${formattedErrorMessage}`);
-        }else{
-          setBookingSuccess(true);
-          toast("Class booked successfully!");
-          console.log('class booked successfully');
+      
+        const parsedData = await response.json();
+        if (response.status === 200) {
+          toast.success("Class booked successfully!");
+        } else {
+          toast.error(parsedData.message);
         }
-      } catch (err) {
-        // Log and show readable error message
-        console.error("Error booking class:", err);
-        const readableError =
-          err.message.length > 100
-            ? "Something went wrong. Please try again later."
-            : err.message;
-        toast.error(`${readableError}`);
-        setBookingError(readableError);
+      } catch (error) {
+        console.error("Error booking class:", error);
       }
+      
     }
   };
 
