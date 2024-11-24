@@ -117,18 +117,47 @@ export const updateClass = async (req, res) => {
 };
 
 // Admin: Delete a class
+const deleteUserClass = async (userId, classId) => {
+  try {
+    await userModel.findByIdAndUpdate(userId, {
+      $pull: { bookedClasses: classId },
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 export const deleteClass = async (req, res) => {
   const { id } = req.params;
 
   try {
+    // Find the class by ID
+    const classData = await Class.findById(id);
+    if (!classData) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    // Remove the class from each user's bookedClasses
+    const removePromises = classData.applicants.map((userId) =>
+      deleteUserClass(userId, id)
+    );
+    const results = await Promise.all(removePromises);
+
+    // Check if any deletion failed
+    if (results.includes(false)) {
+      return res.status(400).json({ message: "Failed to update some users" });
+    }
+
+    // Delete the class
     await Class.findByIdAndDelete(id);
-    res.status(200).json({ message: "Class deleted successfully" });
+
+    return res.status(200).json({ message: "Deletion successful!" });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Failed to delete class", error: error.message });
+    return res.status(500).json({ message: "Failed to delete class", error: error.message });
   }
 };
+
 
 // Admin: Get all classes (for managing purposes)
 export const getAllClasses = async (req, res) => {
@@ -259,13 +288,13 @@ export const getRepresentativeList = async (req, res) => {
 
 export const getparticularRepresentative = async (req, res) => {
   try {
-    let {name} = req.body;
+    let { name } = req.body;
     let List = await customerModel
       .findOne({ name }, { clients: 1 })
       .populate({ path: "clients" });
 
     return res.status(200).json({
-      "array": List.clients,
+      array: List.clients,
     });
   } catch (error) {
     return res.status(400).json({
@@ -286,33 +315,32 @@ export const updatePassword = async (req, res) => {
       { new: true }
     );
     return res.status(200).json({
-      message : "Password updated successfully",
-      updatedAdmin
+      message: "Password updated successfully",
+      updatedAdmin,
     });
   } catch (error) {
-    console.log('Error :',error);
+    console.log("Error :", error);
     return res.status(400).json({
-      message : "Error updating the password"
+      message: "Error updating the password",
     });
   }
 };
 
-export const deleteRepresentative = async(req,res)=>{
+export const deleteRepresentative = async (req, res) => {
   try {
     let id = req.params.id;
-    
+
     let response = await customerModel.findByIdAndDelete(id);
-    if(response){
+    if (response) {
       return res.status(200).json({
-        message : "Representative deleted successfully"
+        message: "Representative deleted successfully",
       });
-    }
-    else{
+    } else {
       return res.status(400).json({
-        message : "Error occured while deleting a respresentative"
+        message: "Error occured while deleting a respresentative",
       });
     }
   } catch (error) {
-    return res.status(400).json({"error" : "occured"});
+    return res.status(400).json({ error: "occured" });
   }
-}
+};

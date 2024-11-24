@@ -14,7 +14,6 @@ export const bookClass = async (req, res) => {
   try {
     // Find the class first
     const classToBook = await Class.findById(classId);
-    console.log(classToBook);
     if (!classToBook) {
       return res.status(404).json({ message: "Class not found." });
     }
@@ -53,7 +52,6 @@ export const bookClass = async (req, res) => {
     res.status(500).json({ message: "Failed to book class", error: error.message });
   }
 };
-
 
 
 export const cancelBooking = async (req, res) => {

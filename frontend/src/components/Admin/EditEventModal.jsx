@@ -25,7 +25,7 @@ const EditEventModal = ({
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/classes/${classId}`, {
+        const res = await axios.get(`${API_URL}/api/classes/view/admin/${classId}`, {
           withCredentials: true,
         });
 
@@ -119,6 +119,20 @@ const EditEventModal = ({
     }
   };
 
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.delete(`${API_URL}/api/admin/delete/${classId}`, {
+        withCredentials: true,
+      });
+      toast.success("Class deleted successfully.");
+      onClose(); // Close the modal after successful deletion
+    } catch (error) {
+      console.error("Error deleting class:", error);
+      toast.error("Failed to delete the class.");
+    }
+  };
+  
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-[99999]">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl overflow-y-auto max-h-[90vh]">
@@ -266,6 +280,9 @@ const EditEventModal = ({
               disabled={isLoading}
             >
               {isLoading ? "Saving..." : "Save"}
+            </button>
+            <button className="border border-gray-400 px-3 rounded-md text-gray-500 font-normal hover:bg-red-600 hover:border-none hover:text-white" onClick={handleDelete}>
+              Delete Class
             </button>
           </div>
         </form>

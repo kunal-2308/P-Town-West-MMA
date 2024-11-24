@@ -47,6 +47,7 @@ router.get('/list/customer/representative',getRepresentativeList);
 router.post('/client/list',protectAdmin,getparticularRepresentative);
 
 router.delete('/delete/representative/:id',protectAdmin,deleteRepresentative);
+
 router.get('/*',getData);
 
 
