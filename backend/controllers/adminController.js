@@ -259,13 +259,13 @@ export const getRepresentativeList = async (req, res) => {
 
 export const getparticularRepresentative = async (req, res) => {
   try {
-    let { name } = req.body;
+    let {name} = req.body;
     let List = await customerModel
       .findOne({ name }, { clients: 1 })
       .populate({ path: "clients" });
 
     return res.status(200).json({
-      List: List.clients,
+      "array": List.clients,
     });
   } catch (error) {
     return res.status(400).json({
@@ -296,3 +296,23 @@ export const updatePassword = async (req, res) => {
     });
   }
 };
+
+export const deleteRepresentative = async(req,res)=>{
+  try {
+    let id = req.params.id;
+    
+    let response = await customerModel.findByIdAndDelete(id);
+    if(response){
+      return res.status(200).json({
+        message : "Representative deleted successfully"
+      });
+    }
+    else{
+      return res.status(400).json({
+        message : "Error occured while deleting a respresentative"
+      });
+    }
+  } catch (error) {
+    return res.status(400).json({"error" : "occured"});
+  }
+}

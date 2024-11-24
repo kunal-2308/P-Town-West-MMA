@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_URL } from '../../../configure';
 import { toast } from 'sonner';
-import { IoMdEye } from 'react-icons/io';
-import { FaEyeSlash } from 'react-icons/fa';
+import { CSVLink } from 'react-csv';
 
 function CustomerRelationship() {
   const [userName, setUserName] = useState('');
   const [list, setList] = useState([]);
-  const [selectedRepresentative, setSelectedRepresentative] = useState(null); // Store selected representative
+  const [selectedRepresentative, setSelectedRepresentative] = useState(null);
   const [clients, setClientsList] = useState([]);
 
   const handleChange = (e) => {
@@ -28,7 +27,7 @@ function CustomerRelationship() {
         setList((prev) => [
           ...prev,
           { name: userName, visibility: false },
-        ]); // Add visibility state
+        ]);
         setUserName('');
       }
     } catch (error) {
@@ -36,14 +35,16 @@ function CustomerRelationship() {
     }
   };
 
-  const handleDelete = async (name) => {
+  const handleDelete = async (name, _id) => {
     try {
-      await axios.delete(`${API_URL}/api/admin/delete/customer/representative`, {
-        data: { name },
+      const response = await axios.delete(`${API_URL}/api/admin/delete/representative/${_id}`, {
         withCredentials: true,
       });
-      toast.success('Representative deleted successfully');
-      setList((prev) => prev.filter((rep) => rep.name !== name));
+
+      if (response.status === 200) {
+        toast.success('Representative deleted successfully');
+        setList((prev) => prev.filter((rep) => rep.name !== name));
+      }
     } catch (error) {
       toast.error('Failed to delete representative');
     }
@@ -56,13 +57,21 @@ function CustomerRelationship() {
       )
     );
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         `${API_URL}/api/admin/client/list`,
-        {"name":ele.name},
+        { name: ele.name },
         { withCredentials: true }
       );
-      setClientsList(response.data.List);
-      setSelectedRepresentative(ele); // Set the selected representative for the modal
+      console.log(response.data);
+      if (response.status === 200) {
+        const newClients = response.data.array.map((client) => ({
+          name: client.name,
+          email: client.email,
+          phoneNumber: client.phoneNumber,
+        }));
+        setClientsList(newClients);
+        setSelectedRepresentative(ele);
+      }
     } catch (error) {
       toast.error('Failed to fetch client list');
     }
@@ -77,7 +86,7 @@ function CustomerRelationship() {
         );
         const fetchedList = response.data.list.map((rep) => ({
           ...rep,
-          visibility: false, // Initialize visibility for fetched data
+          visibility: false,
         }));
         setList(fetchedList);
       } catch (error) {
@@ -92,7 +101,7 @@ function CustomerRelationship() {
     <>
       {/* Modal */}
       {selectedRepresentative && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
+        <div className="fixed inset-0 flex backdrop-blur-sm z-40 justify-center items-center ml-40 mt-20">
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-lg font-semibold mb-4">
               Clients of {selectedRepresentative.name}
@@ -101,22 +110,40 @@ function CustomerRelationship() {
               <thead className="bg-gray-200 text-gray-600">
                 <tr>
                   <th className="border border-gray-300 px-4 py-2">Client Name</th>
+                  <th className="border border-gray-300 px-4 py-2">Email</th>
+                  <th className="border border-gray-300 px-4 py-2">Phone Number</th>
                 </tr>
               </thead>
               <tbody>
-                {clients.map((ele, index) => (
+                {clients.map((client, index) => (
                   <tr key={index}>
-                    <td className="border border-gray-300 px-4 py-2">{ele.name}</td>
+                    <td className="border border-gray-300 px-4 py-2">{client.name}</td>
+                    <td className="border border-gray-300 px-4 py-2">{client.email}</td>
+                    <td className="border border-gray-300 px-4 py-2">{client.phoneNumber}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <button
-              onClick={() => setSelectedRepresentative(null)}
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded-full"
-            >
-              Close
-            </button>
+            <div className="div-button-section flex justify-between items-center">
+              <button
+                onClick={() => setSelectedRepresentative(null)}
+                className="mt-4 bg-red-500 text-white px-4 py-2 rounded-full"
+              >
+                Close
+              </button>
+              <CSVLink
+                data={clients}
+                headers={[
+                  { label: 'Name', key: 'name' },
+                  { label: 'Email', key: 'email' },
+                  { label: 'Phone Number', key: 'phoneNumber' },
+                ]}
+                filename={`clients_of_${selectedRepresentative.name}.csv`}
+                className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 mt-4 rounded-full"
+              >
+                Export to CSV
+              </CSVLink>
+            </div>
           </div>
         </div>
       )}
@@ -152,31 +179,26 @@ function CustomerRelationship() {
             <table className="w-full border-collapse border border-gray-300 text-left shadow-md">
               <thead className="bg-gray-200 text-gray-600">
                 <tr>
-                  <th className="border border-gray-300 px-4 py-2">Name</th>
-                  <th className="border border-gray-300 px-4 py-2">View Clients</th>
-                  <th className="border border-gray-300 px-4 py-2">Actions</th>
+                  <th className="border border-gray-300 text-center px-4 py-2">Name</th>
+                  <th className="border border-gray-300 text-center px-4 py-2">View Clients</th>
+                  <th className="border border-gray-300 text-center px-4 py-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {list.map((ele, index) => (
-                  <tr key={index} className="hover:bg-gray-100">
+                  <tr key={index} className="hover:bg-gray-100 text-center">
                     <td className="border border-gray-300 px-4 py-2">{ele.name}</td>
-                    <td className="border border-gray-300 px-4 py-2 flex justify-center items-center">
-                      {ele.visibility ? (
-                        <IoMdEye
-                          className="text-blue-500 text-2xl cursor-pointer"
-                          onClick={() => toggleVisibility(index, ele)}
-                        />
-                      ) : (
-                        <FaEyeSlash
-                          className="text-gray-500 text-2xl cursor-pointer"
-                          onClick={() => toggleVisibility(index, ele)}
-                        />
-                      )}
+                    <td className=" px-4 py-2  border-gray-300 flex justify-center items-center">
+                      <button
+                        className="bg-red-500 text-white px-4 py-1 rounded-full hover:bg-red-600 transition"
+                        onClick={() => toggleVisibility(index, ele)}
+                      >
+                        View
+                      </button>
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
                       <button
-                        onClick={() => handleDelete(ele.name)}
+                        onClick={() => handleDelete(ele.name, ele._id)}
                         className="bg-red-500 text-white px-4 py-1 rounded-full hover:bg-red-600 transition"
                       >
                         Delete

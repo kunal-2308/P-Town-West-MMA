@@ -15,6 +15,7 @@ import {
   adminLogin,
   addAdmin,
   updatePassword,
+  deleteRepresentative,
 } from "../controllers/adminController.js";
 
 const router = express.Router();
@@ -45,6 +46,7 @@ router.get('/list/customer/representative',getRepresentativeList);
 
 router.post('/client/list',protectAdmin,getparticularRepresentative);
 
+router.delete('/delete/representative/:id',protectAdmin,deleteRepresentative);
 router.get('/*',getData);
 
 
