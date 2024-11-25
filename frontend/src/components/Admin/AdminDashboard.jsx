@@ -90,9 +90,9 @@ const AdminDashboard = () => {
         <div
           className={`${
             isSidebarOpen ? "block" : "hidden"
-          } md:block w-[70vw] md:w-[20vw] bg-black text-white p-6 md:static absolute z-50 h-screen md:h-auto flex flex-col items-center transform transition-transform duration-300 ease-in-out`}
+          } md:block w-[70vw] md:w-[20vw] bg-black text-white p-6 md:static absolute z-50 h-screen md:h-auto flex flex-col items-center transform transition-transform duration-300 ease-in-out rounded-3xl`}
         >
-          <ul className="space-y-4 mt-10 w-full">
+          <ul className="space-y-4 mt-3 w-full">
             {[
               { label: "Home", icon: <GoHomeFill /> },
               { label: "Upcoming Class", icon: <FaRegCalendarAlt /> },

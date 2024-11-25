@@ -18,7 +18,7 @@ import { protectAdmin, protectUser } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 router.post("/book/:id", protectUser, bookClass);
-router.post("/cancel/:id", protectUser, cancelBooking);
+router.get("/cancel/:id", protectUser, cancelBooking);
 router.get("/booked", protectUser, getBookedClasses);
 router.get("/available", protectUser, getAvailableClasses);
 router.get("/previous", protectUser, getPreviousClasses);

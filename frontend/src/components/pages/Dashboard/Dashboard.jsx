@@ -13,6 +13,8 @@ import { FaRegClock } from "react-icons/fa6";
 import { Button } from "../../ui/button";
 import { ImCancelCircle } from "react-icons/im";
 import { API_URL } from "../../../../configure";
+import { GiCancel } from "react-icons/gi";
+import { toast } from "sonner";
 
 const Dashboard = () => {
   const [allClasses, setAllClasses] = useState([]);
@@ -162,6 +164,17 @@ const Dashboard = () => {
     return `${hours12}:${minutes.toString().padStart(2, "0")} ${suffix}`;
   }
 
+  const handleCancelBooking = async(_id) =>{
+      try {
+        let response = await axios.get(`${API_URL}/api/classes/cancel/${_id}`,{withCredentials:true});
+        if(response.status==200) toast.success('Class unbooked successfully');
+
+      } catch (error) {
+          toast.error('Error occured while unbooking class');
+          console.log(error);
+      }
+  }
+
   return (
     <>
       <Navbar />
@@ -183,8 +196,8 @@ const Dashboard = () => {
             <div className="flex space-x-2 lg:space-x-4 mb-4 overflow-x-auto">
               <button
                 className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${selectedCategory === "All"
-                    ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
-                    : "bg-white border-[1px] border-customBorderGray rounded-xl"
+                  ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
+                  : "bg-white border-[1px] border-customBorderGray rounded-xl"
                   }`}
                 onClick={() => handleCategoryClick("All")}
               >
@@ -198,8 +211,8 @@ const Dashboard = () => {
                 <button
                   key={category}
                   className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${selectedCategory === category
-                      ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
-                      : "bg-white border-[1px] border-customBorderGray rounded-xl"
+                    ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
+                    : "bg-white border-[1px] border-customBorderGray rounded-xl"
                     }`}
                   onClick={() => handleCategoryClick(category)}
                 >
@@ -283,8 +296,8 @@ const Dashboard = () => {
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
                 className={`px-4 py-2 flex flex-row justify-center items-center gap-x-2 rounded ${currentPage === 1
-                    ? "bg-gray-300"
-                    : "bg-customPurple text-black"
+                  ? "bg-gray-300"
+                  : "bg-customPurple text-black"
                   }`}
               >
                 <MoveLeftIcon /> Previous
@@ -293,8 +306,8 @@ const Dashboard = () => {
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
                 className={`px-4 flex flex-row justify-center items-center gap-x-2 py-2 rounded ${currentPage === totalPages
-                    ? "bg-gray-300"
-                    : "bg-customPurple text-black"
+                  ? "bg-gray-300"
+                  : "bg-customPurple text-black"
                   }`}
               >
                 Next <MoveRightIcon />
@@ -347,6 +360,7 @@ const Dashboard = () => {
                             {convertTo12HourFormat(cls.timeOut)}
                           </span>
                         </div>
+                        <div className="cancel-booking-logo ml-10"><GiCancel className="size-5 hover:cursor-pointer" onClick={()=>handleCancelBooking(cls._id)}/></div>
                       </div>
                     ))}
                     {upcomingClasses.length > 2 && (

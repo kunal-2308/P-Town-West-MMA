@@ -55,7 +55,7 @@ export const bookClass = async (req, res) => {
 
 
 export const cancelBooking = async (req, res) => {
-  const { id: classId } = req.params;
+  const classId = req.params.id;
   const userId = req.user.id;
 
   try {
