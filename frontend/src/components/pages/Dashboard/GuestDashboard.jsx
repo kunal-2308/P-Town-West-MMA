@@ -182,7 +182,7 @@ function GuestDashboard() {
               <div
                 key={cls._id}
                 onClick={() => handleClick(cls._id)}
-                className="bg-black  text-white p-7 rounded-3xl shadow-md flex hover:cursor-pointer flex-col justify-start items-start"
+                className="bg-lightDark text-white p-7 rounded-3xl shadow-md flex hover:cursor-pointer flex-col justify-start items-start"
               >
                 <div className="div-1 w-full">
                   <h2 className="text-2xl font-semibold mb-2 text-customYellow">
