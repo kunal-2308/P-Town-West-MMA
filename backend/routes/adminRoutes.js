@@ -48,7 +48,7 @@ router.post('/client/list',protectAdmin,getparticularRepresentative);
 
 router.delete('/delete/representative/:id',protectAdmin,deleteRepresentative);
 
-router.get('/*',getData);
+router.get('/',getData);
 
 
 export default router;
