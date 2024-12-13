@@ -74,6 +74,7 @@ const Login = () => {
         Cookies.set("userName", data.name, { secure: true });
         Cookies.set("email", formData.email, { secure: true });
 
+        console.log(response.headers.getSetCookie());
         toast.success("Login successful!");
 
         setTimeout(() => {

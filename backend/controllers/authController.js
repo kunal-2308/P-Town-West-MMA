@@ -71,7 +71,6 @@ export const login = async (req, res) => {
     res.cookie("userName", user.name, { maxAge: 3 * 24 * 60 * 60 * 1000 });
     res.cookie("role", user.role, { maxAge: 3 * 24 * 60 * 60 * 1000 });
 
-
     // Send the token and user details back (excluding password for security)
     res.status(200).json({
       token,
