@@ -43,7 +43,7 @@ function ClassDetailsGuest() {
     const fetchRepresentatives = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5007/api/admin/list/customer/representative"
+          `${API_URL}/api/admin/list/customer/representative`
         );
         const reps = response.data.list.map((rep) => ({
           id: rep._id,
