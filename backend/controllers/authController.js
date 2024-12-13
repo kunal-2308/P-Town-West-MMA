@@ -71,6 +71,7 @@ export const login = async (req, res) => {
     res.cookie("userName", user.name, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
     res.cookie("role", user.role, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
 
+
     // Send the token and user details back (excluding password for security)
     res.status(200).json({
       token,
@@ -81,6 +82,7 @@ export const login = async (req, res) => {
         bookedClasses: user.bookedClasses, // Include booked classes if needed
       },
     });
+    console.log(user.name);
   } catch (error) {
     return res
       .status(500)

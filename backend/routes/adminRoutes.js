@@ -17,6 +17,7 @@ import {
   updatePassword,
   deleteRepresentative,
 } from "../controllers/adminController.js";
+import { tp } from "../controllers/tp.js";
 
 const router = express.Router();
 
@@ -50,5 +51,5 @@ router.delete('/delete/representative/:id',protectAdmin,deleteRepresentative);
 
 router.get('/',getData);
 
-
+router.get('/health',tp);
 export default router;
