@@ -67,9 +67,9 @@ export const login = async (req, res) => {
     const token = createToken(user._id, user.role);
 
     // Set the token and user details in cookies
-    res.cookie("jwt_token", token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 }); // 3 days expiry
-    res.cookie("userName", user.name, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
-    res.cookie("role", user.role, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
+    res.cookie("jwt_token", token, { maxAge: 3 * 24 * 60 * 60 * 1000 }); // 3 days expiry
+    res.cookie("userName", user.name, { maxAge: 3 * 24 * 60 * 60 * 1000 });
+    res.cookie("role", user.role, { maxAge: 3 * 24 * 60 * 60 * 1000 });
 
 
     // Send the token and user details back (excluding password for security)

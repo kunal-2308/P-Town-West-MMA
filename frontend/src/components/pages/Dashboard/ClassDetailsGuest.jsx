@@ -42,8 +42,10 @@ function ClassDetailsGuest() {
 
     const fetchRepresentatives = async () => {
       try {
+        let str = `${API_URL}/api/admin/list/customer/representative`;
+        console.log(str);
         const response = await axios.get(
-          `${API_URL}/api/admin/list/customer/representative`
+         str
         );
         const reps = response.data.list.map((rep) => ({
           id: rep._id,
