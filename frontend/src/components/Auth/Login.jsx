@@ -104,13 +104,16 @@ const Login = () => {
       <Navbar />
       <div className="flex items-center justify-center h-screen bg-gray-100 mt-20">
         <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl w-full">
-          <div className="hidden md:flex md:w-1/2 relative">
+          <div className=" hidden md:flex md:w-1/2 relative">
             <img
               src={images[currentImage]}
               alt={`Carousel ${currentImage + 1}`}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+          </div>
+          <div className="logo-main-login md:hidden flex justify-center items-center">
+            <img src="/images/logo/mainLogo.png" alt="logo_login"/>
           </div>
 
           <div className="flex items-center justify-center w-full md:w-1/2 p-8">

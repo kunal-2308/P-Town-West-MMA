@@ -143,7 +143,7 @@ function GuestDashboard() {
           <h1 className="text-2xl lg:text-2xl font-medium mb-4 md:text-start text-center">
             Available Classes
           </h1>
-          <div className="flex space-x-2 lg:space-x-4 mb-4 overflow-x-auto">
+          <div className="flex space-x-2 lg:space-x-4 mb-4 overflow-x-auto pb-5 md:p-0">
             <button
               className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${
                 selectedCategory === "All"

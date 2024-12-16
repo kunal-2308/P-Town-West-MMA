@@ -4,7 +4,7 @@ function InfoSection() {
     return (
         <>
             <div className="flex justify-center items-center p-4 lg:p-8">
-                <div className="container flex flex-col md:flex-row justify-center items-center sm:gap-y-6 md:gap-x-4">
+                <div className="container flex flex-col md:flex-row justify-center items-center sm:gap-y-10 md:gap-x-4">
                     {/* Left Image */}
                     <div className="flex-shrink-0 w-full md:w-[40%]">
                         <img
@@ -15,7 +15,7 @@ function InfoSection() {
                     </div>
 
                     {/* Text Sections */}
-                    <div className="flex flex-col gap-y-5 w-full md:w-[50%]">
+                    <div className="flex flex-col gap-y-5 w-full md:w-[50%] mt-5 md:mt-0">
                         {/* First Content Block */}
                         <div className="bg-customYellow flex flex-col justify-center items-center w-full h-auto rounded-lg p-4 md:p-6 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-105">
                             <div className="flex justify-start items-start flex-col gap-y-1 text-start px-4 sm:px-6 md:px-10">

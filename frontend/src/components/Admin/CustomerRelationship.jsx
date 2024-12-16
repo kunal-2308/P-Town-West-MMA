@@ -100,53 +100,54 @@ function CustomerRelationship() {
   return (
     <>
       {/* Modal */}
-      {selectedRepresentative && (
-        <div className="fixed inset-0 flex backdrop-blur-sm z-40 justify-center items-center ml-40 mt-20">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-lg font-semibold mb-4">
-              Clients of {selectedRepresentative.name}
-            </h2>
-            <table className="w-full border-collapse border border-gray-300 text-left shadow-md">
-              <thead className="bg-gray-200 text-gray-600">
-                <tr>
-                  <th className="border border-gray-300 px-4 py-2">Client Name</th>
-                  <th className="border border-gray-300 px-4 py-2">Email</th>
-                  <th className="border border-gray-300 px-4 py-2">Phone Number</th>
-                </tr>
-              </thead>
-              <tbody>
-                {clients.map((client, index) => (
-                  <tr key={index}>
-                    <td className="border border-gray-300 px-4 py-2">{client.name}</td>
-                    <td className="border border-gray-300 px-4 py-2">{client.email}</td>
-                    <td className="border border-gray-300 px-4 py-2">{client.phoneNumber}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div className="div-button-section flex justify-between items-center">
-              <button
-                onClick={() => setSelectedRepresentative(null)}
-                className="mt-4 bg-red-500 text-white px-4 py-2 rounded-full"
-              >
-                Close
-              </button>
-              <CSVLink
-                data={clients}
-                headers={[
-                  { label: 'Name', key: 'name' },
-                  { label: 'Email', key: 'email' },
-                  { label: 'Phone Number', key: 'phoneNumber' },
-                ]}
-                filename={`clients_of_${selectedRepresentative.name}.csv`}
-                className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 mt-4 rounded-full"
-              >
-                Export to CSV
-              </CSVLink>
-            </div>
-          </div>
-        </div>
-      )}
+{selectedRepresentative && (
+  <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-40">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <h2 className="text-lg font-semibold mb-4 text-center">
+        Clients of {selectedRepresentative.name}
+      </h2>
+      <table className="w-full border-collapse border border-gray-300 text-left shadow-md">
+        <thead className="bg-gray-200 text-gray-600">
+          <tr>
+            <th className="border border-gray-300 px-4 py-2">Client Name</th>
+            <th className="border border-gray-300 px-4 py-2">Email</th>
+            <th className="border border-gray-300 px-4 py-2">Phone Number</th>
+          </tr>
+        </thead>
+        <tbody>
+          {clients.map((client, index) => (
+            <tr key={index}>
+              <td className="border border-gray-300 px-4 py-2">{client.name}</td>
+              <td className="border border-gray-300 px-4 py-2">{client.email}</td>
+              <td className="border border-gray-300 px-4 py-2">{client.phoneNumber}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="div-button-section flex justify-between items-center mt-4">
+        <button
+          onClick={() => setSelectedRepresentative(null)}
+          className="bg-red-500 text-white px-4 py-2 rounded-full"
+        >
+          Close
+        </button>
+        <CSVLink
+          data={clients}
+          headers={[
+            { label: 'Name', key: 'name' },
+            { label: 'Email', key: 'email' },
+            { label: 'Phone Number', key: 'phoneNumber' },
+          ]}
+          filename={`clients_of_${selectedRepresentative.name}.csv`}
+          className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-full"
+        >
+          Export to CSV
+        </CSVLink>
+      </div>
+    </div>
+  </div>
+)}
+
 
       <div className="main-container flex flex-col items-center gap-y-10 p-6">
         <div className="div-title">
