@@ -190,10 +190,10 @@ const Dashboard = () => {
         <div className="flex flex-col lg:flex-row lg:h-screen justify-between mt-36 px-6 lg:mt-20">
           {/* Left Section - All Classes */}
           <div className="w-full lg:w-3/4 mb-8 lg:mb-0 pl-10 pr-10">
-            <h1 className="text-2xl lg:text-2xl font-medium mb-4">
+            <h1 className="text-2xl lg:text-2xl font-medium mb-4 pl-5">
               Available Classes
             </h1>
-            <div className="flex space-x-2 lg:space-x-4 mb-4 overflow-x-auto">
+            <div className="flex space-x-2 lg:space-x-4 mb-4 overflow-x-auto pl-5">
               <button
                 className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${selectedCategory === "All"
                   ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
@@ -225,7 +225,7 @@ const Dashboard = () => {
             </div>
 
             {/* Classes Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-6 overflow-hidden p-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-6 overflow-hidden pl-5">
               {currentClasses.length !== 0 ? (
                 currentClasses.map((cls) => (
                   <div
