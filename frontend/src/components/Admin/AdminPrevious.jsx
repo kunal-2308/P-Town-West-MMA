@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ViewClassModal from "./ViewClassModal"; // Import the ViewClassModal component
 import { API_URL } from "../../../configure";
+import Cookies from "js-cookie";
 
 const AdminPrevious = () => {
   const [previousArray, setPreviousArray] = useState([]);
@@ -12,8 +13,11 @@ const AdminPrevious = () => {
   useEffect(() => {
     const getPreviousClasses = async () => {
       try {
-        let res = await axios.get(`${API_URL}/api/classes/admin/previous`, {
-          withCredentials: true,
+        let token = Cookies.get('jwt_token');
+        let res = await axios.get(`${API_URL}/api/classes/admin/previous`,{
+          headers: {
+            Authorization: `Bearer ${token}` // Add token as a header
+          },
         });
         setPreviousArray(res.data.previousClasses);
       } catch (error) {

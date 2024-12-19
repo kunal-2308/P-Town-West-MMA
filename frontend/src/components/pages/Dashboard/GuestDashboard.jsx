@@ -10,6 +10,7 @@ import { TiTick } from "react-icons/ti";
 import { MoveLeftIcon, MoveRightIcon } from "lucide-react";
 import { toast } from "sonner";
 import { API_URL } from "../../../../configure";
+import Cookies from "js-cookie";
 
 function GuestDashboard() {
   const [allClasses, setAllClasses] = useState([]);
@@ -29,8 +30,13 @@ function GuestDashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let token = Cookies.get('jwt_token');
     axios
-      .get(`${API_URL}/api/classes/guest/list`)
+      .get(`${API_URL}/api/classes/guest/list`,{
+        headers: {
+          Authorization: `Bearer ${token}` // Add token as a header
+        },
+      })
       .then((response) => {
         const classes = response.data;
         setAllClasses(classes);
@@ -44,6 +50,7 @@ function GuestDashboard() {
       });
   }, [navigate]);
 
+  
   useEffect(() => {
     toast.success(
       "Welcome Guest, for more personalised experience please Signup / Login"

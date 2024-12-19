@@ -3,6 +3,7 @@ import axios from "axios";
 import EditEventModal from "./EditEventModal";
 import ViewClassModal from "./ViewClassModal";
 import { API_URL } from "../../../configure";
+import Cookies from "js-cookie";
 
 const AdminUpcoming = () => {
   const [upcomingArray, setUpcomingArray] = useState([]);
@@ -14,8 +15,11 @@ const AdminUpcoming = () => {
   useEffect(() => {
     const getUpcomingClasses = async () => {
       try {
-        let res = await axios.get(`${API_URL}/api/classes/admin/upcoming`, {
-          withCredentials: true,
+        let token = Cookies.get('jwt_token');
+        let res = await axios.get(`${API_URL}/api/classes/admin/upcoming`,{
+          headers: {
+            Authorization: `Bearer ${token}` // Add token as a header
+          },
         });
         setUpcomingArray(res.data.upcomingClasses);
       } catch (error) {

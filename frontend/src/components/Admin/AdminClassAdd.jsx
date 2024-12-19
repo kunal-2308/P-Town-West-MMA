@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { API_URL } from "../../../configure";
+import Cookies from "js-cookie";
 
 const AdminClassAdd = () => {
   const [formData, setFormData] = useState({
@@ -20,12 +21,14 @@ const AdminClassAdd = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    let token = Cookies.get('jwt_token');
     const fetchDetails = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/api/admin/all`,
-          {
-            withCredentials: true,
+          `${API_URL}/api/admin/all`,{
+            headers: {
+              Authorization: `Bearer ${token}` // Add token as a header
+            },
           }
         );
         console.log("API Response:", response.data); // Log to ensure we get data
@@ -67,8 +70,11 @@ const AdminClassAdd = () => {
     setIsLoading(true); // Show loading state when submitting
 
     try {
-      await axios.post(`${API_URL}/api/admin/add`, formData, {
-        withCredentials: true,
+      let token = Cookies.get('jwt_token');
+      await axios.post(`${API_URL}/api/admin/add`, formData,{
+        headers: {
+          Authorization: `Bearer ${token}` // Add token as a header
+        },
       });
 
       setFormData({

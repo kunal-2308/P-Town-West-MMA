@@ -41,8 +41,10 @@ const Dashboard = () => {
       if (token) {
         // setLoading(true);
         axios
-          .get(`${API_URL}/api/classes/all-classes`, {
-            withCredentials: true,
+          .get(`${API_URL}/api/classes/all-classes`,{
+            headers: {
+              Authorization: `Bearer ${token}` // Add token as a header
+            },
           })
           .then((response) => {
             const classes = response.data;
@@ -57,8 +59,10 @@ const Dashboard = () => {
           });
 
         axios
-          .get(`${API_URL}/api/auth/user/details`, {
-            withCredentials: true,
+          .get(`${API_URL}/api/auth/user/details`,{
+            headers: {
+              Authorization: `Bearer ${token}` // Add token as a header
+            },
           })
           .then((response) => {
             const { userDetails } = response.data;
@@ -166,7 +170,12 @@ const Dashboard = () => {
 
   const handleCancelBooking = async(_id) =>{
       try {
-        let response = await axios.get(`${API_URL}/api/classes/cancel/${_id}`,{withCredentials:true});
+        let token = Cookies.get('jwt_token');
+        let response = await axios.get(`${API_URL}/api/classes/cancel/${_id}`,{
+          headers: {
+            Authorization: `Bearer ${token}` // Add token as a header
+          },
+        });
         if(response.status==200) toast.success('Class unbooked successfully');
 
       } catch (error) {

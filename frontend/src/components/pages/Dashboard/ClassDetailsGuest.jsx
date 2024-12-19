@@ -93,6 +93,10 @@ function ClassDetailsGuest() {
     console.log(formData);
 
     try {
+      if(formData.phoneNumber.length != 10){
+        toast.error('Please enter a valid phone number!!!');
+        return;
+      }
       // Book the class
       const bookingResponse = await axios.post(
         `${API_URL}/api/classes/guest/book/class/${classId}`,
@@ -104,7 +108,6 @@ function ClassDetailsGuest() {
         localStorage.setItem("jwt_token", token);
         toast.success("Class booked successfully");
         // Login after booking
-        debugger
         const loginResponse = await axios.post(
           `${API_URL}/api/auth/login`,
           { "email": formData.email }
@@ -132,10 +135,11 @@ function ClassDetailsGuest() {
           toast.error(
             loginResponse.data.message || "Login failed. Please try again."
           );
+          
         }
       }
     } catch (error) {
-      toast.error('error occured');
+      toast.error(error?.response?.data?.message);
       setViewModal(false);
     }
   }

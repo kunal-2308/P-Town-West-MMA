@@ -3,6 +3,7 @@ import axios from 'axios';
 import { API_URL } from '../../../configure';
 import { toast } from 'sonner';
 import { CSVLink } from 'react-csv';
+import Cookies from 'js-cookie';
 
 function CustomerRelationship() {
   const [userName, setUserName] = useState('');
@@ -17,10 +18,15 @@ function CustomerRelationship() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      let token = Cookies.get('jwt_token');
       const response = await axios.post(
         `${API_URL}/api/admin/add/customer/representative`,
         { name: userName },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}` // Add token as a header
+          },
+        }
       );
       if (response.status === 200) {
         toast.success(response.data.message);
@@ -37,8 +43,11 @@ function CustomerRelationship() {
 
   const handleDelete = async (name, _id) => {
     try {
-      const response = await axios.delete(`${API_URL}/api/admin/delete/representative/${_id}`, {
-        withCredentials: true,
+      let token = Cookies.get('jwt_token');
+      const response = await axios.delete(`${API_URL}/api/admin/delete/representative/${_id}`,{
+        headers: {
+          Authorization: `Bearer ${token}` // Add token as a header
+        },
       });
 
       if (response.status === 200) {
@@ -57,10 +66,15 @@ function CustomerRelationship() {
       )
     );
     try {
+      let token = Cookies.get('jwt_token');
       const response = await axios.post(
         `${API_URL}/api/admin/client/list`,
         { name: ele.name },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}` // Add token as a header
+          },
+        }
       );
       console.log(response.data);
       if (response.status === 200) {
@@ -80,9 +94,14 @@ function CustomerRelationship() {
   useEffect(() => {
     const fetchRepresentatives = async () => {
       try {
+        let token = Cookies.get('jwt_token');
         const response = await axios.get(
-          `${API_URL}/api/admin/list/customer/representative`,
-          { withCredentials: true }
+          `${API_URL}/api/admin/list/customer/representative`
+          ,{
+            headers: {
+              Authorization: `Bearer ${token}` // Add token as a header
+            },
+          }
         );
         const fetchedList = response.data.list.map((rep) => ({
           ...rep,

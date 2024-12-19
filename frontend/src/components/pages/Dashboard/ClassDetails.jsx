@@ -31,8 +31,12 @@ const ClassDetails = () => {
           //   },
           //   credentials: "include",
           // });
-
-          const response = await axios.get(`${API_URL}/api/classes/view/${classId}`, { withCredentials: true });
+          let token = Cookies.get('jwt_token');
+          const response = await axios.get(`${API_URL}/api/classes/view/${classId}`,{
+            headers: {
+              Authorization: `Bearer ${token}` // Add token as a header
+            },
+          });
 
           if (response.status > 200 && response.status < 600) {
             const errorMessage = await response.text(); // Get the response body as text

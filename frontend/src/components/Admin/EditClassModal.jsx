@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
 import "react-toastify/dist/ReactToastify.css";
 import { API_URL } from "../../../configure";
+import Cookies from "js-cookie";
 
 const EditClassModal = ({
   isOpen,
@@ -30,10 +31,14 @@ const EditClassModal = ({
     setIsLoading(true);
 
     try {
+      let token = Cookies.get('jwt_token');
       const response = await axios.post(
         `${API_URL}/api/admin/update/${updatedData._id}`,
-        updatedData,
-        { withCredentials: true }
+        updatedData,{
+          headers: {
+            Authorization: `Bearer ${token}` // Add token as a header
+          },
+        }
       );
       toast.success("Class successfully updated!");
       onUpdate(response.data);

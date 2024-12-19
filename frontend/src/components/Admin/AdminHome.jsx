@@ -3,6 +3,7 @@ import axios from "axios";
 import EditEventModal from "./EditEventModal";
 import ViewClassModal from "./ViewClassModal";
 import { API_URL } from "../../../configure";
+import Cookies from "js-cookie";
 
 const AdminHome = ({ onViewAllClick }) => {
   const [upcomingArray, setUpcomingArray] = useState([]);
@@ -17,8 +18,11 @@ const AdminHome = ({ onViewAllClick }) => {
   useEffect(() => {
     const getPreviousClasses = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/classes/admin/previous`, {
-          withCredentials: true,
+        let token = Cookies.get('jwt_token');
+        const res = await axios.get(`${API_URL}/api/classes/admin/previous`,{
+          headers: {
+            Authorization: `Bearer ${token}` // Add token as a header
+          },
         });
         setPreviousArray(res.data.previousClasses);
       } catch (error) {
@@ -28,8 +32,11 @@ const AdminHome = ({ onViewAllClick }) => {
 
     const getUpcomingClasses = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/classes/admin/upcoming`, {
-          withCredentials: true,
+        let token = Cookies.get('jwt_token');
+        const res = await axios.get(`${API_URL}/api/classes/admin/upcoming`,{
+          headers: {
+            Authorization: `Bearer ${token}` // Add token as a header
+          },
         });
         setUpcomingArray(res.data.upcomingClasses);
       } catch (error) {
@@ -39,8 +46,11 @@ const AdminHome = ({ onViewAllClick }) => {
 
     const fetchCategoriesAndInstructors = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/admin/all`, {
-          withCredentials: true,
+        let token = Cookies.get('jwt_token');
+        const res = await axios.get(`${API_URL}/api/admin/all`,{
+          headers: {
+            Authorization: `Bearer ${token}` // Add token as a header
+          },
         });
         setCategories(res.data.categories);
         setInstructors(res.data.instructors);

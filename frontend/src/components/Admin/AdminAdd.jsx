@@ -2,6 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { API_URL } from "../../../configure";
+import Cookies from "js-cookie";
+
 const AdminAdd = () => {
   const [adminData, setAdminData] = useState({
     name: "",
@@ -11,22 +13,36 @@ const AdminAdd = () => {
     role: "admin",
   });
 
+  const token = Cookies.get("jwt_token");
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAdminData({ ...adminData, [name]: value });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    let response = await axios.post(`${API_URL}/api/admin/add/admin`, adminData, {
-      withCredentials: true,
-    });
-    if(!response.status.ok){
-      toast.error(response.data.message);
-    }else{
-      toast.success(response.data.message);
-    }
+  
+    axios
+      .post(
+        `${API_URL}/api/admin/add/admin`,
+        adminData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token as a header
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message);
+      })
+      .catch((error) => {
+        const errorMessage = error.response?.data?.message || 'Something went wrong!';
+        toast.error(errorMessage);
+      });
   };
+  
+  
 
   return (
     <div className="p-8 max-w-lg mx-auto bg-white border border-gray-300 rounded-lg shadow-md">

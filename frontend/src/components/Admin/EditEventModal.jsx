@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { API_URL } from "../../../configure";
+import Cookies from "js-cookie";
 
 const EditEventModal = ({
   classId,
@@ -25,8 +26,11 @@ const EditEventModal = ({
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/classes/view/admin/${classId}`, {
-          withCredentials: true,
+        let token = Cookies.get('jwt_token');
+        const res = await axios.get(`${API_URL}/api/classes/view/admin/${classId}`,{
+          headers: {
+            Authorization: `Bearer ${token}` // Add token as a header
+          },
         });
 
         const eventDetails = res.data;
@@ -106,8 +110,11 @@ const EditEventModal = ({
     setIsLoading(true);
 
     try {
-      await axios.put(`${API_URL}/api/admin/update/${classId}`, formData, {
-        withCredentials: true,
+      let token = Cookies.get('jwt_token');
+      await axios.put(`${API_URL}/api/admin/update/${classId}`, formData,{
+        headers: {
+          Authorization: `Bearer ${token}` // Add token as a header
+        },
       });
       toast.success("Event updated successfully.");
       onClose();
@@ -122,8 +129,11 @@ const EditEventModal = ({
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.delete(`${API_URL}/api/admin/delete/${classId}`, {
-        withCredentials: true,
+      let token = Cookies.get('jwt_token');
+      const response = await axios.delete(`${API_URL}/api/admin/delete/${classId}`,{
+        headers: {
+          Authorization: `Bearer ${token}` // Add token as a header
+        },
       });
       toast.success("Class deleted successfully.");
       onClose(); // Close the modal after successful deletion

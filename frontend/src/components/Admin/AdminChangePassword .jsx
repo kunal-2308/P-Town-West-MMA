@@ -30,34 +30,36 @@ const AdminChangePassword = () => {
     }
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     // Validate passwords
     if (password !== confirmPassword) {
       toast.error("Passwords do not match.");
       return;
     }
-
-    try {
-      await axios.put(
+  
+    axios
+      .put(
         `${API_URL}/api/admin/update/password/${adminId}`,
+        { password: confirmPassword },
         {
-          "password": confirmPassword,
-        },
-        {
-          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token as a header
+          },
         }
-      );
-
-      toast.success("Password updated successfully!");
-      setPassword("");
-      setConfirmPassword("");
-    } catch (error) {
-      console.error("Error updating password:", error);
-      toast.error("Failed to update password.");
-    }
+      )
+      .then(() => {
+        toast.success("Password updated successfully!");
+        setPassword("");
+        setConfirmPassword("");
+      })
+      .catch((error) => {
+        console.error("Error updating password:", error);
+        toast.error("Failed to update password.");
+      });
   };
+  
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">

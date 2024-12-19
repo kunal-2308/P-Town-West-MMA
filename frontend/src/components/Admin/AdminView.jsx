@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { API_URL } from "../../../configure";
+import Cookies from 'js-cookie';
 
 const AdminView = () => {
   const [admin, setAdmin] = useState([]);
@@ -14,8 +15,11 @@ const AdminView = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/admin/allAdmin`, {
-          withCredentials: true,
+        let token = Cookies.get('jwt_token');
+        const response = await axios.get(`${API_URL}/api/admin/allAdmin`,{
+          headers: {
+            Authorization: `Bearer ${token}` // Add token as a header
+          },
         });
         setAdmin(response.data);
       } catch (error) {
@@ -40,8 +44,11 @@ const AdminView = () => {
   const handleDelete = async (id) => {
     try {
       console.log(id);
+      let token = Cookies.get('jwt_token');
       let response = await axios.delete(`${API_URL}/api/admin/deleteAdmin/${id}`,{
-        withCredentials:true
+        headers: {
+          Authorization: `Bearer ${token}` // Add token as a header
+        },
       });
       console.log("Admin Deleted Successfully");
       toast.success("Admin deleted successfully");
