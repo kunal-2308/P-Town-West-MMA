@@ -69,7 +69,6 @@ const ClassDetails = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          credentials: "include",
         });
       
         const parsedData = await response.json();
