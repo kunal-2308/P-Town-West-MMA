@@ -72,9 +72,30 @@ const AdminHome = ({ onViewAllClick }) => {
   };
 
   const handleEditClick = (classId) => {
-    setSelectedClassId(classId);
-    setIsEditModalOpen(true);
+    try{
+      setSelectedClassId(classId);
+      setIsEditModalOpen(true);
+    }
+    finally{
+      const getUpcomingClasses = async () => {
+        try {
+          let token = Cookies.get('jwt_token');
+          const res = await axios.get(`${API_URL}/api/classes/admin/upcoming`,{
+            headers: {
+              Authorization: `Bearer ${token}` // Add token as a header
+            },
+          });
+          setUpcomingArray(res.data.upcomingClasses);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getUpcomingClasses();
+    }
+   
   };
+
+
 
   const handleSave = () => {
     setIsEditModalOpen(false);
