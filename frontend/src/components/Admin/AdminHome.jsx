@@ -15,41 +15,41 @@ const AdminHome = ({ onViewAllClick }) => {
   const [categories, setCategories] = useState([]);
   const [instructors, setInstructors] = useState([]);
 
+  const fetchUpcomingClasses = async () => {
+    try {
+      const token = Cookies.get("jwt_token");
+      const res = await axios.get(`${API_URL}/api/classes/admin/upcoming`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUpcomingArray(res.data.upcomingClasses);
+    } catch (error) {
+      console.error("Error fetching upcoming classes:", error);
+    }
+  };
+
   useEffect(() => {
     const getPreviousClasses = async () => {
       try {
-        let token = Cookies.get('jwt_token');
-        const res = await axios.get(`${API_URL}/api/classes/admin/previous`,{
+        const token = Cookies.get("jwt_token");
+        const res = await axios.get(`${API_URL}/api/classes/admin/previous`, {
           headers: {
-            Authorization: `Bearer ${token}` // Add token as a header
+            Authorization: `Bearer ${token}`,
           },
         });
         setPreviousArray(res.data.previousClasses);
       } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const getUpcomingClasses = async () => {
-      try {
-        let token = Cookies.get('jwt_token');
-        const res = await axios.get(`${API_URL}/api/classes/admin/upcoming`,{
-          headers: {
-            Authorization: `Bearer ${token}` // Add token as a header
-          },
-        });
-        setUpcomingArray(res.data.upcomingClasses);
-      } catch (error) {
-        console.log(error);
+        console.error("Error fetching previous classes:", error);
       }
     };
 
     const fetchCategoriesAndInstructors = async () => {
       try {
-        let token = Cookies.get('jwt_token');
-        const res = await axios.get(`${API_URL}/api/admin/all`,{
+        const token = Cookies.get("jwt_token");
+        const res = await axios.get(`${API_URL}/api/admin/all`, {
           headers: {
-            Authorization: `Bearer ${token}` // Add token as a header
+            Authorization: `Bearer ${token}`,
           },
         });
         setCategories(res.data.categories);
@@ -60,7 +60,7 @@ const AdminHome = ({ onViewAllClick }) => {
     };
 
     getPreviousClasses();
-    getUpcomingClasses();
+    fetchUpcomingClasses();
     fetchCategoriesAndInstructors();
   }, []);
 
@@ -72,40 +72,19 @@ const AdminHome = ({ onViewAllClick }) => {
   };
 
   const handleEditClick = (classId) => {
-    try{
-      setSelectedClassId(classId);
-      setIsEditModalOpen(true);
-    }
-    finally{
-      const getUpcomingClasses = async () => {
-        try {
-          let token = Cookies.get('jwt_token');
-          const res = await axios.get(`${API_URL}/api/classes/admin/upcoming`,{
-            headers: {
-              Authorization: `Bearer ${token}` // Add token as a header
-            },
-          });
-          setUpcomingArray(res.data.upcomingClasses);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      getUpcomingClasses();
-    }
-   
+    setSelectedClassId(classId);
+    setIsEditModalOpen(true);
   };
-
-
 
   const handleSave = () => {
     setIsEditModalOpen(false);
+    fetchUpcomingClasses(); // Fetch updated classes when modal closes
   };
 
   const handleViewDetails = (classItem) => {
     setViewClassItem(classItem);
     setIsViewModalOpen(true);
   };
-  
 
   return (
     <div className="space-y-3 p-4 sm:p-6 lg:p-8">
@@ -233,14 +212,12 @@ const AdminHome = ({ onViewAllClick }) => {
                     {classItem.category}
                   </span>
                 </div>
-                <div className="div-button-section">
                 <button
                   className="text-sm bg-customYellow px-3 py-2 rounded-lg text-black w-full mt-5"
                   onClick={() => handleViewDetails(classItem)}
                 >
                   View Details
                 </button>
-                </div>
               </div>
             </div>
           ))}
