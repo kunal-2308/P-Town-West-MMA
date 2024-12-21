@@ -119,9 +119,9 @@ export const getBookedClasses = async (req, res) => {
 // User: Get available classes
 export const getAvailableClasses = async (req, res) => {
   try {
-    const availableClasses = await Class.find({ isFull: false });
-    console.log(availableClasses);
-    res.status(200).json(availableClasses);
+    let allClasses = await Class.find({ date: { $gt: Date.now() } });
+    res.status(200).json(allClasses);
+    res.status(200).json(allClasses);
   } catch (error) {
     res
       .status(500)
