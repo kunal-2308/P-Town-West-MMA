@@ -1,7 +1,7 @@
 import Class from "../models/classModel.js";
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
-import Customer from '../models/customerRepresentativeModel.js'
+import Customer from "../models/customerRepresentativeModel.js";
 // User: Book a class
 export const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET);
@@ -25,17 +25,18 @@ export const bookClass = async (req, res) => {
       classToBook.applicants.includes(userId)
     ) {
       return res.status(400).json({
-        message: "Error occurred while booking: Class is full or already booked.",
+        message:
+          "Error occurred while booking: Class is full or already booked.",
       });
     }
 
     // Perform the update
     classToBook.bookedSlots += 1;
     classToBook.applicants.push(userId);
-    if(classToBook.bookedSlots>=classToBook.slots){
-      classToBook.isFull=true;
-    }else{
-      classToBook.isFull=false;
+    if (classToBook.bookedSlots >= classToBook.slots) {
+      classToBook.isFull = true;
+    } else {
+      classToBook.isFull = false;
     }
     await classToBook.save();
 
@@ -49,10 +50,11 @@ export const bookClass = async (req, res) => {
     res.status(200).json({ message: "Class booked successfully", classToBook });
   } catch (error) {
     console.error("Error booking class:", error);
-    res.status(500).json({ message: "Failed to book class", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to book class", error: error.message });
   }
 };
-
 
 export const cancelBooking = async (req, res) => {
   const classId = req.params.id;
@@ -118,6 +120,7 @@ export const getBookedClasses = async (req, res) => {
 export const getAvailableClasses = async (req, res) => {
   try {
     const availableClasses = await Class.find({ isFull: false });
+    console.log(availableClasses);
     res.status(200).json(availableClasses);
   } catch (error) {
     res
@@ -150,22 +153,9 @@ export const getPreviousClasses = async (req, res) => {
 
 // User: Get all classes (with optional category and week filter)
 export const getAllClasses = async (req, res) => {
-  const { category, week } = req.query; // Get category and week from query parameters
-
   try {
-    const filter = {};
-
-    // Add filters based on provided query parameters
-    if (category) {
-      filter.category = category;
-    }
-
-    if (week) {
-      filter.week = week; // Use the week field to filter
-    }
-
-    const classes = await Class.find(filter);
-    res.status(200).json(classes);
+    let allClasses = await Class.find({ date: { $gt: Date.now() } });
+    res.status(200).json(allClasses);
   } catch (error) {
     res
       .status(500)
@@ -173,11 +163,12 @@ export const getAllClasses = async (req, res) => {
   }
 };
 
+
 // Get class by id
 export const getClassById = async (req, res) => {
   try {
     const classId = req.params.classId; // Correct the parameter name
-    const classDetails = await Class.findOne({"_id":classId});
+    const classDetails = await Class.findOne({ _id: classId });
     if (!classDetails) {
       return res.status(404).json({ message: "Class not found" });
     }
@@ -283,7 +274,7 @@ export const guestClassDetails = async (req, res) => {
 };
 
 export const bookGuestClasses = async (req, res) => {
-  const { name, email, phoneNumber, CR } = req.body;  // CR is passed in the body
+  const { name, email, phoneNumber, CR } = req.body; // CR is passed in the body
   const classId = req.params.classId;
 
   try {
@@ -329,7 +320,9 @@ export const bookGuestClasses = async (req, res) => {
         customerRep.clients.push(findUser._id); // Add the user ID to the client's array
         await customerRep.save(); // Save the updated customer representative document
       } else {
-        return res.status(400).json({ message: "Invalid Customer Representative" });
+        return res
+          .status(400)
+          .json({ message: "Invalid Customer Representative" });
       }
 
       await classToBook.save();
@@ -367,7 +360,9 @@ export const bookGuestClasses = async (req, res) => {
         customerRep.clients.push(newUser._id); // Add the new user ID to the clients array
         await customerRep.save(); // Save the updated customer representative document
       } else {
-        return res.status(400).json({ message: "Invalid Customer Representative" });
+        return res
+          .status(400)
+          .json({ message: "Invalid Customer Representative" });
       }
 
       await classToBook.save();
@@ -383,8 +378,8 @@ export const bookGuestClasses = async (req, res) => {
     }
   } catch (error) {
     console.error("Error booking class:", error);
-    res.status(500).json({ message: "An error occurred while booking the class" });
+    res
+      .status(500)
+      .json({ message: "An error occurred while booking the class" });
   }
 };
-
-
