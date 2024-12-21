@@ -119,8 +119,7 @@ export const getBookedClasses = async (req, res) => {
 // User: Get available classes
 export const getAvailableClasses = async (req, res) => {
   try {
-    let allClasses = await Class.find({ date: { $gt: Date.now() } });
-    res.status(200).json(allClasses);
+    let allClasses = await Class.find({ date: { $gt: Date.now() } }).sort({ date: 1 });
     res.status(200).json(allClasses);
   } catch (error) {
     res
@@ -128,6 +127,7 @@ export const getAvailableClasses = async (req, res) => {
       .json({ message: "Failed to retrieve classes", error: error.message });
   }
 };
+
 
 // User: Get previous classes (past classes)
 export const getPreviousClasses = async (req, res) => {
@@ -154,7 +154,7 @@ export const getPreviousClasses = async (req, res) => {
 // User: Get all classes (with optional category and week filter)
 export const getAllClasses = async (req, res) => {
   try {
-    let allClasses = await Class.find({ date: { $gt: Date.now() } });
+    let allClasses = await Class.find({ date: { $gt: Date.now() } }).sort({date:1});
     res.status(200).json(allClasses);
   } catch (error) {
     res
@@ -181,13 +181,10 @@ export const getClassById = async (req, res) => {
 
 export const getListOfUpcomingClasses = async (req, res) => {
   try {
-    let allClasses = await Class.find({});
-    let upcomingClasses = allClasses.filter(
-      (c) => new Date(c.date) > new Date()
-    );
+    let allClasses = await Class.find({},{date:{$gt:Date.now()}}).sort({date:1});
     res.status(200).json({
       message: "Upcoming classes fetched successfully",
-      upcomingClasses: upcomingClasses,
+      upcomingClasses: allClasses,
     });
   } catch (error) {
     console.error("Error occurred:", error);
@@ -200,13 +197,10 @@ export const getListOfUpcomingClasses = async (req, res) => {
 
 export const getListOfPreviousClasses = async (req, res) => {
   try {
-    let allClasses = await Class.find({});
-    let previousClasses = allClasses.filter(
-      (c) => new Date(c.date) < new Date()
-    );
+    let allClasses = await Class.find({},{date:{$ls:Date.now()}}).sort({date:1});
     res.status(200).json({
       message: "Previous classes fetched successfully",
-      previousClasses: previousClasses,
+      previousClasses: allClasses,
     });
   } catch (error) {
     console.log(error);
