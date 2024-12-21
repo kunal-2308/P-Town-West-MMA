@@ -8,9 +8,7 @@ import { API_URL } from "../../../configure";
 
 const Login = () => {
   const [currentImage, setCurrentImage] = useState(0);
-  const [formData, setFormData] = useState({
-    email: "",
-  });
+  const [formData, setFormData] = useState({ email: "" });
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,7 +34,6 @@ const Login = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
     if (!formData.email) {
       newErrors.email = "Email is required.";
     } else {
@@ -45,7 +42,6 @@ const Login = () => {
         newErrors.email = "Please enter a valid email.";
       }
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -66,15 +62,12 @@ const Login = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
       const data = await response.json();
 
       if (response.ok) {
         Cookies.set("jwt_token", data.token, { secure: true });
         Cookies.set("userName", data.name, { secure: true });
         Cookies.set("email", formData.email, { secure: true });
-
-        console.log(response.headers.getSetCookie());
         toast.success("Login successful!");
 
         setTimeout(() => {
@@ -102,9 +95,10 @@ const Login = () => {
   return (
     <>
       <Navbar />
-      <div className="flex items-center justify-center h-screen bg-gray-100 mt-20">
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 pt-20">
         <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl w-full">
-          <div className=" hidden md:flex md:w-1/2 relative">
+          {/* Carousel for larger screens */}
+          <div className="hidden md:flex md:w-1/2 relative">
             <img
               src={images[currentImage]}
               alt={`Carousel ${currentImage + 1}`}
@@ -112,13 +106,20 @@ const Login = () => {
             />
             <div className="absolute inset-0 bg-black bg-opacity-40"></div>
           </div>
-          <div className="logo-main-login md:hidden flex justify-center items-center">
-            <img src="/images/logo/mainLogo.png" alt="logo_login"/>
+
+          {/* Logo for small screens */}
+          <div className="flex md:hidden justify-center items-center bg-blue-50 py-8">
+            <img
+              src="/images/logo/mainLogo.png"
+              alt="logo_login"
+              className="w-32 h-32"
+            />
           </div>
 
-          <div className="flex items-center justify-center w-full md:w-1/2 p-8">
+          {/* Login Form */}
+          <div className="flex items-center justify-center w-full md:w-1/2 p-6 md:p-8">
             <div className="w-full max-w-md">
-              <h2 className="text-3xl font-semibold mb-6 text-center">
+              <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-center">
                 Login to Your Account
               </h2>
 

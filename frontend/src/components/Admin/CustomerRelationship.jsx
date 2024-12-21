@@ -24,7 +24,7 @@ function CustomerRelationship() {
         { name: userName },
         {
           headers: {
-            Authorization: `Bearer ${token}` // Add token as a header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -44,9 +44,9 @@ function CustomerRelationship() {
   const handleDelete = async (name, _id) => {
     try {
       let token = Cookies.get('jwt_token');
-      const response = await axios.delete(`${API_URL}/api/admin/delete/representative/${_id}`,{
+      const response = await axios.delete(`${API_URL}/api/admin/delete/representative/${_id}`, {
         headers: {
-          Authorization: `Bearer ${token}` // Add token as a header
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -72,7 +72,7 @@ function CustomerRelationship() {
         { name: ele.name },
         {
           headers: {
-            Authorization: `Bearer ${token}` // Add token as a header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -96,10 +96,10 @@ function CustomerRelationship() {
       try {
         let token = Cookies.get('jwt_token');
         const response = await axios.get(
-          `${API_URL}/api/admin/list/customer/representative`
-          ,{
+          `${API_URL}/api/admin/list/customer/representative`,
+          {
             headers: {
-              Authorization: `Bearer ${token}` // Add token as a header
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -118,97 +118,93 @@ function CustomerRelationship() {
 
   return (
     <>
-      {/* Modal */}
-{selectedRepresentative && (
-  <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-40">
-    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-      <h2 className="text-lg font-semibold mb-4 text-center">
-        Clients of {selectedRepresentative.name}
-      </h2>
-      <table className="w-full border-collapse border border-gray-300 text-left shadow-md">
-        <thead className="bg-gray-200 text-gray-600">
-          <tr>
-            <th className="border border-gray-300 px-4 py-2">Client Name</th>
-            <th className="border border-gray-300 px-4 py-2">Email</th>
-            <th className="border border-gray-300 px-4 py-2">Phone Number</th>
-          </tr>
-        </thead>
-        <tbody>
-          {clients.map((client, index) => (
-            <tr key={index}>
-              <td className="border border-gray-300 px-4 py-2">{client.name}</td>
-              <td className="border border-gray-300 px-4 py-2">{client.email}</td>
-              <td className="border border-gray-300 px-4 py-2">{client.phoneNumber}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="div-button-section flex justify-between items-center mt-4">
-        <button
-          onClick={() => setSelectedRepresentative(null)}
-          className="bg-red-500 text-white px-4 py-2 rounded-full"
-        >
-          Close
-        </button>
-        <CSVLink
-          data={clients}
-          headers={[
-            { label: 'Name', key: 'name' },
-            { label: 'Email', key: 'email' },
-            { label: 'Phone Number', key: 'phoneNumber' },
-          ]}
-          filename={`clients_of_${selectedRepresentative.name}.csv`}
-          className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-full"
-        >
-          Export to CSV
-        </CSVLink>
-      </div>
-    </div>
-  </div>
-)}
-
-
-      <div className="main-container flex flex-col items-center gap-y-10 p-6">
-        <div className="div-title">
-          <h1 className="text-3xl font-bold text-gray-800">Customer Representatives</h1>
+      {selectedRepresentative && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-40">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-lg sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+            <h2 className="text-lg font-semibold mb-4 text-center">
+              Clients of {selectedRepresentative.name}
+            </h2>
+            <table className="w-full border-collapse border border-gray-300 text-left shadow-md">
+              <thead className="bg-gray-200 text-gray-600">
+                <tr>
+                  <th className="border border-gray-300 px-2 sm:px-4 py-2">Client Name</th>
+                  <th className="border border-gray-300 px-2 sm:px-4 py-2">Email</th>
+                  <th className="border border-gray-300 px-2 sm:px-4 py-2">Phone Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                {clients.map((client, index) => (
+                  <tr key={index}>
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2">{client.name}</td>
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2">{client.email}</td>
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2">{client.phoneNumber}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="flex justify-between items-center mt-4">
+              <button
+                onClick={() => setSelectedRepresentative(null)}
+                className="bg-red-500 text-white px-4 py-2 rounded-full"
+              >
+                Close
+              </button>
+              <CSVLink
+                data={clients}
+                headers={[
+                  { label: 'Name', key: 'name' },
+                  { label: 'Email', key: 'email' },
+                  { label: 'Phone Number', key: 'phoneNumber' },
+                ]}
+                filename={`clients_of_${selectedRepresentative.name}.csv`}
+                className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-full"
+              >
+                Export to CSV
+              </CSVLink>
+            </div>
+          </div>
         </div>
+      )}
 
-        <div className="section-1-input w-full max-w-md">
-          <form onSubmit={handleSubmit} className="flex gap-x-4">
-            <input
-              type="text"
-              name="name"
-              id="name"
-              required
-              value={userName}
-              onChange={handleChange}
-              placeholder="Enter representative name here"
-              className="h-14 w-full border-2 rounded-full pl-5 placeholder-gray-400 font-medium shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="bg-customYellow px-6 rounded-full font-semibold transition"
-            >
-              Add
-            </button>
-          </form>
-        </div>
+      <div className="flex flex-col items-center gap-y-6 sm:gap-y-10 p-4 sm:p-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center">
+          Customer Representatives
+        </h1>
 
-        <div className="div-List w-full max-w-3xl">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-md">
+          <input
+            type="text"
+            name="name"
+            id="name"
+            required
+            value={userName}
+            onChange={handleChange}
+            placeholder="Enter representative name here"
+            className="h-12 sm:h-14 w-full border-2 rounded-full pl-4 placeholder-gray-400 font-medium shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+          <button
+            type="submit"
+            className="bg-customYellow px-4 py-2 sm:px-6 rounded-full font-semibold transition w-full sm:w-auto"
+          >
+            Add
+          </button>
+        </form>
+
+        <div className="w-full max-w-3xl overflow-x-auto">
           {list.length > 0 ? (
             <table className="w-full border-collapse border border-gray-300 text-left shadow-md">
               <thead className="bg-gray-200 text-gray-600">
                 <tr>
-                  <th className="border border-gray-300 text-center px-4 py-2">Name</th>
-                  <th className="border border-gray-300 text-center px-4 py-2">View Clients</th>
-                  <th className="border border-gray-300 text-center px-4 py-2">Actions</th>
+                  <th className="border border-gray-300 px-2 sm:px-4 py-2">Name</th>
+                  <th className="border border-gray-300 px-2 sm:px-4 py-2">View Clients</th>
+                  <th className="border border-gray-300 px-2 sm:px-4 py-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {list.map((ele, index) => (
-                  <tr key={index} className="hover:bg-gray-100 text-center">
-                    <td className="border border-gray-300 px-4 py-2">{ele.name}</td>
-                    <td className=" px-4 py-2  border-gray-300 flex justify-center items-center">
+                  <tr key={index} className="hover:bg-gray-100">
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2">{ele.name}</td>
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2 text-center">
                       <button
                         className="bg-red-500 text-white px-4 py-1 rounded-full hover:bg-red-600 transition"
                         onClick={() => toggleVisibility(index, ele)}
@@ -216,7 +212,7 @@ function CustomerRelationship() {
                         View
                       </button>
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2 text-center">
                       <button
                         onClick={() => handleDelete(ele.name, ele._id)}
                         className="bg-red-500 text-white px-4 py-1 rounded-full hover:bg-red-600 transition"
