@@ -197,7 +197,7 @@ export const getListOfUpcomingClasses = async (req, res) => {
 
 export const getListOfPreviousClasses = async (req, res) => {
   try {
-    let allClasses = await Class.find({},{date:{$ls:Date.now()}}).sort({date:1});
+    let allClasses = await Class.find({},{date:{$ls:Date.now()}}).sort({date:-1});
     res.status(200).json({
       message: "Previous classes fetched successfully",
       previousClasses: allClasses,
