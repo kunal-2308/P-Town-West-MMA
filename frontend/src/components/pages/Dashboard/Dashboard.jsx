@@ -41,7 +41,7 @@ const Dashboard = () => {
       if (token) {
         // setLoading(true);
         axios
-          .get(`${API_URL}/api/classes/all-classes`,{
+          .get(`${API_URL}/api/classes/all-classes`, {
             headers: {
               Authorization: `Bearer ${token}` // Add token as a header
             },
@@ -59,7 +59,7 @@ const Dashboard = () => {
           });
 
         axios
-          .get(`${API_URL}/api/auth/user/details`,{
+          .get(`${API_URL}/api/auth/user/details`, {
             headers: {
               Authorization: `Bearer ${token}` // Add token as a header
             },
@@ -168,20 +168,20 @@ const Dashboard = () => {
     return `${hours12}:${minutes.toString().padStart(2, "0")} ${suffix}`;
   }
 
-  const handleCancelBooking = async(_id) =>{
-      try {
-        let token = Cookies.get('jwt_token');
-        let response = await axios.get(`${API_URL}/api/classes/cancel/${_id}`,{
-          headers: {
-            Authorization: `Bearer ${token}` // Add token as a header
-          },
-        });
-        if(response.status==200) toast.success('Class unbooked successfully');
+  const handleCancelBooking = async (_id) => {
+    try {
+      let token = Cookies.get('jwt_token');
+      let response = await axios.get(`${API_URL}/api/classes/cancel/${_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}` // Add token as a header
+        },
+      });
+      if (response.status == 200) toast.success('Class unbooked successfully');
 
-      } catch (error) {
-          toast.error('Error occured while unbooking class');
-          console.log(error);
-      }
+    } catch (error) {
+      toast.error('Error occured while unbooking class');
+      console.log(error);
+    }
   }
 
   return (
@@ -369,7 +369,7 @@ const Dashboard = () => {
                             {convertTo12HourFormat(cls.timeOut)}
                           </span>
                         </div>
-                        <div className="cancel-booking-logo ml-10"><GiCancel className="size-5 hover:cursor-pointer" onClick={()=>handleCancelBooking(cls._id)}/></div>
+                        <div className="cancel-booking-logo ml-10"><GiCancel className="size-5 hover:cursor-pointer" onClick={() => handleCancelBooking(cls._id)} /></div>
                       </div>
                     ))}
                     {upcomingClasses.length > 2 && (
@@ -409,23 +409,18 @@ const Dashboard = () => {
 
       {/* Modal for showing all booked classes */}
       {showModal && (
-        <Modal
-        // title="All Upcoming Classes"
-        // className="bg-black"
-        >
+        <Modal>
           <div className="div-main-container w-full text-black mb-4 rounded-3xl flex justify-between items-center">
             <span className="text-2xl font-semibold">All Upcoming Classes</span>
-            <span>
-              <ImCancelCircle
-                className="text-xl cursor-pointer"
-                onClick={() => setShowModal(false)}
-              />
-            </span>
+            <ImCancelCircle
+              className="text-xl cursor-pointer"
+              onClick={() => setShowModal(false)}
+            />
           </div>
           {allBookedClasses.map((cls) => (
             <div
               key={cls._id}
-              className="bg-black p-2 text-white w-full rounded-lg mb-2 flex flex-row justify-start items-center gap-x-3"
+              className="bg-black p-2 text-white w-full rounded-lg mb-2 flex flex-row justify-between items-center gap-x-3"
             >
               <div className="div-calendar-col bg-customYellow w-11 h-11 rounded-lg flex flex-col justify-start items-center p-1">
                 <span className="bg-black text-white text-[9px] text-center w-full rounded-xl">
@@ -442,10 +437,17 @@ const Dashboard = () => {
                   {convertTo12HourFormat(cls.timeOut)}
                 </span>
               </div>
+              <button
+                className="bg-red-600 text-white text-sm px-3 py-1 rounded-md hover:bg-red-500 transition duration-200"
+                onClick={() => handleCancelBooking(cls._id)}
+              >
+                Unbook
+              </button>
             </div>
           ))}
         </Modal>
       )}
+
       <div className="h-[14vh]"></div>
       <Footer />
     </>
