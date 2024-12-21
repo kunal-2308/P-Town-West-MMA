@@ -181,7 +181,7 @@ export const getClassById = async (req, res) => {
 
 export const getListOfUpcomingClasses = async (req, res) => {
   try {
-    let allClasses = await Class.find({},{date:{$gt:Date.now()}}).sort({date:1});
+    let allClasses = await Class.find({ date: { $gt: Date.now() } }).sort({ date: 1 });
     res.status(200).json({
       message: "Upcoming classes fetched successfully",
       upcomingClasses: allClasses,
@@ -197,19 +197,20 @@ export const getListOfUpcomingClasses = async (req, res) => {
 
 export const getListOfPreviousClasses = async (req, res) => {
   try {
-    let allClasses = await Class.find({},{date:{$ls:Date.now()}}).sort({date:-1});
+    let allClasses = await Class.find({ date: { $lt: Date.now() } }).sort({ date: -1 });
     res.status(200).json({
       message: "Previous classes fetched successfully",
       previousClasses: allClasses,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error occurred:", error);
     res.status(500).json({
       message: "Failed to retrieve classes",
       error: error.message,
     });
   }
 };
+
 
 export const getListOfApplicants = async (req, res) => {
   try {
