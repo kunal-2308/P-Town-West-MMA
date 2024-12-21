@@ -33,6 +33,8 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
+  const token = Cookies.get('jwt_token');
+
   useEffect(() => {
     const token = Cookies.get("jwt_token");
     if (!token) {
@@ -176,7 +178,24 @@ const Dashboard = () => {
           Authorization: `Bearer ${token}` // Add token as a header
         },
       });
-      if (response.status == 200) toast.success('Class unbooked successfully');
+      if (response.status == 200) { toast.success('Class unbooked successfully'); }
+        axios
+          .get(`${API_URL}/api/auth/user/details`, {
+            headers: {
+              Authorization: `Bearer ${token}` // Add token as a header
+            },
+          })
+          .then((response) => {
+            const { userDetails } = response.data;
+            const bookedClasses = userDetails.bookedClasses;
+            setUpcomingClasses(bookedClasses);
+            // Set the user name
+            setUserName(userDetails.name);
+            // Assuming 'name' is the field in user details
+          })
+          .catch((error) => {
+            console.error("Error fetching user details:", error);
+          });
 
     } catch (error) {
       toast.error('Error occured while unbooking class');
@@ -414,10 +433,29 @@ const Dashboard = () => {
             <span className="text-2xl font-semibold">All Upcoming Classes</span>
             <ImCancelCircle
               className="text-xl cursor-pointer"
-              onClick={() => setShowModal(false)}
+              onClick={() => {
+                setShowModal(false);
+                axios
+                .get(`${API_URL}/api/auth/user/details`, {
+                  headers: {
+                    Authorization: `Bearer ${token}` // Add token as a header
+                  },
+                })
+                .then((response) => {
+                  const { userDetails } = response.data;
+                  const bookedClasses = userDetails.bookedClasses;
+                  setUpcomingClasses(bookedClasses);
+                  // Set the user name
+                  setUserName(userDetails.name);
+                  // Assuming 'name' is the field in user details
+                })
+                .catch((error) => {
+                  console.error("Error fetching user details:", error);
+                });
+              }}
             />
           </div>
-          {allBookedClasses.map((cls) => (
+          {upcomingClasses.map((cls) => (
             <div
               key={cls._id}
               className="bg-black p-2 text-white w-full rounded-lg mb-2 flex flex-row justify-between items-center gap-x-3"

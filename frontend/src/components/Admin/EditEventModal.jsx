@@ -20,7 +20,6 @@ const EditEventModal = ({
     category: "",
     slots: "",
   });
-
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -32,10 +31,10 @@ const EditEventModal = ({
             Authorization: `Bearer ${token}` // Add token as a header
           },
         });
-
         const eventDetails = res.data;
 
         const formattedDate = eventDetails.date.split("T")[0];
+        
         const formattedTimeIn = new Date(eventDetails.timeIn).toLocaleTimeString(
           "en-GB",
           {
@@ -55,9 +54,10 @@ const EditEventModal = ({
         setFormData({
           ...eventDetails,
           date: formattedDate,
-          timeIn: formattedTimeIn,
-          timeOut: formattedTimeOut,
         });
+
+        console.log(formattedTimeIn);
+        
       } catch (error) {
         console.error("Error fetching event details:", error);
         if (error.response) {
@@ -78,6 +78,8 @@ const EditEventModal = ({
       fetchEventDetails();
     }
   }, [classId]);
+
+ 
 
   if (!isOpen) {
     return null;
@@ -234,7 +236,7 @@ const EditEventModal = ({
               disabled={isLoading}
             />
           </div>
-
+          
           {/* End Time */}
           <div>
             <label className="block text-sm font-medium mb-2">End Time</label>

@@ -227,7 +227,10 @@ const AdminHome = ({ onViewAllClick }) => {
       {/* Modal for Editing */}
       <EditEventModal
         isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          fetchUpcomingClasses();
+        }}
         classId={selectedClassId}
         onUpdate={handleSave}
         categories={categories}

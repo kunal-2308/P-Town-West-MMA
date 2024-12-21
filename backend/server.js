@@ -24,8 +24,9 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "https://ptownmma.vercel.app",
-    // origin:"http://localhost:5173",
+    // origin: "https://ptownmma.vercel.app",
+    // origin:"http://localhost:5173"
+    origin:"*"
   })
 );
 
@@ -52,7 +53,7 @@ process.on("unhandledRejection", (error) => {
   process.exit(1);
 });
 
-const storage = multer.memoryStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     return cb(null, "./uploads");
   },
