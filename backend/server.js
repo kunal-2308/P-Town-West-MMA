@@ -24,12 +24,11 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "https://ptownmma.vercel.app",
-    // origin:"http://localhost:5173"
-    // origin:"*"
+    // origin: "https://ptownmma.vercel.app",
+    // origin: "http://localhost:5173",
+    origin: "*",
   })
 );
-
 
 // Define routes:
 app.use("/api/classes", classRoutes);
@@ -79,7 +78,6 @@ app.post("/api/upload", upload.single("profileImage"), async (req, res) => {
       message: "File uploaded and saved successfully",
       file: savedFile,
     });
-
   } catch (error) {
     console.error("Error saving file:", error.message);
     res.status(500).json({ message: "Error saving file", error });
