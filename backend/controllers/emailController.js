@@ -9,47 +9,48 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendMail = async (req, res) => {
-  const { name, email, message } = req.body;
-
-  if (!name || !email || !message) {
+  const { name, email, phone } = req.body;
+  if (!name || !phone || !email) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
   const thankYouMailOptions = {
-    from: `"Example Company" <${process.env.EMAIL_USER}>`,
+    from: `"P-Town West MMA" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: "Thank You for Reaching Out!",
+    subject: "Welcome to P-Town West MMA!",
     html: `
       <div style="background-color:#f0f4f8; padding:20px; font-family:Arial, sans-serif;">
-        <h1 style="color:#0077b6;">Thank You, ${name}!</h1>
-        <p style="color:#333; font-size:16px;">We appreciate your interest in Example Company! Below is a summary of the information you provided:</p>
+       <img src="https://i.ibb.co/b5HLcsw/mainLogo.png" alt="P-Town West MMA" style="width:200px; height:auto; margin:0 auto; display:block;" />
+        <h1 style="color:#d32f2f;">Thank You, ${name}!</h1>
+        <p style="color:#333; font-size:16px;">We are excited to welcome you to P-Town West MMA, Pune's premier Mixed Martial Arts academy! Here's a summary of the details you provided:</p>
         <ul style="background-color:#ffffff; padding:15px; border-radius:8px; list-style-type:none; color:#222;">
           <li><strong>Name:</strong> ${name}</li>
           <li><strong>Email:</strong> ${email}</li>
-          <li><strong>Message:</strong> ${message}</li>
+          <li><strong>Phone:</strong> ${phone}</li>
         </ul>
-        <p style="color:#333; font-size:16px;">Our team will review your message and reach out soon.</p>
-        <p style="color:#0077b6; font-weight:bold;">Best regards,</p>
-        <p><strong>Jane Doe</strong><br>Client Relations Manager<br>Example Company</p>
+        <p style="color:#333; font-size:16px;">At P-Town West MMA, we offer expert training in disciplines like Boxing, Brazilian Jiu-Jitsu (BJJ), Muay Thai, and Judo. Our inclusive environment is perfect for everyone, from beginners to experienced fighters. We can't wait to have you train with us!</p>
+        <p style="color:#d32f2f; font-weight:bold;">Best regards,</p>
+        <p><strong>P-Town West MMA Team</strong></p>
       </div>
     `,
   };
 
   const notificationMailOptions = {
-    from: `"Example Company" <${process.env.EMAIL_USER}>`,
+    from: `"P-Town West MMA" <${process.env.EMAIL_USER}>`,
     to: "notifications@example.com",
-    subject: "New Contact Submission Received",
+    subject: "New Membership Inquiry Received",
     html: `
       <div style="background-color:#f8f9fa; padding:20px; font-family:Arial, sans-serif;">
-        <h2 style="color:#ff6f61;">New Contact Alert</h2>
-        <p style="color:#444; font-size:16px;">A new contact submission has been received with the following details:</p>
+       <img src="https://i.ibb.co/b5HLcsw/mainLogo.png" alt="P-Town West MMA" style="width:200px; height:auto; margin:0 auto; display:block;" />
+        <h2 style="color:#1976d2;">New Membership Inquiry</h2>
+        <p style="color:#444; font-size:16px;">A new inquiry has been received with the following details:</p>
         <ul style="background-color:#ffffff; padding:15px; border-radius:8px; list-style-type:none; color:#555;">
           <li><strong>Name:</strong> ${name}</li>
           <li><strong>Email:</strong> ${email}</li>
-          <li><strong>Message:</strong> ${message}</li>
+          <li><strong>Phone:</strong> ${phone}</li>
         </ul>
-        <p style="color:#ff6f61; font-weight:bold;">Please review and follow up if necessary.</p>
-        <p><strong>Notification System</strong><br>Example Company</p>
+        <p style="color:#1976d2; font-weight:bold;">Please follow up with this individual to provide more information about our training programs.</p>
+        <p><strong>P-Town West MMA Notification System</strong></p>
       </div>
     `,
   };
