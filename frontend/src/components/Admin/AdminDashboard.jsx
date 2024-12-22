@@ -22,10 +22,19 @@ import { FaUsers } from "react-icons/fa";
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("Home");
+  const [isAnimating, setIsAnimating] = useState(false);
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+    if (isSidebarOpen) {
+      setIsAnimating(true);
+      setTimeout(() => {
+        setIsSidebarOpen(false);
+        setIsAnimating(false);
+      }, 300);
+    } else {
+      setIsSidebarOpen(true);
+    }
   };
 
   const renderContent = () => {
@@ -49,7 +58,7 @@ const AdminDashboard = () => {
       case "Display Schedule":
         return <DisplayUploadedImage />;
       case "Customer Relationship":
-        return <CustomerRelationship/>
+        return <CustomerRelationship />;
       default:
         return <p>Welcome to the admin dashboard.</p>;
     }
@@ -66,33 +75,26 @@ const AdminDashboard = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col md:flex-row sm:mt-20 text-white mt-16 md:p-6 lg:p-20 gap-x-3">
+      <div className="flex flex-col md:flex-row sm:mt-10 text-white mt-16 md:p-6 lg:p-20 gap-x-3">
         <button
           className="md:hidden flex items-center px-4 py-2 text-black mt-4 z-[999] mb-20 hover:from-blue-500 hover:to-purple-600 transition duration-300 group"
           onClick={toggleSidebar}
         >
           {isSidebarOpen ? (
-            <IoClose size={20} className="text-white" />
+            <IoClose size={24} className="text-white" />
           ) : (
-            <IoMenu size={20} />
+            <IoMenu size={24} />
           )}
-          <span>
-            {isSidebarOpen ? (
-              <span className="text-white ml-2">
-                Close to view selected tab
-              </span>
-            ) : (
-              <span className="text-black ml-2">Open to switch tabs</span>
-            )}
-          </span>
         </button>
 
         <div
           className={`${
-            isSidebarOpen ? "block" : "hidden"
-          } md:block w-[70vw] md:w-[20vw] bg-black text-white p-6 md:static absolute z-50 h-screen md:h-auto flex flex-col items-center transform transition-transform duration-300 ease-in-out rounded-3xl`}
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } ${
+            isAnimating ? "block" : isSidebarOpen ? "block" : "hidden"
+          } md:block w-[70vw] h-[75vh] overflow-y-scroll md:w-[20vw] bg-black text-white p-6 md:static absolute z-50 md:h-auto flex flex-col items-center transform transition-transform duration-300 ease-in-out md:rounded-3xl`}
         >
-          <ul className="space-y-4 mt-3 w-full">
+          <ul className="space-y-4 mt-10 w-full">
             {[
               { label: "Home", icon: <GoHomeFill /> },
               { label: "Upcoming Class", icon: <FaRegCalendarAlt /> },
@@ -103,7 +105,7 @@ const AdminDashboard = () => {
               { label: "Change Password", icon: <FaUserPlus /> },
               { label: "Add Schedule", icon: <MdSchedule /> },
               { label: "Display Schedule", icon: <MdSchedule /> },
-              { label: "Customer Relationship", icon: <FaUsers/>},
+              { label: "Customer Relationship", icon: <FaUsers /> },
             ].map((item, index) => (
               <li
                 key={index}
@@ -112,7 +114,10 @@ const AdminDashboard = () => {
                     ? "bg-customYellow text-black"
                     : "hover:bg-customYellow hover:text-black"
                 }`}
-                onClick={() => setSelectedTab(item.label)}
+                onClick={() => {
+                  setSelectedTab(item.label);
+                  if (isSidebarOpen) toggleSidebar(); // Close sidebar if it's open
+                }}
               >
                 <span className="text-2xl">{item.icon}</span>
                 <span>{item.label}</span>
@@ -120,7 +125,10 @@ const AdminDashboard = () => {
             ))}
             <li
               className="flex items-center gap-x-2 text-lg font-normal p-3 rounded-xl cursor-pointer hover:bg-red-500 hover:text-white text-white"
-              onClick={handleLogout}
+              onClick={() => {
+                handleLogout();
+                if (isSidebarOpen) toggleSidebar(); // Close sidebar if it's open
+              }}
             >
               <IoLogOut className="text-2xl" />
               <span>Logout</span>
@@ -128,7 +136,7 @@ const AdminDashboard = () => {
           </ul>
         </div>
 
-        <div className="flex-1 bg-white rounded-lg mt-6 md:mt-0 p-4 sm:p-6 md:p-8 lg:p-10">
+        <div className="flex-1 bg-white rounded-lg mt-6 mb-20 md:mt-0 p-4 sm:p-6 md:p-8 lg:p-10">
           <div className="text-lg text-gray-600">{renderContent()}</div>
         </div>
       </div>
