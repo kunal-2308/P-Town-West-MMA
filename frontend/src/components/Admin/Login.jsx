@@ -72,14 +72,11 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch(
-        `${API_URL}/api/admin/admin/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/admin/admin/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
       const data = await response.json();
 
@@ -174,7 +171,11 @@ const Login = () => {
                     className="absolute right-3 top-3"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <FaEyeSlash className="size-5 pt-1"/> : <FaEye className="size-5 pt-1"/>}
+                    {showPassword ? (
+                      <FaEyeSlash className="size-5 pt-1" />
+                    ) : (
+                      <FaEye className="size-5 pt-1" />
+                    )}
                   </button>
                   {errors.password && (
                     <p className="text-red-500 text-sm mt-1">
@@ -214,22 +215,11 @@ const Login = () => {
                   )}
                 </button>
               </form>
-
-              {/* Don't have an account? */}
-              <div className="mt-4 text-center">
-                <p>
-                  Don&apos;t have an account?{" "}
-                  <a href="/signup" className="text-blue-600 hover:underline">
-                    Sign up
-                  </a>
-                </p>
-              </div>
             </div>
           </div>
         </div>
       </div>
       <Footer />
-      
     </>
   );
 };
