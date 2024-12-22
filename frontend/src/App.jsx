@@ -1,5 +1,5 @@
 import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/shared/ScrollToTop"; // Adjust the path if needed
 import Home from "./components/pages/Home/Home";
 import KickBoxing from "./components/pages/KickBoxing/KickBoxing";
@@ -21,35 +21,35 @@ import ClassDetailsGuest from "./components/pages/Dashboard/ClassDetailsGuest";
 import TimeTable from "./components/pages/Timetable/TimeTable";
 
 function App() {
-  const createRouter = createBrowserRouter([
-    { path: "/", element: <Home /> },
-    { path: "/kickboxing", element: <KickBoxing /> },
-    { path: "/jitsu", element: <Jitsu /> },
-    { path: "/kids", element: <Kids /> },
-    { path: "/about", element: <About /> },
-    { path: "/nutrition", element: <Nutrition /> },
-    { path: "/contact", element: <Contact /> },
-    { path: "/strength", element: <Strength /> },
-    { path: "/trainer", element: <Trainer /> },
-    { path: "/dashboard", element: <Dashboard /> },
-    { path: "/admin/dashboard", element: <AdminDashboard /> },
-    { path: "/login", element: <Login /> },
-    { path: "/admin/login", element: <AdminLogin /> },
-    { path: "/classes/:classId", element: <ClassDetails /> },
-    { path: "/guest/classes/:classId", element: <ClassDetailsGuest /> },
-    { path: "/class/schedule", element: <Dashboard /> },
-    { path: "/guest/dashboard", element: <GuestDashboard /> },
-    { path: "/timetable", element: <TimeTable /> },
-  ]);
-
   return (
     <>
       <Toaster position="bottom-right" />
-      <RouterProvider router={createRouter}>
-        {/* This should be inside RouterProvider */}
-
+      <Router>
         <ScrollToTop />
-      </RouterProvider>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/kickboxing" element={<KickBoxing />} />
+          <Route path="/jitsu" element={<Jitsu />} />
+          <Route path="/kids" element={<Kids />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/nutrition" element={<Nutrition />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/strength" element={<Strength />} />
+          <Route path="/trainer" element={<Trainer />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/classes/:classId" element={<ClassDetails />} />
+          <Route
+            path="/guest/classes/:classId"
+            element={<ClassDetailsGuest />}
+          />
+          <Route path="/class/schedule" element={<Dashboard />} />
+          <Route path="/guest/dashboard" element={<GuestDashboard />} />
+          <Route path="/timetable" element={<TimeTable />} />
+        </Routes>
+      </Router>
     </>
   );
 }
