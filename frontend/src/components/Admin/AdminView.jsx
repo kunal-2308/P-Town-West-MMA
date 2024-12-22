@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { toast } from 'sonner';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "sonner";
 import { API_URL } from "../../../configure";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 const AdminView = () => {
   const [admin, setAdmin] = useState([]);
@@ -15,10 +15,10 @@ const AdminView = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        let token = Cookies.get('jwt_token');
-        const response = await axios.get(`${API_URL}/api/admin/allAdmin`,{
+        let token = Cookies.get("jwt_token");
+        const response = await axios.get(`${API_URL}/api/admin/allAdmin`, {
           headers: {
-            Authorization: `Bearer ${token}` // Add token as a header
+            Authorization: `Bearer ${token}`,
           },
         });
         setAdmin(response.data);
@@ -43,15 +43,17 @@ const AdminView = () => {
   // Handle delete action
   const handleDelete = async (id) => {
     try {
-      console.log(id);
-      let token = Cookies.get('jwt_token');
-      let response = await axios.delete(`${API_URL}/api/admin/deleteAdmin/${id}`,{
+      let token = Cookies.get("jwt_token");
+      await axios.delete(`${API_URL}/api/admin/deleteAdmin/${id}`, {
         headers: {
-          Authorization: `Bearer ${token}` // Add token as a header
+          Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Admin Deleted Successfully");
       toast.success("Admin deleted successfully");
+
+      setAdmin((prevAdmins) =>
+        prevAdmins.filter((adminItem) => adminItem._id !== id)
+      );
     } catch (error) {
       toast.error("Error deleting admin");
       console.error("Error deleting admin:", error);
@@ -90,7 +92,9 @@ const AdminView = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="py-4 text-center">No admin data available</td>
+                <td colSpan="4" className="py-4 text-center">
+                  No admin data available
+                </td>
               </tr>
             )}
           </tbody>
@@ -115,7 +119,9 @@ const AdminView = () => {
               key={index}
               onClick={() => handlePageChange(index + 1)}
               className={`px-3 py-1 rounded ${
-                currentPage === index + 1 ? 'bg-customYellow text-black' : 'bg-gray-800 text-white'
+                currentPage === index + 1
+                  ? "bg-customYellow text-black"
+                  : "bg-gray-800 text-white"
               }`}
             >
               {index + 1}
