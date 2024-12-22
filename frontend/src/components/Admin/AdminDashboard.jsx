@@ -22,19 +22,10 @@ import { FaUsers } from "react-icons/fa";
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("Home");
-  const [isAnimating, setIsAnimating] = useState(false);
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
-    if (isSidebarOpen) {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setIsSidebarOpen(false);
-        setIsAnimating(false);
-      }, 300);
-    } else {
-      setIsSidebarOpen(true);
-    }
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   const renderContent = () => {
@@ -75,7 +66,7 @@ const AdminDashboard = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col md:flex-row sm:mt-10 text-white mt-16 md:p-6 lg:p-20 gap-x-3">
+      <div className="flex flex-col md:flex-row sm:mt-20 text-white mt-16 md:p-6 lg:p-20 gap-x-3">
         <button
           className="md:hidden flex items-center px-4 py-2 text-black mt-4 z-[999] mb-20 hover:from-blue-500 hover:to-purple-600 transition duration-300 group"
           onClick={toggleSidebar}
@@ -89,9 +80,7 @@ const AdminDashboard = () => {
 
         <div
           className={`${
-            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } ${
-            isAnimating ? "block" : isSidebarOpen ? "block" : "hidden"
+            isSidebarOpen ? "block" : "hidden"
           } md:block w-[70vw] h-[75vh] overflow-y-scroll md:w-[20vw] bg-black text-white p-6 md:static absolute z-50 md:h-auto flex flex-col items-center transform transition-transform duration-300 ease-in-out md:rounded-3xl`}
         >
           <ul className="space-y-4 mt-10 w-full">
