@@ -8,14 +8,15 @@ import { IoClose } from "react-icons/io5";
 import { toast } from "sonner";
 import { API_URL } from "../../../../configure";
 import axios from "axios";
+import { ClipLoader } from "react-spinners";
+
 const ClassDetails = () => {
   const { classId } = useParams();
   const navigate = useNavigate(); // Initialize useNavigate
   const [classDetails, setClassDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [bookingError, setBookingError] = useState(null);
-  const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [bookingLoading, setBookingLoading] = useState(false);
 
   const token = Cookies.get("jwt_token");
 
@@ -23,20 +24,15 @@ const ClassDetails = () => {
     const fetchClassDetails = async () => {
       if (token) {
         try {
-          // const response = await fetch(`${API_URL}/api/classes/${classId}`, {
-          //   method: "GET",
-          //   headers: {
-          //     Authorization: `Bearer ${token}`,
-          //     "Content-Type": "application/json",
-          //   },
-          //   credentials: "include",
-          // });
-          let token = Cookies.get('jwt_token');
-          const response = await axios.get(`${API_URL}/api/classes/view/${classId}`,{
-            headers: {
-              Authorization: `Bearer ${token}` // Add token as a header
-            },
-          });
+          let token = Cookies.get("jwt_token");
+          const response = await axios.get(
+            `${API_URL}/api/classes/view/${classId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
           if (response.status > 200 && response.status < 600) {
             const errorMessage = await response.text(); // Get the response body as text
@@ -62,6 +58,7 @@ const ClassDetails = () => {
 
   const handleBookClass = async () => {
     if (token) {
+      setBookingLoading(true); // Start booking loader
       try {
         const response = await fetch(`${API_URL}/api/classes/book/${classId}`, {
           method: "POST",
@@ -70,21 +67,21 @@ const ClassDetails = () => {
             "Content-Type": "application/json",
           },
         });
-      
+
         const parsedData = await response.json();
         if (response.status === 200) {
           toast.success("Class booked successfully!");
-          setTimeout(()=>{
-            navigate('/dashboard');
-          },1000)
-          
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 1000);
         } else {
           toast.error(parsedData.message);
         }
       } catch (error) {
         console.error("Error booking class:", error);
+      } finally {
+        setBookingLoading(false);
       }
-      
     }
   };
 
@@ -95,9 +92,7 @@ const ClassDetails = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p className="text-xl font-semibold text-gray-600">
-          Loading class details...
-        </p>
+        <ClipLoader size={50} color={"#FFD700"} loading={loading} />
       </div>
     );
   }
@@ -175,8 +170,15 @@ const ClassDetails = () => {
             <button
               className="px-5 py-2 text-base flex items-center gap-x-2 bg-customYellow text-black font-light rounded-full transition duration-300 ease-in-out"
               onClick={handleBookClass}
+              disabled={bookingLoading}
             >
-              Book Your Slot <MoveRightIcon />
+              {bookingLoading ? (
+                <ClipLoader size={20} color={"#000"} loading={bookingLoading} />
+              ) : (
+                <>
+                  Book Your Slot <MoveRightIcon />
+                </>
+              )}
             </button>
             <button
               className="px-5 py-2 text-base flex items-center gap-x-2 bg-customYellow text-black font-light rounded-full transition duration-300 ease-in-out"
@@ -187,7 +189,6 @@ const ClassDetails = () => {
           </div>
         </div>
       </div>
-
       <Footer />
     </>
   );
