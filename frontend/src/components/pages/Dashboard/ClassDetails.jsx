@@ -74,6 +74,10 @@ const ClassDetails = () => {
         const parsedData = await response.json();
         if (response.status === 200) {
           toast.success("Class booked successfully!");
+          setTimeout(()=>{
+            navigate('/dashboard');
+          },1000)
+          
         } else {
           toast.error(parsedData.message);
         }

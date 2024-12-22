@@ -264,7 +264,7 @@ const Dashboard = () => {
                     <div className="div-1-container flex justify-between items-center w-full bg-black text-white h-20 rounded-t-3xl p-3">
                       <div className="div-1-cont flex flex-col justify-start items-start pl-2">
                         <span className="text-2xl font-medium">
-                          {cls.category}
+                          {cls.name}
                         </span>
                         <span className="text-xs font-medium">
                           {cls.instructor}

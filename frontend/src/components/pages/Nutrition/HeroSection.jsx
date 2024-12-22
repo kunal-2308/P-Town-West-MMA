@@ -1,6 +1,7 @@
 import { Button } from "../../ui/button";
 import { MoveRight } from "lucide-react";
 import React from "react";
+import { Link } from "react-router-dom";
 
 function HeroSection() {
   return (
@@ -57,9 +58,9 @@ function HeroSection() {
             personalized nutrition plans and expert guidance will help you
             achieve sustainable results.{" "}
           </span>
-          <Button className="bg-customYellow text-black w-[150px] flex justify-center items-center gap-x-3 rounded-full mt-5 h-[30px] hover:bg-customYellow hover:cursor-pointer">
+          <Link to='/contact'><Button className="bg-customYellow text-black w-[150px] flex justify-center items-center gap-x-3 rounded-full mt-5 h-[30px] hover:bg-customYellow hover:cursor-pointer">
             Contact Us <MoveRight />
-          </Button>
+          </Button></Link>
         </div>
       </div>
     </>

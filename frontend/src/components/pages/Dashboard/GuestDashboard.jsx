@@ -5,12 +5,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 // import Modal from "../../../components/shared/Modal"; // Import the Modal component
-import { FaUserAlt } from "react-icons/fa";
+import { FaRegClock, FaUserAlt } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
 import { MoveLeftIcon, MoveRightIcon } from "lucide-react";
 import { toast } from "sonner";
 import { API_URL } from "../../../../configure";
 import Cookies from "js-cookie";
+import { MdOutlineCalendarMonth } from "react-icons/md";
+import { Button } from "../../ui/button";
 
 function GuestDashboard() {
   const [allClasses, setAllClasses] = useState([]);
@@ -133,6 +135,14 @@ function GuestDashboard() {
     e.preventDefault();
     navigate("/login");
   };
+
+  function convertTo12HourFormat(time24) {
+    const [hours, minutes] = time24.split(":").map(Number);
+    const suffix = hours >= 12 ? "PM" : "AM";
+    const hours12 = ((hours + 11) % 12) + 1; // Converts 24-hour to 12-hour
+    return `${hours12}:${minutes.toString().padStart(2, "0")} ${suffix}`;
+  }
+
   return (
     <>
       <Navbar />
@@ -184,34 +194,70 @@ function GuestDashboard() {
           </div>
 
           {/* Classes Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-hidden">
-            {currentClasses.map((cls) => (
-              <div
-                key={cls._id}
-                onClick={() => handleClick(cls._id)}
-                className="bg-lightDark text-white p-7 rounded-3xl shadow-md flex hover:cursor-pointer flex-col justify-start items-start"
-              >
-                <div className="div-1 w-full">
-                  <h2 className="text-2xl font-semibold mb-2 text-customYellow">
-                    {cls.name}
-                  </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-6 overflow-hidden pl-5">
+              {currentClasses.length !== 0 ? (
+                currentClasses.map((cls) => (
+                  <div
+                    key={cls._id}
+                    onClick={() => handleClick(cls._id)}
+                    className="bg-white text-black rounded-3xl shadow-md flex hover:cursor-pointer flex-col justify-start items-start mb-6"
+                  >
+                    <div className="div-1-container flex justify-between items-center w-full bg-black text-white h-20 rounded-t-3xl p-3">
+                      <div className="div-1-cont flex flex-col justify-start items-start pl-2">
+                        <span className="text-2xl font-medium">
+                          {cls.name}
+                        </span>
+                        <span className="text-xs font-medium">
+                          {cls.instructor}
+                        </span>
+                      </div>
+                      <div className="div-2-cont flex flex-col justify-start items-start pr-2">
+                        <div className="badge bg-customYellow text-black rounded-full flex justify-center items-center p-1 px-2">
+                          <span className="text-[12px] font-semibold">
+                            {cls.slots === cls.bookedSlots
+                              ? "Slots Full"
+                              : `Available: ${cls.slots - cls.bookedSlots}`}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="div-content-section bg-white text-black mt-3 flex justify-between items-center w-full px-4">
+                      <div className="div-content-1 flex flex-row justify-start items-center gap-x-2">
+                        <MdOutlineCalendarMonth className="text-sm" />
+                        <span className="text-xs font-semibold">
+                          {formatDate(cls.date)}
+                        </span>
+                      </div>
+                      <div className="div-time-section flex flex-row justify-start items-center gap-x-2">
+                        <FaRegClock className="text-sm" />
+                        <span className="text-xs font-semibold">
+                          {convertTo12HourFormat(cls.timeIn)} - {convertTo12HourFormat(cls.timeOut)}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="div-info-section my-4 px-4 flex flex-col justify-start items-start">
+                      <span className="text-sm font-medium">
+                        Please carry the following essentials:
+                      </span>
+                      <span className="text-xs font-semibold">
+                        Gloves, Water Bottle, Towel
+                      </span>
+                    </div>
+                    <div className="div-button-section w-full flex justify-center items-center my-4">
+                      <Button className="bg-black text-white text-sm font-semibold hover:animate-pulse">
+                        BOOK NOW
+                        <FaRegClock className="text-sm ml-2" />
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="flex justify-center items-center mt-6 w-full">
+                  <span className="text-lg font-medium text-gray-500">No classes available</span>
                 </div>
-                <div className="div-2 flex flex-col w-full justify-start items-start">
-                  <span>Date: {formatDate(cls.date)}</span>
-                  <span>
-                    Time: {cls.timeIn} - {cls.timeOut}
-                  </span>
-                  <span>Slots: {cls.slots}</span>
-                </div>
+              )}
 
-                <div className="w-full">
-                  <button className="mt-6 p-2 rounded-lg bg-customYellow text-center w-full text-black/80 font-semibold">
-                    Book Now
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+            </div>
 
           {/* Pagination Controls */}
           <div className="flex justify-between mt-4">

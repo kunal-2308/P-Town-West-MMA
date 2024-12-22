@@ -1,6 +1,7 @@
 import { Button } from "../../ui/button";
 import { MoveRight } from "lucide-react";
 import React from "react";
+import { Link } from "react-router-dom";
 
 function InfoSection() {
   return (
@@ -65,10 +66,10 @@ function InfoSection() {
             </span>
           </div>
 
-          <Button className="bg-customYellow text-black rounded-full hover:bg-customYellow hover:cursor-pointer font-semibold text-xs sm:text-sm md:text-sm p-1 sm:p-2 w-[140px] sm:w-[160px] md:w-[170px] h-[28px] sm:h-[30px] mt-6">
+          <Link to='/guest/dashboard'><Button className="bg-customYellow text-black rounded-full hover:bg-customYellow hover:cursor-pointer font-semibold text-xs sm:text-sm md:text-sm p-1 sm:p-2 w-[140px] sm:w-[160px] md:w-[170px] h-[28px] sm:h-[30px] mt-6">
             Book a free trial
             <MoveRight className="ml-2" />
-          </Button>
+          </Button></Link>
         </div>
       </div>
     </>

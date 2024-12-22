@@ -91,7 +91,7 @@ const AdminHome = ({ onViewAllClick }) => {
       {/* Upcoming Classes */}
       <div className="border-2 bg-black rounded-3xl p-5">
         <h2 className="text-2xl font-semibold mb-4 text-customYellow pl-2">
-          Upcoming Classes
+          Top Upcoming Classes
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {upcomingArray.slice(0, 3).map((classItem) => (
@@ -163,7 +163,7 @@ const AdminHome = ({ onViewAllClick }) => {
       {/* Previous Classes */}
       <div className="border-2 bg-black rounded-3xl p-5">
         <h2 className="text-2xl font-semibold mb-4 text-customYellow pl-2">
-          Previous Classes
+          Top Previous Classes
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {previousArray.slice(0, 3).map((classItem) => (

@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { API_URL } from "../../../configure";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -172,7 +174,7 @@ const Login = () => {
                     className="absolute right-3 top-3"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? "🙈" : "👁️"}
+                    {showPassword ? <FaEyeSlash className="size-5 pt-1"/> : <FaEye className="size-5 pt-1"/>}
                   </button>
                   {errors.password && (
                     <p className="text-red-500 text-sm mt-1">

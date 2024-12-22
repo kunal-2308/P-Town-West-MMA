@@ -1,5 +1,6 @@
 import { MoveRight } from 'lucide-react';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function Trainers() {
   return (
@@ -27,12 +28,12 @@ function Trainers() {
           />
 
           {/* Button on top of the image */}
-          <button
+          <Link to='/trainer'><button
             className="absolute flex bottom-5 mb-10 gap-x-3 left-1/2 transform -translate-x-1/2 bg-customYellow text-black font-semibold py-2 px-4 sm:px-5 rounded-full hover:bg-customYellow-light transition-all text-xs sm:text-sm md:text-base"
           >
             <span>Know More</span>
             <MoveRight />
-          </button>
+          </button></Link>
         </div>
       </div>
     </>

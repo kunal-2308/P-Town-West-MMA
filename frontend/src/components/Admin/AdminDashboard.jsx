@@ -59,7 +59,7 @@ const AdminDashboard = () => {
     Cookies.remove("jwt_token");
     Cookies.remove("userName");
     Cookies.remove("email");
-    navigate("/login");
+    navigate("/admin/login");
     localStorage.clear();
   };
 

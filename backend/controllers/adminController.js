@@ -306,6 +306,7 @@ export const getparticularRepresentative = async (req, res) => {
 export const updatePassword = async (req, res) => {
   try {
     let { password } = req.body;
+    console.log(password);
     let id = req.params.id;
     let hashedPassword = await bcrypt.hash(password, 12);
 

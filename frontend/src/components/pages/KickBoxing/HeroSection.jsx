@@ -1,7 +1,7 @@
 import { Button } from "../../ui/button";
 import { MoveRight } from "lucide-react";
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 function HeroSection() {
   return (
@@ -88,9 +88,9 @@ function HeroSection() {
             enhance your overall fitness under the guidance of our expert
             trainers.
           </span>
-          <Button className="bg-customYellow text-black w-[150px] flex justify-center items-center gap-x-3 rounded-full mt-5 h-[30px] hover:bg-customYellow hover:cursor-pointer">
+          <Link to='/contact'><Button className="bg-customYellow text-black w-[150px] flex justify-center items-center gap-x-3 rounded-full mt-5 h-[30px] hover:bg-customYellow hover:cursor-pointer">
             Contact Us <MoveRight />
-          </Button>
+          </Button></Link>
         </div>
       </div>
     </>

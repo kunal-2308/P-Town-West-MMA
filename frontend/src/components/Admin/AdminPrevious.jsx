@@ -7,16 +7,18 @@ import Cookies from "js-cookie";
 const AdminPrevious = () => {
   const [previousArray, setPreviousArray] = useState([]);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [viewClassItem, setViewClassItem] = useState(null); // State to hold selected class for viewing
+  const [viewClassItem, setViewClassItem] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const classesPerPage = 6; // Number of classes per page
 
   // Fetch data when component mounts
   useEffect(() => {
     const getPreviousClasses = async () => {
       try {
-        let token = Cookies.get('jwt_token');
-        let res = await axios.get(`${API_URL}/api/classes/admin/previous`,{
+        let token = Cookies.get("jwt_token");
+        let res = await axios.get(`${API_URL}/api/classes/admin/previous`, {
           headers: {
-            Authorization: `Bearer ${token}` // Add token as a header
+            Authorization: `Bearer ${token}`, // Add token as a header
           },
         });
         setPreviousArray(res.data.previousClasses);
@@ -29,8 +31,23 @@ const AdminPrevious = () => {
   }, []);
 
   const handleViewDetails = (classItem) => {
-    setViewClassItem(classItem); // Set the selected class data
-    setIsViewModalOpen(true); // Open the modal
+    setViewClassItem(classItem);
+    setIsViewModalOpen(true);
+  };
+
+  // Pagination logic
+  const totalPages = Math.ceil(previousArray.length / classesPerPage);
+  const paginatedClasses = previousArray.slice(
+    (currentPage - 1) * classesPerPage,
+    currentPage * classesPerPage
+  );
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   };
 
   return (
@@ -39,7 +56,7 @@ const AdminPrevious = () => {
         Previous Classes
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {previousArray.slice(0, 3).map((classItem) => (
+        {paginatedClasses.map((classItem) => (
           <div
             className="bg-customDark text-white rounded-3xl h-auto p-5 flex flex-col items-start"
             key={classItem._id}
@@ -72,7 +89,7 @@ const AdminPrevious = () => {
               </div>
               <button
                 className="text-sm bg-customYellow p-2 rounded-lg hover:font-semibold mt-5 text-black"
-                onClick={() => handleViewDetails(classItem)} // Pass the class item to view details
+                onClick={() => handleViewDetails(classItem)}
               >
                 View Details
               </button>
@@ -81,12 +98,41 @@ const AdminPrevious = () => {
         ))}
       </div>
 
+      {/* Pagination Controls */}
+      <div className="flex justify-center items-center mt-10">
+        <button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className={`px-4 py-2 rounded-lg ${
+            currentPage === 1
+              ? "bg-gray-200 cursor-not-allowed"
+              : "bg-customYellow hover:animate-pulse text-black"
+          }`}
+        >
+          Previous
+        </button>
+        <span className="mx-4 text-white">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={`px-4 py-2 rounded-lg ${
+            currentPage === totalPages
+              ? "bg-gray-200 cursor-not-allowed"
+              : "bg-customYellow hover:animate-pulse text-black"
+          }`}
+        >
+          Next
+        </button>
+      </div>
+
       {/* ViewClassModal Component */}
       {viewClassItem && (
         <ViewClassModal
           isOpen={isViewModalOpen}
           onClose={() => setIsViewModalOpen(false)}
-          classItem={viewClassItem} // Pass the selected class item
+          classItem={viewClassItem}
         />
       )}
     </div>

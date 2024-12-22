@@ -1,6 +1,7 @@
 import { Button } from "../../ui/button";
 import { MoveRight } from "lucide-react";
 import React from "react";
+import { Link } from "react-router-dom";
 
 function HeroSection1() {
   return (
@@ -12,10 +13,10 @@ function HeroSection1() {
       />
 
       <div className="z-10 hidden md:flex md:pt-[380px] lg:pt-[430px] justify-center items-center h-full">
-        <Button className=" bg-customYellow text-black rounded-full hover:bg-customYellow hover:cursor-pointer font-semibold text-sm md:text-base lg:text-base flex items-center h-auto w-auto">
+        <Link to='/guest/dashboard'><Button className=" bg-customYellow text-black rounded-full hover:bg-customYellow hover:cursor-pointer font-semibold text-sm md:text-base lg:text-base flex items-center h-auto w-auto">
           Book a free trial
           <MoveRight className="ml-2" />
-        </Button>
+        </Button></Link>
       </div>
     </div>
   );

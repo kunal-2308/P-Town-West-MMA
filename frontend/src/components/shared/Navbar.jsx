@@ -104,10 +104,10 @@ function Navbar() {
             </ul>
           </div>
 
-          <div className="mr-6 lg:mr-9 hidden md:block">
-            <Button className="bg-customYellow text-black hover:bg-customYellow rounded-full font-medium text-sm lg:text-sm">
+          <div className="mr-6 ml-5 lg:mr-9 hidden md:block">
+            <Link to='/guest/dashboard'><Button className="bg-customYellow text-black hover:bg-customYellow rounded-full font-medium text-sm lg:text-sm">
               Book a Free Trial Class
-            </Button>
+            </Button></Link>
           </div>
 
           {/* Mobile Menu Icon */}

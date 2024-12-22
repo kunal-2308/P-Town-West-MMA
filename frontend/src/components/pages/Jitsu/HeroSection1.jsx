@@ -1,6 +1,7 @@
 import { Button } from "../../ui/button";
 import { MoveRight } from "lucide-react";
 import React from "react";
+import { Link } from "react-router-dom";
 
 function HeroSection1() {
   return (
@@ -81,9 +82,9 @@ function HeroSection1() {
           <span className="text-white text-xs sm:text-base md:text-sm font-thin">
           Unlock the power and technique of Brazilian Jiu-Jitsu (BJJ) with our specialized training program at [P-Town MMA  in Pune, Baner. Whether you’re a beginner or an advanced practitioner, our program is designed to help you master grappling, submissions, and ground control under the guidance of our expert coaches.
           </span>
-          <Button className="bg-customYellow text-black w-[150px] flex justify-center items-center gap-x-3 rounded-full mt-5 h-[30px] hover:bg-customYellow hover:cursor-pointer">
+          <Link to='/contact'><Button className="bg-customYellow text-black w-[150px] flex justify-center items-center gap-x-3 rounded-full mt-5 h-[30px] hover:bg-customYellow hover:cursor-pointer">
             Contact Us <MoveRight />
-          </Button>
+          </Button></Link>
         </div>
       </div>
     </>
