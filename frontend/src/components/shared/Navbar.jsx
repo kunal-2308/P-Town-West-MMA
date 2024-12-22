@@ -91,13 +91,13 @@ function Navbar() {
               <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
                 <Link to="/timetable">Class TimeTable</Link>
               </li>
-              <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
+              {/* <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
                 {localStorage.getItem("role") == "admin" ? (
                   <Link to="/admin/dashboard">Class Schedule</Link>
                 ) : (
                   <Link to="/class/schedule">Class Schedule</Link>
                 )}
-              </li>
+              </li> */}
               <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
                 <Link to="/contact">Contact Us</Link>
               </li>
@@ -105,9 +105,11 @@ function Navbar() {
           </div>
 
           <div className="mr-6 ml-5 lg:mr-9 hidden md:block">
-            <Link to='/guest/dashboard'><Button className="bg-customYellow text-black hover:bg-customYellow rounded-full font-medium text-sm lg:text-sm">
-              Book a Free Trial Class
-            </Button></Link>
+            <Link to="/guest/dashboard">
+              <Button className="bg-customYellow text-black hover:bg-customYellow rounded-full font-medium text-sm lg:text-sm">
+                Book a Free Trial Class
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Icon */}
@@ -170,9 +172,9 @@ function Navbar() {
             <li className="text-sm font-medium">
               <Link to="/timetable">Class TimeTable</Link>
             </li>
-            <li className="hover:cursor-pointer font-semibold text-sm">
+            {/* <li className="hover:cursor-pointer font-semibold text-sm">
               <Link to="/class/schedule">Class Schedule</Link>
-            </li>
+            </li> */}
             <li className="hover:cursor-pointer font-semibold text-sm">
               <Link to="/contact">Contact Us</Link>
             </li>
