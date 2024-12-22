@@ -96,7 +96,7 @@ const AdminChangePassword = () => {
             className="absolute right-3 top-10"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
           >
-            {showConfirmPassword ? "🙈" : "👁️"}
+            {showConfirmPassword ? <FaEyeSlash/> : <FaEye/>}
           </button>
         </div>
 

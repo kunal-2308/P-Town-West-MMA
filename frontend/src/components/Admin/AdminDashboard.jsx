@@ -32,11 +32,11 @@ const AdminDashboard = () => {
     switch (selectedTab) {
       case "Home":
         return <AdminHome onViewAllClick={setSelectedTab} />;
-      case "Upcoming Class":
+      case "Upcoming Classes":
         return <AdminUpcoming />;
-      case "Previous Class":
+      case "Previous Classes":
         return <AdminPrevious />;
-      case "Schedule Class":
+      case "Schedule a Class":
         return <AdminClassAdd />;
       case "Add Admin":
         return <AdminAdd />;
@@ -48,7 +48,7 @@ const AdminDashboard = () => {
         return <AddSchedule />;
       case "Display Schedule":
         return <DisplayUploadedImage />;
-      case "Customer Relationship":
+      case "Customer Representative":
         return <CustomerRelationship />;
       default:
         return <p>Welcome to the admin dashboard.</p>;
@@ -86,15 +86,15 @@ const AdminDashboard = () => {
           <ul className="space-y-4 mt-10 w-full">
             {[
               { label: "Home", icon: <GoHomeFill /> },
-              { label: "Upcoming Class", icon: <FaRegCalendarAlt /> },
-              { label: "Previous Class", icon: <FaClipboardList /> },
-              { label: "Schedule Class", icon: <FaRegCalendarAlt /> },
+              { label: "Upcoming Classes", icon: <FaRegCalendarAlt /> },
+              { label: "Previous Classes", icon: <FaClipboardList /> },
+              { label: "Schedule a Class", icon: <FaRegCalendarAlt /> },
               { label: "Add Admin", icon: <FaUserPlus /> },
               { label: "View Admins", icon: <FaUserPlus /> },
               { label: "Change Password", icon: <FaUserPlus /> },
               { label: "Add Schedule", icon: <MdSchedule /> },
               { label: "Display Schedule", icon: <MdSchedule /> },
-              { label: "Customer Relationship", icon: <FaUsers /> },
+              { label: "Customer Representative", icon: <FaUsers /> },
             ].map((item, index) => (
               <li
                 key={index}
@@ -124,7 +124,6 @@ const AdminDashboard = () => {
             </li>
           </ul>
         </div>
-
         <div className="flex-1 bg-white rounded-lg mt-6 mb-20 md:mt-0 p-4 sm:p-6 md:p-8 lg:p-10">
           <div className="text-lg text-gray-600">{renderContent()}</div>
         </div>
