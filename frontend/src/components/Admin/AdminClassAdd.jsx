@@ -21,16 +21,14 @@ const AdminClassAdd = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    let token = Cookies.get('jwt_token');
+    let token = Cookies.get("jwt_token");
     const fetchDetails = async () => {
       try {
-        const response = await axios.get(
-          `${API_URL}/api/admin/all`,{
-            headers: {
-              Authorization: `Bearer ${token}` // Add token as a header
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/api/admin/all`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token as a header
+          },
+        });
         console.log("API Response:", response.data); // Log to ensure we get data
         const { categories, instructors } = response.data;
         setCategories(categories);
@@ -70,10 +68,10 @@ const AdminClassAdd = () => {
     setIsLoading(true); // Show loading state when submitting
 
     try {
-      let token = Cookies.get('jwt_token');
-      await axios.post(`${API_URL}/api/admin/add`, formData,{
+      let token = Cookies.get("jwt_token");
+      await axios.post(`${API_URL}/api/admin/add`, formData, {
         headers: {
-          Authorization: `Bearer ${token}` // Add token as a header
+          Authorization: `Bearer ${token}`, // Add token as a header
         },
       });
 
@@ -183,6 +181,7 @@ const AdminClassAdd = () => {
             value={formData.date}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md"
+            min={new Date().toISOString().split("T")[0]}
           />
         </div>
 
@@ -195,6 +194,14 @@ const AdminClassAdd = () => {
             value={formData.timeIn}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md"
+            disabled={!formData.date}
+            min={
+              formData.date === new Date().toISOString().split("T")[0]
+                ? new Date()
+                    .toLocaleTimeString("en-GB", { hour12: false })
+                    .slice(0, 5)
+                : undefined
+            }
           />
         </div>
 
