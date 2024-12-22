@@ -25,24 +25,26 @@ const EditEventModal = ({
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
-        let token = Cookies.get('jwt_token');
-        const res = await axios.get(`${API_URL}/api/classes/view/admin/${classId}`,{
-          headers: {
-            Authorization: `Bearer ${token}` // Add token as a header
-          },
-        });
+        let token = Cookies.get("jwt_token");
+        const res = await axios.get(
+          `${API_URL}/api/classes/view/admin/${classId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Add token as a header
+            },
+          }
+        );
         const eventDetails = res.data;
 
         const formattedDate = eventDetails.date.split("T")[0];
-        
-        const formattedTimeIn = new Date(eventDetails.timeIn).toLocaleTimeString(
-          "en-GB",
-          {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          }
-        );
+
+        const formattedTimeIn = new Date(
+          eventDetails.timeIn
+        ).toLocaleTimeString("en-GB", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
         const formattedTimeOut = new Date(
           eventDetails.timeOut
         ).toLocaleTimeString("en-GB", {
@@ -57,7 +59,6 @@ const EditEventModal = ({
         });
 
         console.log(formattedTimeIn);
-        
       } catch (error) {
         console.error("Error fetching event details:", error);
         if (error.response) {
@@ -78,8 +79,6 @@ const EditEventModal = ({
       fetchEventDetails();
     }
   }, [classId]);
-
- 
 
   if (!isOpen) {
     return null;
@@ -112,10 +111,10 @@ const EditEventModal = ({
     setIsLoading(true);
 
     try {
-      let token = Cookies.get('jwt_token');
-      await axios.put(`${API_URL}/api/admin/update/${classId}`, formData,{
+      let token = Cookies.get("jwt_token");
+      await axios.put(`${API_URL}/api/admin/update/${classId}`, formData, {
         headers: {
-          Authorization: `Bearer ${token}` // Add token as a header
+          Authorization: `Bearer ${token}`, // Add token as a header
         },
       });
       toast.success("Event updated successfully.");
@@ -131,12 +130,15 @@ const EditEventModal = ({
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
-      let token = Cookies.get('jwt_token');
-      const response = await axios.delete(`${API_URL}/api/admin/delete/${classId}`,{
-        headers: {
-          Authorization: `Bearer ${token}` // Add token as a header
-        },
-      });
+      let token = Cookies.get("jwt_token");
+      const response = await axios.delete(
+        `${API_URL}/api/admin/delete/${classId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token as a header
+          },
+        }
+      );
       toast.success("Class deleted successfully.");
       onClose(); // Close the modal after successful deletion
     } catch (error) {
@@ -144,7 +146,7 @@ const EditEventModal = ({
       toast.error("Failed to delete the class.");
     }
   };
-  
+
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-[99999]">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl overflow-y-auto max-h-[90vh]">
@@ -160,7 +162,9 @@ const EditEventModal = ({
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              className={`w-full p-2 border rounded-md ${!formData.name && 'border-red-500'}`}
+              className={`w-full p-2 border rounded-md ${
+                !formData.name && "border-red-500"
+              }`}
               placeholder="Event Name"
               required
               disabled={isLoading}
@@ -177,7 +181,9 @@ const EditEventModal = ({
               name="instructor"
               value={formData.instructor}
               onChange={handleInputChange}
-              className={`w-full p-2 border rounded-md ${!formData.instructor && 'border-red-500'}`}
+              className={`w-full p-2 border rounded-md ${
+                !formData.instructor && "border-red-500"
+              }`}
               placeholder="Enter Instructor"
               list="instructor-list"
               required
@@ -202,7 +208,9 @@ const EditEventModal = ({
               name="slots"
               value={formData.slots}
               onChange={handleInputChange}
-              className={`w-full p-2 border rounded-md ${!formData.slots && 'border-red-500'}`}
+              className={`w-full p-2 border rounded-md ${
+                !formData.slots && "border-red-500"
+              }`}
               placeholder="No. of Slots"
               required
               disabled={isLoading}
@@ -211,15 +219,20 @@ const EditEventModal = ({
 
           {/* Date */}
           <div>
-            <label className="block text-sm font-medium mb-2">Choose Date</label>
+            <label className="block text-sm font-medium mb-2">
+              Choose Date
+            </label>
             <input
               type="date"
               name="date"
               value={formData.date}
               onChange={handleInputChange}
-              className={`w-full p-2 border rounded-md ${!formData.date && 'border-red-500'}`}
+              className={`w-full p-2 border rounded-md ${
+                !formData.date && "border-red-500"
+              }`}
               required
               disabled={isLoading}
+              min={new Date().toISOString().split("T")[0]}
             />
           </div>
 
@@ -231,12 +244,21 @@ const EditEventModal = ({
               name="timeIn"
               value={formData.timeIn}
               onChange={handleInputChange}
-              className={`w-full p-2 border rounded-md ${!formData.timeIn && 'border-red-500'}`}
+              className={`w-full p-2 border rounded-md ${
+                !formData.timeIn && "border-red-500"
+              }`}
               required
               disabled={isLoading}
+              min={
+                formData.date === new Date().toISOString().split("T")[0]
+                  ? new Date()
+                      .toLocaleTimeString("en-GB", { hour12: false })
+                      .slice(0, 5)
+                  : undefined
+              }
             />
           </div>
-          
+
           {/* End Time */}
           <div>
             <label className="block text-sm font-medium mb-2">End Time</label>
@@ -245,7 +267,9 @@ const EditEventModal = ({
               name="timeOut"
               value={formData.timeOut}
               onChange={handleInputChange}
-              className={`w-full p-2 border rounded-md ${!formData.timeOut && 'border-red-500'}`}
+              className={`w-full p-2 border rounded-md ${
+                !formData.timeOut && "border-red-500"
+              }`}
               required
               disabled={isLoading}
             />
@@ -262,7 +286,9 @@ const EditEventModal = ({
               value={formData.category}
               onChange={handleInputChange}
               list="category-list"
-              className={`w-full p-2 border rounded-md ${!formData.category && 'border-red-500'}`}
+              className={`w-full p-2 border rounded-md ${
+                !formData.category && "border-red-500"
+              }`}
               disabled={isLoading}
             />
             <datalist id="category-list">
@@ -293,7 +319,10 @@ const EditEventModal = ({
             >
               {isLoading ? "Saving..." : "Save"}
             </button>
-            <button className="border border-gray-400 px-3 rounded-md text-gray-500 font-normal hover:bg-red-600 hover:border-none hover:text-white" onClick={handleDelete}>
+            <button
+              className="border border-gray-400 px-3 rounded-md text-gray-500 font-normal hover:bg-red-600 hover:border-none hover:text-white"
+              onClick={handleDelete}
+            >
               Delete Class
             </button>
           </div>
