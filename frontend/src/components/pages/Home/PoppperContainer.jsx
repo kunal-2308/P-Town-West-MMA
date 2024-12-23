@@ -16,7 +16,7 @@ function PoppperContainer() {
           </span>
           <Button className="bg-customYellow text-black rounded-full flex items-center px-6 sm:px-8 md:px-5 lg:px-10 hover:bg-customYellow">
             <Link
-              to="/contact"
+              to="/guest/dashboard"
               className="flex items-center font-semibold text-sm sm:text-base lg:text-base"
             >
               Book a free trial

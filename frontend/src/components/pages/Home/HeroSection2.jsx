@@ -36,7 +36,7 @@ function HeroSection2() {
         </div>
         <div className="block h-auto md:hidden mt-1 lg:mt-5 justify-start items-start md:justify-end md:items-end sm:pt-24">
           <Button className="bg-customYellow text-black rounded-full flex items-center px-6 sm:px-8 md:px-5 lg:px-10 hover:bg-customYellow">
-            <Link to="/contact" className="flex items-center font-semibold text-sm sm:text-base lg:text-base">
+            <Link to="/guest/dashboard" className="flex items-center font-semibold text-sm sm:text-base lg:text-base">
               Book a free trial
               <MoveRight className="ml-2" />
             </Link>

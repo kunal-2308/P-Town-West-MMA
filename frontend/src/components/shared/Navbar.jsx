@@ -181,9 +181,9 @@ function Navbar() {
 
             {/* Mobile Trial Button */}
             <div className="pt-4">
-              <Button className="bg-customYellow text-black hover:bg-customYellow rounded-full font-medium text-sm px-6 py-2">
+              <Link to='/guest/dashboard'><Button className="bg-customYellow text-black hover:bg-customYellow rounded-full font-medium text-sm px-6 py-2">
                 Book a Free Trial Class
-              </Button>
+              </Button></Link>
             </div>
           </ul>
         </div>
