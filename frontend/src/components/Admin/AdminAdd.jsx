@@ -35,6 +35,12 @@ const AdminAdd = () => {
       )
       .then((response) => {
         toast.success(response.data.message);
+        setAdminData({
+          name: "",
+          email: "",
+          phoneNumber: "",
+          password:"",
+        });
       })
       .catch((error) => {
         const errorMessage = error.response?.data?.message || 'Something went wrong!';
