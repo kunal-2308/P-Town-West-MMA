@@ -179,23 +179,23 @@ const Dashboard = () => {
         },
       });
       if (response.status == 200) { toast.success('Class unbooked successfully'); }
-        axios
-          .get(`${API_URL}/api/auth/user/details`, {
-            headers: {
-              Authorization: `Bearer ${token}` // Add token as a header
-            },
-          })
-          .then((response) => {
-            const { userDetails } = response.data;
-            const bookedClasses = userDetails.bookedClasses;
-            setUpcomingClasses(bookedClasses);
-            // Set the user name
-            setUserName(userDetails.name);
-            // Assuming 'name' is the field in user details
-          })
-          .catch((error) => {
-            console.error("Error fetching user details:", error);
-          });
+      axios
+        .get(`${API_URL}/api/auth/user/details`, {
+          headers: {
+            Authorization: `Bearer ${token}` // Add token as a header
+          },
+        })
+        .then((response) => {
+          const { userDetails } = response.data;
+          const bookedClasses = userDetails.bookedClasses;
+          setUpcomingClasses(bookedClasses);
+          // Set the user name
+          setUserName(userDetails.name);
+          // Assuming 'name' is the field in user details
+        })
+        .catch((error) => {
+          console.error("Error fetching user details:", error);
+        });
 
     } catch (error) {
       toast.error('Error occured while unbooking class');
@@ -280,12 +280,17 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="div-content-section bg-white text-black mt-3 flex justify-between items-center w-full px-4">
-                      <div className="div-content-1 flex flex-row justify-start items-center gap-x-2">
-                        <MdOutlineCalendarMonth className="text-sm" />
-                        <span className="text-xs font-semibold">
-                          {formatDate(cls.date)}
-                        </span>
+                    <div className="div-content-section bg-white text-black mt-3 flex justify-between items-start w-full px-4">
+                      <div className="div-content-1 flex flex-col justify-start items-start gap-x-2 gap-y-2">
+                        <div className="div-1 flex flex-row gap-x-1">
+                          <MdOutlineCalendarMonth className="text-sm" />
+                          <span className="text-xs font-semibold">
+                            {formatDate(cls.date)}
+                          </span>
+                        </div>
+                        <div className="div-2 flex justify-start items-start text-start bg-customDark px-3 rounded-lg text-white hover:shadow-lg">
+                          <span className="text-start text-sm">{cls.category}</span>
+                        </div>
                       </div>
                       <div className="div-time-section flex flex-row justify-start items-center gap-x-2">
                         <FaRegClock className="text-sm" />
@@ -436,22 +441,22 @@ const Dashboard = () => {
               onClick={() => {
                 setShowModal(false);
                 axios
-                .get(`${API_URL}/api/auth/user/details`, {
-                  headers: {
-                    Authorization: `Bearer ${token}` // Add token as a header
-                  },
-                })
-                .then((response) => {
-                  const { userDetails } = response.data;
-                  const bookedClasses = userDetails.bookedClasses;
-                  setUpcomingClasses(bookedClasses);
-                  // Set the user name
-                  setUserName(userDetails.name);
-                  // Assuming 'name' is the field in user details
-                })
-                .catch((error) => {
-                  console.error("Error fetching user details:", error);
-                });
+                  .get(`${API_URL}/api/auth/user/details`, {
+                    headers: {
+                      Authorization: `Bearer ${token}` // Add token as a header
+                    },
+                  })
+                  .then((response) => {
+                    const { userDetails } = response.data;
+                    const bookedClasses = userDetails.bookedClasses;
+                    setUpcomingClasses(bookedClasses);
+                    // Set the user name
+                    setUserName(userDetails.name);
+                    // Assuming 'name' is the field in user details
+                  })
+                  .catch((error) => {
+                    console.error("Error fetching user details:", error);
+                  });
               }}
             />
           </div>

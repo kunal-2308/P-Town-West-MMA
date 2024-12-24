@@ -131,7 +131,20 @@ const AdminPrevious = () => {
       {viewClassItem && (
         <ViewClassModal
           isOpen={isViewModalOpen}
-          onClose={() => setIsViewModalOpen(false)}
+          onClose={async() => {
+            setIsViewModalOpen(false);
+            try {
+              let token = Cookies.get("jwt_token");
+              let res = await axios.get(`${API_URL}/api/classes/admin/previous`, {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Add token as a header
+                },
+              });
+              setPreviousArray(res.data.previousClasses);
+            } catch (error) {
+              console.log(error);
+            }
+          }}
           classItem={viewClassItem}
         />
       )}

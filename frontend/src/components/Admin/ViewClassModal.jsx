@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_URL } from '../../../configure';
 import Cookies from 'js-cookie';
+import { toast } from 'sonner';
 
 // Utility function to convert 24-hour format time to 12-hour format with AM/PM
 const convertTo12HourFormat = (time24) => {
@@ -37,6 +38,26 @@ function ViewClassModal({ isOpen, onClose, classItem }) {
   if (!isOpen || !classDetails) {
     return null;
   }
+  const classId = classItem._id;
+  const handleDelete = async(e)=>{
+    e.preventDefault();
+    try {
+      let token = Cookies.get("jwt_token");
+      const response = await axios.delete(
+        `${API_URL}/api/admin/delete/${classId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token as a header
+          },
+        }
+      );
+      toast.success("Class deleted successfully.");
+      onClose(); // Close the modal after successful deletion
+    } catch (error) {
+      console.error("Error deleting class:", error);
+      toast.error("Failed to delete the class.");
+    }
+  }
 
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center p-4">
@@ -56,6 +77,9 @@ function ViewClassModal({ isOpen, onClose, classItem }) {
           <p><strong>Instructor:</strong> {classDetails.instructor}</p>
           <p><strong>Slots:</strong> {classDetails.slots}</p>
           <p><strong>Category:</strong> {classDetails.category}</p>
+        </div>
+        <div className="delete-button-div mt-3">
+          <button className='bg-transparent border-[1px] border-slate-400 p-2 rounded-lg hover:bg-red-700 hover:text-white hover:border-white' onClick={handleDelete}>Delete Class</button>
         </div>
 
         <div className="mt-8 overflow-y-auto max-h-48 border-t-2 border-gray-300 pt-4">

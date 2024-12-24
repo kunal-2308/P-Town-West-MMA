@@ -222,11 +222,16 @@ function GuestDashboard() {
                       </div>
                     </div>
                     <div className="div-content-section bg-white text-black mt-3 flex justify-between items-center w-full px-4">
-                      <div className="div-content-1 flex flex-row justify-start items-center gap-x-2">
-                        <MdOutlineCalendarMonth className="text-sm" />
-                        <span className="text-xs font-semibold">
-                          {formatDate(cls.date)}
-                        </span>
+                    <div className="div-content-1 flex flex-col justify-start items-start gap-x-2 gap-y-2">
+                        <div className="div-1 flex flex-row gap-x-1">
+                          <MdOutlineCalendarMonth className="text-sm" />
+                          <span className="text-xs font-semibold">
+                            {formatDate(cls.date)}
+                          </span>
+                        </div>
+                        <div className="div-2 flex justify-start items-start text-start bg-customDark px-3 rounded-lg text-white hover:shadow-lg">
+                          <span className="text-start text-sm">{cls.category}</span>
+                        </div>
                       </div>
                       <div className="div-time-section flex flex-row justify-start items-center gap-x-2">
                         <FaRegClock className="text-sm" />
