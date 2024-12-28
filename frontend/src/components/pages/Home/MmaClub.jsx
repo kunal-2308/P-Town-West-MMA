@@ -22,23 +22,17 @@ function MmaClub() {
             {/* Description */}
             <div className="div-2 mt-4 sm:mt-6 flex justify-center lg:justify-start items-center px-4 lg:px-0">
               <span className="text-xs sm:text-base md:text-lg leading-relaxed text-gray-600">
-                Dictum quam et adipiscing faucibus orci neque curabitur. Turpis
-                duis morbi in a at amet scelerisque. Dictum quam et adipiscing
-                faucibus orci neque curabitur. Turpis duis morbi in a at amet
-                scelerisque. Dictum quam et adipiscing faucibus orci neque
-                curabitur. Turpis duis morbi in a at amet scelerisque. Dictum
-                quam et adipiscing faucibus orci neque curabitur. Turpis duis
-                morbi in a at amet scelerisque.
+              At P-Town West MMA in Baner, Pune, we offer top-tier training in MMA, Muay Thai, Brazilian Jiu-Jitsu, kickboxing, and wrestling. With expert coaches and state-of-the-art facilities, our programs help students excel in combat skills, fitness, and confidence. Hear from our students to see the difference
               </span>
             </div>
 
             {/* Button */}
-            <div className="mt-8 sm:mt-6 flex justify-center lg:justify-start">
+            {/* <div className="mt-8 sm:mt-6 flex justify-center lg:justify-start">
               <Button className="bg-customYellow text-black rounded-full hover:bg-customYellow hover:cursor-pointer font-semibold text-xs sm:text-sm md:text-sm px-4 py-2 sm:px-5 md:px-6">
                 JOIN THE CLUB
                 <MoveRight className="ml-2" />
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
 
