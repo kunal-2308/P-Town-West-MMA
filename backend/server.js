@@ -44,7 +44,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
 app.post("/api/send-email", sendMail);
 
-const PORT = process.env.PORT || 5007;
+const PORT = 1337;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
