@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 function VideoSectionCards({ thumbnail, video, title }) {
   // State to track whether the video has been clicked
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const videoRef = useRef(null);
 
   // Function to handle button click to play video
   const handlePlayVideo = () => {
     setIsVideoPlaying(true);
+
+    setTimeout(() => {
+      if (videoRef.current) {
+        videoRef.current.play().catch((error) => {
+          console.error('Autoplay failed:', error);
+        });
+      }
+    }, 0); 
+
   };
 
   return (
@@ -42,7 +52,7 @@ function VideoSectionCards({ thumbnail, video, title }) {
                 title={title}
                 className="w-full h-full rounded-lg"
               ></iframe> */}
-              <video className='rounded-lg h-[26rem]' width="800" height="360" controls autoplay poster={thumbnail}>
+              <video className='rounded-lg h-[26rem]' width="800" height="360" controls autoplay poster={thumbnail}  ref={videoRef}>
                 <source src={video} type="video/mp4" />
                 Your browser does not support the video.
               </video>
