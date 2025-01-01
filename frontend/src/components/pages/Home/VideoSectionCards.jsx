@@ -11,7 +11,7 @@ function VideoSectionCards({ thumbnail, video, title }) {
 
   return (
     <>
-      <div className="div-main flex flex-col justify-center items-center p-4">
+      <div className="div-main flex flex-col justify-center items-center p-4 ">
         {/* Video or Thumbnail */}
         <div className="div-2-video-section relative flex justify-center items-center lg:w-[300px] max-w-[310px] md:max-w-[450px]">
           {/* Conditionally render the iframe or the thumbnail */}
@@ -33,7 +33,7 @@ function VideoSectionCards({ thumbnail, video, title }) {
             </div>
           ) : (
             <div className="w-full aspect-w-16 aspect-h-9">
-              <iframe
+              {/* <iframe
                 src={`${video}?autoplay=1`} // Dynamically use video prop for the video URL
                 width="100%"
                 height="100%"
@@ -41,7 +41,11 @@ function VideoSectionCards({ thumbnail, video, title }) {
                 allowFullScreen
                 title={title}
                 className="w-full h-full rounded-lg"
-              ></iframe>
+              ></iframe> */}
+              <video className='rounded-lg h-[26rem]' width="800" height="360" controls autoplay poster={thumbnail}>
+                <source src={video} type="video/mp4" />
+                Your browser does not support the video.
+              </video>
             </div>
           )}
         </div>

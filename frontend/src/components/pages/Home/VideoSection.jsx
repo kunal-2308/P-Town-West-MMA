@@ -15,18 +15,18 @@ function VideoSection() {
                     {/* Video Section Cards */}
                     <VideoSectionCards 
                       thumbnail="/images/Home/Trainings/12.png" 
-                      video="https://www.youtube.com/watch?v=8-aI8Fp2bPU&pp=ygUUbW1hIHRyYWluaW5nIGF0IGhvbWU%3D" 
-                      title="Beginner Friendly Training" 
+                      video="/videos/beginnerFriendly.mp4" 
+                      title="Beginner Friendly Training"
                     />
                     <VideoSectionCards 
                       thumbnail="/images/Home/Trainings/13.png" 
-                      video="https://www.youtube.com/watch?v=8-aI8Fp2bPU&pp=ygUUbW1hIHRyYWluaW5nIGF0IGhvbWU%3D" 
+                      video="/videos/muay_thai.mp4"
                       title="Muay Thai Classes" 
                     />
                     <VideoSectionCards 
                       thumbnail="/images/Home/Trainings/14.png" 
-                      video="https://www.youtube.com/watch?v=8-aI8Fp2bPU&pp=ygUUbW1hIHRyYWluaW5nIGF0IGhvbWU%3D" 
-                      title="Brazilian Jiu-Jitsu" 
+                      video="/videos/brazilian_jiu_jitsu.mp4" 
+                      title="Brazilian Jiu-Jitsu"
                     />
                 </div>
             </div>
