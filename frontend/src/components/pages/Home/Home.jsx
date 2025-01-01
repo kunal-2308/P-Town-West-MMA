@@ -1,3 +1,5 @@
+import { Helmet } from "react-helmet"; // Ensure Helmet is imported
+
 import Navbar from "../../shared/Navbar";
 import HeroSection1 from "./HeroSection1";
 import HeroSection2 from "./HeroSection2";
@@ -15,6 +17,17 @@ import Unstop from "./Unstop";
 function Home() {
   return (
     <>
+      <Helmet>
+        <title>P-Town West MMA</title>
+        <meta
+          name="description"
+          content="P-Town West MMA in Pune, Baner, is the ultimate destination to master MMA, Muay Thai, kickboxing, boxing, and wrestling. Our expert trainers provide programs tailored for beginners and advanced practitioners, ensuring personalized attention in a supportive community."
+        />
+        <meta
+          name="keywords"
+          content="MMA training Pune, Muay Thai Pune, Kickboxing Pune, Boxing Pune, Wrestling Pune, beginner-friendly MMA, expert MMA coaching Baner, combat sports Pune, martial arts Pune"
+        />
+      </Helmet>
       <div className="overflow-hidden">
         <Navbar />
         <div className="block md:hidden">

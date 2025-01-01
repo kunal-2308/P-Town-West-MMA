@@ -15,6 +15,7 @@ import { ImCancelCircle } from "react-icons/im";
 import { API_URL } from "../../../../configure";
 import { GiCancel } from "react-icons/gi";
 import { toast } from "sonner";
+import { Helmet } from "react-helmet";
 
 const Dashboard = () => {
   const [allClasses, setAllClasses] = useState([]);
@@ -205,6 +206,12 @@ const Dashboard = () => {
 
   return (
     <>
+      <Helmet>
+        <title>P-Town West MMA | Book a Free Trial Class</title>
+        <meta name="description" content="Experience world-class training with a free trial class at P-Town West MMA in Pune, Baner. Try our MMA, Muay Thai, kickboxing, boxing, and wrestling programs, guided by expert trainers." />
+        <meta name="keywords" content="Book free trial MMA Pune, free trial martial arts Baner, MMA trial class Pune, Kickboxing trial Baner, free Muay Thai session Pune, combat sports trial Pune, martial arts beginners free class" />
+      </Helmet>
+
       <Navbar />
       <div className="div-1-herosection relative mt-10 mb-20 overflow-hidden">
         <img src="/images/Training/3.png" alt="" className="w-screen" />

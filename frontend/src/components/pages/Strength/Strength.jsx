@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet"; // Import Helmet
 import Navbar from "../../shared/Navbar";
 import HeroSection from "./HeroSection";
 import InfoSection from "./InfoSection";
@@ -13,6 +14,17 @@ import Footer from "../../shared/Footer";
 function Strength() {
   return (
     <>
+      <Helmet>
+        <title>P-Town West MMA | Strength Program</title>
+        <meta
+          name="description"
+          content="Transform your fitness journey with our Strength Program at P-Town West MMA in Pune, Baner. Focused on muscle building, endurance, and overall physical conditioning, our expert-led sessions are ideal for all fitness levels."
+        />
+        <meta
+          name="keywords"
+          content="Strength training Pune, fitness programs Baner, muscle building Pune, endurance training, strength and conditioning Pune, fitness for athletes, MMA fitness training"
+        />
+      </Helmet>
       <Navbar />
       <HeroSection />
       <InfoSection />
