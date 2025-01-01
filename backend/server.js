@@ -9,6 +9,8 @@ import { sendMail } from "./controllers/emailController.js";
 import cors from "cors";
 import multer from "multer";
 import Upload from "./models/uploadModel.js";
+import path from "path"
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 connectDB();
@@ -29,6 +31,12 @@ app.use(
     origin:"*"
   })
 );
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// For statically serving react files.
+app.use(express.static('static'))
 
 // Define routes:
 app.use("/api/classes", classRoutes);
@@ -60,6 +68,7 @@ const storage = multer.diskStorage({
     return cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
+
 
 const upload = multer({ storage: storage });
 app.post("/api/upload", upload.single("profileImage"), async (req, res) => {
@@ -95,3 +104,9 @@ app.get("/api/uploads", async (req, res) => {
 });
 
 app.use("/uploads", express.static("uploads"));
+
+app.get('*', (req, res) => {
+  let filePath = path.resolve(__dirname, 'static', 'index.html');
+  filePath = path.normalize(filePath);
+  res.sendFile(filePath);
+});
