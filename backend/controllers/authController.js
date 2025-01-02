@@ -100,8 +100,6 @@ export const adminLogin = async (req, res) => {
 
     const token = createToken(admin._id, admin.role);
 
-    res.cookie("jwt_token", token);
-
     res.status(200).json({
       token,
       userId: admin._id,

@@ -47,6 +47,7 @@ const AdminHome = ({ onViewAllClick }) => {
     const fetchCategoriesAndInstructors = async () => {
       try {
         const token = Cookies.get("jwt_token");
+        console.log("token", token);
         const res = await axios.get(`${API_URL}/api/admin/all`, {
           headers: {
             Authorization: `Bearer ${token}`,
