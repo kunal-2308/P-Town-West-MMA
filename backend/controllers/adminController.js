@@ -31,13 +31,13 @@ export const adminLogin = async (req, res) => {
 
     const token = createToken(admin._id, admin.role);
 
-    res.cookie("jwt_token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Set this to true in production (HTTPS)
-      sameSite: "strict",
-      // Omit maxAge for an indefinite cookie, or set a large value in ms (e.g., 5 years)
-      maxAge: 5 * 365 * 24 * 60 * 60 * 1000, // 5 years in milliseconds
-    });
+    // res.cookie("jwt_token", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production", // Set this to true in production (HTTPS)
+    //   sameSite: "strict",
+    //   // Omit maxAge for an indefinite cookie, or set a large value in ms (e.g., 5 years)
+    //   maxAge: 5 * 365 * 24 * 60 * 60 * 1000, // 5 years in milliseconds
+    // });
 
     return res.status(200).json({
       token,

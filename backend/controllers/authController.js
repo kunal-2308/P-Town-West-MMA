@@ -36,7 +36,7 @@ export const register = async (req, res) => {
     // Set token and userName in cookies
     res.cookie("token", token);
     res.cookie("userName", user.name);
-    res.cookie("role", user.role); // Ensure role is also set for the user
+    res.cookie("role", user.role);
 
     res.status(201).json({
       message: "User registered successfully",
