@@ -34,11 +34,11 @@ function TrainingPrograms() {
             desc="Unlock the power of Brazilian Jiu-Jitsu with our specialized training program in Pune, Baner. Learn effective grappling techniques, enhance your ground game, and boost your fitness with personalized instruction."
           />
         </Link>
-        <TrainingCard
+        <Link to='/muay-thai'><TrainingCard
           link="/Photos_Ptown/Home/image-2.png"
           title="MUAY THAI"
           desc="Join our Thai Boxing training program in Pune, Baner, to master traditional techniques, enhance striking skills, and achieve peak fitness with expert guidance."
-        />
+        /></Link>
       </div>
     </div>
   );

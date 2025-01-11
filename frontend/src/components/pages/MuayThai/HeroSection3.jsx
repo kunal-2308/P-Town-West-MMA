@@ -12,18 +12,17 @@ function HeroSection3() {
                 {/* Title Section */}
                 <div className="div-1-title">
                     <span className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl text-customYellow font-medium leading-tight">
-                        WHY CHOOSE OUR <br /> JIU-JITSU PROGRAM?
+                        WHY CHOOSE OUR <br /> MUAY THAI PROGRAM?
                     </span>
                 </div>
 
                 {/* Technique Mastery Section */}
-                <div className="div-2 mt-10 sm:mt-12 md:mt-16 lg:mt-24 flex flex-col w-[90%] sm:w-[80%] md:w-[60%] lg:w-[400px] mb-10 sm:mb-12 md:mb-16 lg:mb-16">
+                <div className="div-2 mt-10 sm:mt-12 md:mt-16 lg:mt-24 flex flex-col w-[90%] sm:w-[80%] md:w-[80%] lg:w-[700px] mb-10 sm:mb-12 md:mb-16 lg:mb-16">
                     <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extralight text-white">
-                        Technique Mastery
+                    Professional Coaching:
                     </span>
                     <span className="text-sm sm:text-base md:text-lg lg:text-sm text-white mt-4 sm:mt-6 md:mt-8 font-extralight pl-1 sm:pl-2">
-                    Our BJJ program is led by highly skilled and experienced instructors who have trained extensively in Brazilian Jiu-Jitsu. Many of our coaches have competed at high levels and have a deep understanding of the techniques and strategies that make BJJ effective. Their real-world experience translates into practical, applicable instruction that helps you develop your skills efficiently and effectively.                    </span>
-                </div>
+                    Our Muay Thai program is led by highly skilled instructors who bring years of training and competition experience to the mat. Their deep understanding of Muay Thai techniques, combined with real-world insights, ensures that you learn practical and effective skills for both self-defense and competitive scenarios.</span>                </div>
             </div>
         </>
     )

@@ -55,7 +55,7 @@ function Form() {
     <>
       <div
         className="main-container w-full h-auto bg-cover bg-center bg-no-repeat lg:h-[800px]"
-        style={{ backgroundImage: `url('/images/Home/Trainings/25.png')` }}
+        style={{ backgroundImage: `url('/images/Shared/FormBg.png')` }}
       >
         <div className="flex flex-col md:flex-row gap-x-8 p-6 sm:p-8 pl-10 md:pt-16 justify-start items-start">
           <div className="flex justify-start items-start pt-2">

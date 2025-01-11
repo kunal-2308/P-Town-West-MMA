@@ -19,6 +19,7 @@ import AdminLogin from "./components/Admin/Login";
 import GuestDashboard from "./components/pages/Dashboard/GuestDashboard";
 import ClassDetailsGuest from "./components/pages/Dashboard/ClassDetailsGuest";
 import TimeTable from "./components/pages/Timetable/TimeTable";
+import Muay from "./components/pages/MuayThai/Muay";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/kickboxing" element={<KickBoxing />} />
           <Route path="/jitsu" element={<Jitsu />} />
+          <Route path="/muay-thai" element={<Muay/>} />
           <Route path="/kids" element={<Kids />} />
           <Route path="/about" element={<About />} />
           <Route path="/nutrition" element={<Nutrition />} />

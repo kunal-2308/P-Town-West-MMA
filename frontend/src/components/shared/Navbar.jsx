@@ -39,9 +39,9 @@ function Navbar() {
 
           <div className="hidden md:block ml-6 lg:ml-10">
             <ul className="flex space-x-4 lg:space-x-8 items-center">
-              <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
-                <Link to="/">Home</Link>
-              </li>
+              <Link to="/"><li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
+                Home
+              </li></Link>
 
               <div className="relative">
                 <div
@@ -52,34 +52,35 @@ function Navbar() {
                     Training Programs
                   </li>
                   <ChevronDown
-                    className={`transform transition-transform duration-300 ml-1 ${
-                      dropdownClick ? "rotate-180" : "rotate-0"
-                    }`}
+                    className={`transform transition-transform duration-300 ml-1 ${dropdownClick ? "rotate-180" : "rotate-0"
+                      }`}
                   />
                 </div>
 
                 <ul
-                  className={`absolute left-0 mt-2 py-2 w-48 bg-white shadow-lg rounded-md transition-opacity duration-300 ease-in-out ${
-                    dropdownClick
-                      ? "opacity-100 visible"
-                      : "opacity-0 invisible"
-                  }`}
+                  className={`absolute left-0 mt-2 py-2 w-48 bg-white shadow-lg rounded-md transition-opacity duration-300 ease-in-out ${dropdownClick
+                    ? "opacity-100 visible"
+                    : "opacity-0 invisible"
+                    }`}
                 >
-                  <li className="px-4 py-2 text-sm hover:bg-gray-200">
-                    <Link to="/jitsu">Brazilian Jitsu</Link>
-                  </li>
-                  <li className="px-4 py-2 text-sm hover:bg-gray-200">
-                    <Link to="/kickboxing">KickBoxing</Link>
-                  </li>
-                  <li className="px-4 py-2 text-sm hover:bg-gray-200">
-                    <Link to="/strength">Strength Program</Link>
-                  </li>
-                  <li className="px-4 py-2 text-sm hover:bg-gray-200">
-                    <Link to="/kids">Kids</Link>
-                  </li>
-                  <li className="px-4 py-2 text-sm hover:bg-gray-200">
-                    <Link to="/nutrition">Nutrition</Link>
-                  </li>
+                  <Link to="/jitsu"><li className="px-4 py-2 text-sm hover:bg-gray-200">
+                    Brazilian Jitsu
+                  </li></Link>
+                  <Link to="/muay-thai"><li className="px-4 py-2 text-sm hover:bg-gray-200">
+                    Muay Thai
+                  </li></Link>
+                  <Link to="/kickboxing"><li className="px-4 py-2 text-sm hover:bg-gray-200">
+                    KickBoxing
+                  </li></Link>
+                  <Link to="/strength"><li className="px-4 py-2 text-sm hover:bg-gray-200">
+                    Strength Program
+                  </li></Link>
+                  <Link to="/kids"><li className="px-4 py-2 text-sm hover:bg-gray-200">
+                   Kids
+                  </li></Link>
+                  <Link to="/nutrition"><li className="px-4 py-2 text-sm hover:bg-gray-200">
+                    Nutrition
+                  </li></Link>
                 </ul>
               </div>
               <li className="hover:cursor-pointer font-semibold text-sm lg:text-base">
@@ -124,9 +125,8 @@ function Navbar() {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
-            navStatus ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-          }`}
+          className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${navStatus ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+            }`}
         >
           <ul className="flex flex-col space-y-4 items-center mt-4 bg-white py-4">
             <li className="hover:cursor-pointer font-semibold text-sm">
@@ -138,9 +138,8 @@ function Navbar() {
             >
               Training Programs
               <ChevronDown
-                className={`ml-1 transform transition-transform ${
-                  mobileDropdownClick ? "rotate-180" : "rotate-0"
-                }`}
+                className={`ml-1 transform transition-transform ${mobileDropdownClick ? "rotate-180" : "rotate-0"
+                  }`}
               />
             </li>
             {/* Mobile dropdown items */}
