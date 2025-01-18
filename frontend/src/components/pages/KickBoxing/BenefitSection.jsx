@@ -13,7 +13,7 @@ function BenefitSection() {
                 </div>
 
                 {/* Image Layer */}
-                <img src="/images/Kickboxing/5.png" alt="Kickboxing" className='h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] w-full object-cover' />
+                <img src="../../images/Kickboxing/benefits_kick.png" alt="Kickboxing" className='h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] w-full object-cover' />
             </div>
         </>
     )

@@ -7,7 +7,7 @@ function HeroSection1() {
   return (
     <div className="relative w-[100%] h-[230px] sm:h-[600px] md:h-[700px] lg:h-[800px] xl:h-[900px] flex justify-center items-center overflow-x-hidden lg:mt-10 md:mt-0 mt-0">
       <img
-        src="/Photos_Ptown/Home/1.Hero_PTown MMA.png"
+        src="../../images/Home/Hero_home.png"
         alt="Hero Section"
         className="absolute inset-0 w-full h-full object-cover z-0"
       />

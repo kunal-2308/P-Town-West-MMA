@@ -13,12 +13,12 @@ function HeroSection6() {
         </div>
 
         {/* Image Layer */}
-        <img src="/images/Training/7.png" alt="Lifting" className='h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] w-full object-cover' />
+        <img src="../../images/Training/card_str-1.png" alt="Lifting" className='h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] w-full object-cover' />
       </div>
 
       <div className="mobile-div relative block md:hidden">
         <img
-          src="/images/Training/7.png"
+          src="../../images/Training/card_str-1.png"
           alt="Lifting"
           className="h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] w-full object-cover"
         />

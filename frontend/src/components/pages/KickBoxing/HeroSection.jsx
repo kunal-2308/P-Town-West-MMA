@@ -13,7 +13,7 @@ function HeroSection() {
           absolute top-0 left-0 w-full h-full 
           bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url('/Photos_Ptown/KickBoxing/Hero_PTown MMA.png')`,
+            backgroundImage: `url('../../images/Kickboxing/Kick_hero.png')`,
           }}
         ></div>
 

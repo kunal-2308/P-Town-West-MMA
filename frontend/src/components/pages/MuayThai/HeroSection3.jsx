@@ -7,7 +7,7 @@ function HeroSection3() {
                 className="div-main-container w-full h-[600px] sm:h-[700px] md:h-[800px] lg:h-[680px] 
         flex flex-col justify-start bg-cover bg-center bg-no-repeat 
         pl-6 sm:pl-12 md:pl-24 lg:pl-52 pt-24 sm:pt-28 md:pt-32 lg:pt-40" /* Adjusted top padding */
-                style={{ backgroundImage: `url('/images/Kickboxing/8.png')` }}
+                style={{ backgroundImage: `url('../../images/MuayThai/why_muay.png')` }}
             >
                 {/* Title Section */}
                 <div className="div-1-title">

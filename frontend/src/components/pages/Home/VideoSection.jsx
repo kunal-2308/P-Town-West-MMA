@@ -5,14 +5,17 @@ const videos = [
     {
         video: '/videos/beginnerFriendly.mp4',
         title: 'Beginner Friendly Training',
+        poster: '../../images/Home/t1.png',
     },
     {
         video: '/videos/muay_thai.mp4',
         title: 'Muay Thai Classes',
+        poster: '../../images/Home/t2.png',
     },
     {
         video: '/videos/brazilian_jiu_jitsu.mp4',
         title: 'Brazilian Jiu-Jitsu',
+        poster: '../../images/Home/t3.png',
     },
 ];
 
@@ -27,7 +30,12 @@ function VideoSection() {
             {/* Video or Thumbnail Section */}
             <div className="div mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-6">
                 {videos.map((video, index) => (
-                    <VideoSectionCards key={index} video={video.video} title={video.title} />
+                    <VideoSectionCards
+                        key={index}
+                        video={video.video}
+                        title={video.title}
+                        poster={video.poster}
+                    />
                 ))}
             </div>
         </div>

@@ -1,36 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
-function VideoSectionCards({ video, title }) {
+function VideoSectionCards({ video, title, poster }) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  const [thumbnail, setThumbnail] = useState('');
   const videoRef = useRef(null);
-
-  // Generate thumbnail from the video
-  useEffect(() => {
-    const generateThumbnail = () => {
-      const videoElement = document.createElement('video');
-      videoElement.src = video;
-
-      videoElement.addEventListener('loadeddata', () => {
-        // Seek to a specific timestamp (e.g., 2 seconds)
-        videoElement.currentTime = 2;
-      });
-
-      videoElement.addEventListener('seeked', () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = videoElement.videoWidth;
-        canvas.height = videoElement.videoHeight;
-        const context = canvas.getContext('2d');
-        context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-        const thumbnailURL = canvas.toDataURL('image/png');
-        setThumbnail(thumbnailURL);
-      });
-
-      videoElement.load();
-    };
-
-    generateThumbnail();
-  }, [video]);
 
   const handlePlayVideo = () => {
     setIsVideoPlaying(true);
@@ -53,18 +25,12 @@ function VideoSectionCards({ video, title }) {
             onClick={handlePlayVideo}
             aria-label={`Play ${title}`}
           >
-            {/* Dynamically generated Thumbnail */}
-            {thumbnail ? (
-              <img
-                src={thumbnail}
-                alt={`Thumbnail for ${title}`}
-                className="w-full h-auto object-cover rounded-lg"
-              />
-            ) : (
-              <div className="w-full h-56 bg-gray-700 flex items-center justify-center rounded-lg">
-                <span className="text-gray-400">Loading Thumbnail...</span>
-              </div>
-            )}
+            {/* Thumbnail passed as poster */}
+            <img
+              src={poster}
+              alt={`Thumbnail for ${title}`}
+              className="w-full h-auto object-cover rounded-lg"
+            />
 
             {/* Play Button */}
             <button

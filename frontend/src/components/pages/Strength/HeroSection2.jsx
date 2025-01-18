@@ -5,7 +5,7 @@ function HeroSection2() {
         <>
             <div className="hidden md:block relative w-full h-auto items-center">
                 {/* Background Image */}
-                <img src="/images/Training/3.png" alt="image" className="w-full h-auto object-cover" />
+                <img src="../../images/Training/card_strentgh.png" alt="image" className="w-full h-auto object-cover" />
 
                 {/* Text Overlay */}
                 <div className="absolute top-12 left-0 h-full flex flex-col justify-start items-center pl-6 sm:pl-12 lg:pl-20 w-full md:w-[50%] md: lg:gap-y-20 lg:mt-10">

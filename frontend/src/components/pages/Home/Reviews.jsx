@@ -4,28 +4,28 @@ import React, { useState } from 'react';
 function Reviews() {
     const reviews = [
         {
-            text: "Training at P-TownWest MMA in Pune, Baner has been a life-changing experience. The expert coaches and comprehensive MMA programs have significantly improved my skills and fitness.",
-            author: "-Rohit S.",
+            text: "The best sports experience in my life. This place has developed my game to a next level. Great coaches and facilities. The best time of my day is spent here. I train in the MMA pro batch and the training is really great and fun...",
+            author: "-Aryan Sawant",
         },
         {
-            text: "I joined the Muay Thai classes in Baner and am amazed by the progress I've made. The trainers are incredibly knowledgeable and supportive.",
-            author: "-Priya M.",
+            text: "An excellent MMA class that offers a perfect balance of fitness, technique, and discipline. The instructors are highly skilled, patient, and ensure a safe yet challenging environment for all levels. Ideal for both beginners and seasoned fighters looking to hone their skills.",
+            author: "-Akshay Gugnani",
         },
         {
-            text: "The Brazilian Jiu-Jitsu classes have helped me immensely in improving my self-defense skills. The trainers are incredibly supportive, and the community is amazing.",
-            author: "-Ankit P.",
+            text: "I love going to ptown everyday I learn new stuff about MMA and Muay Thai . Just wonderful experience and friendly people around to help you all the time. I love the gym and has various facilities too. I am glad there is someone this passionate about martial arts",
+            author: "-Rajat sharma",
         },
         {
             text: "P-Town West MMA offers top-notch facilities and a welcoming atmosphere. The kickboxing classes have pushed me to new limits, and I'm in the best shape of my life.",
             author: "-Kiran D.",
         },
         {
-            text: "My kids love the children's martial arts program! The instructors are great with kids, and I've seen a huge boost in their confidence and discipline.",
-            author: "-Neha T.",
+            text: "The best academy to train for MMA in Pune. I have been training here for over a year. They have the best coaches for boxing, Muay Thai, wrestling, and Jiu-Jitsu, with dedicated classes for people of every skill level (beginners, intermediate, and pros).",
+            author: "-Vibhor Rajput",
         },
         {
-            text: "The nutrition program at P-Town West MMA complements the physical training perfectly. It's been an invaluable resource for me in my fitness journey.",
-            author: "-Siddharth R.",
+            text: "Joining this club has been a transformative experience for me, both mentally and physically. It has pushed me to build discipline, resilience, and strength while improving my overall fitness. The supportive trainers and challenging sessions keep me motivated to grow every day. Thanks alot and Looking forward to continuing this journey!",
+            author: "-Prasad Borse",
         }
     ];
 

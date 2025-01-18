@@ -15,7 +15,7 @@ function InfoSection() {
                     {/* Left Image */}
                     <div className="md:w-[30%] w-[90%]">
                         <img
-                            src="/images/Nutrition/2.png"
+                            src="../../images/Nutrition/popper.png"
                             alt="image"
                             className="h-[240px] sm:h-[300px] md:h-[360px] lg:h-[460px] xl:h-[430px] object-cover w-full rounded-lg"
                         />

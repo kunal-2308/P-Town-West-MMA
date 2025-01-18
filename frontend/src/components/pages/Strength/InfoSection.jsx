@@ -18,9 +18,9 @@ function InfoSection() {
                         {/* Left Image */}
                         <div className="flex-shrink-0 w-full sm:w-[60%] md:w-[40%] lg:w-[40%] xl:w-[40%] max-w-full">
                             <img
-                                src="/images/Training/2.png"
+                                src="../../images/Training/image_str.png"
                                 alt="image"
-                                className="h-[200px] sm:h-[300px] md:h-[360px] lg:h-[460px] xl:h-[480px] object-cover w-full rounded-lg"
+                                className="h-[200px] sm:h-[300px] md:h-[360px] lg:h-[460px] xl:h-[440px] object-cover w-full rounded-lg"
                             />
                         </div>
 

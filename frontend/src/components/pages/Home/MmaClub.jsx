@@ -39,7 +39,7 @@ function MmaClub() {
         {/* Image Section */}
         <div className="div-2 flex justify-center items-center">
           <img
-            src="/images/Home/Trainings/24.png"
+            src="../../images/Home/circle.png"
             alt="image"
             className="h-[100px] sm:h-[120px] md:h-[150px] lg:h-[180px] object-contain"
           />

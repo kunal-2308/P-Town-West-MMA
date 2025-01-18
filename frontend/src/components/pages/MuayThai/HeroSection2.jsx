@@ -15,7 +15,7 @@ function HeroSection2() {
                 </div>
 
                 {/* Middle Section with Two Columns */}
-                <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-x-6 lg:gap-x-12">
+                <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-x-6 lg:gap-x-12 mb-10">
                     {/* Left Column */}
                     <div className="flex-1">
                         <div className="pl-6 lg:pl-14 mt-8 lg:mt-14">
@@ -68,11 +68,6 @@ function HeroSection2() {
                         </div>
                     </div>
                 </div>
-
-                {/* Image Section */}
-                <div className="flex justify-end items-end w-full mt-8 lg:mt-16 mr-6 lg:mr-20">
-                    <img src="/images/Kickboxing/7.png" alt="Kickboxing Image" className="w-full lg:w-[1000px] max-w-full h-[500px] lg:h-[600px]" />
-                </div>
             </div>
 
             {/* Mobile View */}
@@ -87,7 +82,7 @@ function HeroSection2() {
 
                 {/* Image Section */}
                 <div className="flex justify-center mt-8">
-                    <img src="/images/Kickboxing/7.png" alt="Muay Thai Image" className="w-[380px] h-[220px]" />
+                    <img src="/images/Kickboxing/7.png" alt="Muay Thai Image" className="w-max h-[220px]" />
                 </div>
 
                 {/* Beginner Classes */}

@@ -36,7 +36,7 @@ function HeroSection3() {
     
             <div className="lg:w-1/2 flex justify-center lg:justify-end pt-4">
               <img
-                src="/images/Training/4.png"
+                src="../../images/Training/why_str-4.png"
                 alt="Boxer"
                 className="h-[300px] lg:h-[450px] object-cover"
               />

@@ -18,8 +18,8 @@ function BenefitSection() {
 
                 {/* Image Layer */}
                 <img
-                    src="/images/Kickboxing/10.png"
-                    alt="jiu-jitsu"
+                    src="../../images/MuayThai/m_Benefits.png"
+                    alt="Muay-Thai"
                     className='h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] w-full object-cover'
                 />
             </div>

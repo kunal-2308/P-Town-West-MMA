@@ -22,7 +22,7 @@ function TrainingPrograms() {
       <div className="flex flex-wrap justify-center items-center gap-8 p-5 max-w-fullxl mx-auto">
         <Link to="/kickboxing">
           <TrainingCard
-            link="/Photos_Ptown/Home/image.png"
+            link="../../images/Home/boxing.png"
             title="BOXING"
             desc="Experience the art of eight limbs with our Muay Thai training program in Pune, Baner, where you'll learn authentic techniques, build strength, and enhance your fitness under the guidance of experienced trainers."
           />
