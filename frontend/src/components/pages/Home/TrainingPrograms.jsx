@@ -1,4 +1,3 @@
-import React from "react";
 import TrainingCard from "./TrainingCard";
 import { Link } from "react-router-dom";
 
@@ -8,7 +7,7 @@ function TrainingPrograms() {
       {/* Title Section */}
       <div className="flex flex-col justify-start items-start w-full max-w-4xl p-8 md:p-16 mt-4">
         <span className="font-medium text-gray-400 text-2xl md:text-4xl">
-          ////
+          {"////"}
           <span className="text-white ml-3 text-xl">OUR TRAINING PROGRAMS</span>
         </span>
         <span className="text-white text-xs md:text-base font-extralight mt-3 pl-10 md:pl-16">
@@ -22,9 +21,9 @@ function TrainingPrograms() {
       <div className="flex flex-wrap justify-center items-center gap-8 p-5 max-w-fullxl mx-auto">
         <Link to="/kickboxing">
           <TrainingCard
-            link="../../images/Home/boxing.png"
+            link="/images/Home/boxing_card.png"
             title="BOXING"
-            desc="Experience the art of eight limbs with our Muay Thai training program in Pune, Baner, where you'll learn authentic techniques, build strength, and enhance your fitness under the guidance of experienced trainers."
+            desc="Join our Thai Boxing training program in Pune, Baner, to master traditional techniques, enhance striking skills, and achieve peak fitness with expert guidance."
           />
         </Link>
         <Link to="/jitsu">
@@ -34,11 +33,13 @@ function TrainingPrograms() {
             desc="Unlock the power of Brazilian Jiu-Jitsu with our specialized training program in Pune, Baner. Learn effective grappling techniques, enhance your ground game, and boost your fitness with personalized instruction."
           />
         </Link>
-        <Link to='/muay-thai'><TrainingCard
-          link="/Photos_Ptown/Home/image-2.png"
-          title="MUAY THAI"
-          desc="Join our Thai Boxing training program in Pune, Baner, to master traditional techniques, enhance striking skills, and achieve peak fitness with expert guidance."
-        /></Link>
+        <Link to="/muay-thai">
+          <TrainingCard
+            link="/Photos_Ptown/Home/image-2.png"
+            title="MUAY THAI"
+            desc="Experience the art of eight limbs with our Muay Thai training program in Pune, Baner, where you'll learn authentic techniques, build strength, and enhance your fitness under the guidance of experienced trainers."
+          />
+        </Link>
       </div>
     </div>
   );

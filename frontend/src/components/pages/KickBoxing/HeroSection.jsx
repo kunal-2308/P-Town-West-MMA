@@ -1,6 +1,5 @@
 import { Button } from "../../ui/button";
 import { MoveRight } from "lucide-react";
-import React from "react";
 import { Link, NavLink } from "react-router-dom";
 
 function HeroSection() {
@@ -10,10 +9,10 @@ function HeroSection() {
         {/* Background Image */}
         <div
           className="
-          absolute top-0 left-0 w-full h-full 
+          absolute top-0 left-0 w-full h-full
           bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url('../../images/Kickboxing/Kick_hero.png')`,
+            backgroundImage: `url('/images/Home/Hero.png')`,
           }}
         ></div>
 
@@ -32,7 +31,7 @@ function HeroSection() {
             <div className="flex flex-col justify-start items-start w-full lg:w-[600px] mb-8 lg:mb-0 pl-10">
               <div className="flex justify-center items-center">
                 <span className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-400 mr-4">
-                  ////
+                  {"////"}
                 </span>
                 <span className="text-xl sm:text-2xl text-white font-thin pt-2">
                   Master Kickboxing with Expert Training
@@ -68,7 +67,7 @@ function HeroSection() {
       <div className="div-mobile-view block md:hidden bg-black w-screen h-auto -mt-1 pl-5">
         <div className="div-a flex justify-start items-center pl-5">
           <span className="text-3xl md:text-4xl font-semibold text-gray-400 mr-4">
-            ////
+            {"////"}
           </span>
           <span className="text-xs text-white font-thin pt-2">
             Master Kickboxing with Expert Training
@@ -88,9 +87,11 @@ function HeroSection() {
             enhance your overall fitness under the guidance of our expert
             trainers.
           </span>
-          <Link to='/contact'><Button className="bg-customYellow text-black w-[150px] flex justify-center items-center gap-x-3 rounded-full mt-5 h-[30px] hover:bg-customYellow hover:cursor-pointer">
-            Contact Us <MoveRight />
-          </Button></Link>
+          <Link to="/contact">
+            <Button className="bg-customYellow text-black w-[150px] flex justify-center items-center gap-x-3 rounded-full mt-5 h-[30px] hover:bg-customYellow hover:cursor-pointer">
+              Contact Us <MoveRight />
+            </Button>
+          </Link>
         </div>
       </div>
     </>
