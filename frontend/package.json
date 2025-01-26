@@ -10,6 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.1.0",
+    "@dnd-kit/sortable": "^8.0.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.11",
+    "@fullcalendar/interaction": "^6.1.11",
+    "@fullcalendar/react": "^6.1.11",
+    "@fullcalendar/timegrid": "^6.1.11",
+    "@mui/icons-material": "^6.4.1",
+    "@mui/material": "^6.4.1",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "axios": "^1.7.7",
@@ -17,11 +28,13 @@
     "clsx": "^2.1.1",
     "cookie": "^1.0.1",
     "cors": "^2.8.5",
+    "date-fns": "^3.3.1",
     "firebase": "^10.14.1",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.441.0",
     "next-themes": "^0.3.0",
+    "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-csv": "^2.2.2",
     "react-dom": "^18.3.1",
@@ -31,8 +44,9 @@
     "react-spinners": "^0.15.0",
     "sonner": "^1.7.0",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
-  },
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^11.0.5"
+},
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@types/node": "^22.5.5",

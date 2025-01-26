@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import AdminHome from "./AdminHome";
 import AdminUpcoming from "./AdminUpcoming";
 import AdminPrevious from "./AdminPrevious";
-import AdminClassAdd from "./AdminClassAdd";
+import NewAddClass from "./NewAddClass";
 import AdminView from "./AdminView";
 import AdminChangePassword from "./AdminChangePassword ";
 import AdminAdd from "./AdminAdd";
@@ -37,7 +37,7 @@ const AdminDashboard = () => {
       case "Previous Classes":
         return <AdminPrevious />;
       case "Schedule a Class":
-        return <AdminClassAdd />;
+        return <NewAddClass />;
       case "Add Admin":
         return <AdminAdd />;
       case "View Admins":

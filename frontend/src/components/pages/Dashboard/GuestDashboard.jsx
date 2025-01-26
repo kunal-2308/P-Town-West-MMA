@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 // import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { SchedulerProvider } from "../../../context/SchedulerContext";
 // import Modal from "../../../components/shared/Modal"; // Import the Modal component
 import { FaRegClock, FaUserAlt } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
@@ -14,6 +15,7 @@ import Cookies from "js-cookie";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 import { Button } from "../../ui/button";
 import { Helmet } from "react-helmet";
+import ClientView from "./ViewClass";
 function GuestDashboard() {
   const [allClasses, setAllClasses] = useState([]);
   const [upcomingClasses, setUpcomingClasses] = useState([]);
@@ -32,11 +34,11 @@ function GuestDashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    let token = Cookies.get('jwt_token');
+    let token = Cookies.get("jwt_token");
     axios
       .get(`${API_URL}/api/classes/guest/list`, {
         headers: {
-          Authorization: `Bearer ${token}` // Add token as a header
+          Authorization: `Bearer ${token}`, // Add token as a header
         },
       })
       .then((response) => {
@@ -51,7 +53,6 @@ function GuestDashboard() {
         console.error("Error fetching all classes:", error);
       });
   }, [navigate]);
-
 
   useEffect(() => {
     toast.success(
@@ -147,8 +148,14 @@ function GuestDashboard() {
     <>
       <Helmet>
         <title>P-Town West MMA | Book a Free Trial Class</title>
-        <meta name="description" content="Experience world-class training with a free trial class at P-Town West MMA in Pune, Baner. Try our MMA, Muay Thai, kickboxing, boxing, and wrestling programs, guided by expert trainers." />
-        <meta name="keywords" content="Book free trial MMA Pune, free trial martial arts Baner, MMA trial class Pune, Kickboxing trial Baner, free Muay Thai session Pune, combat sports trial Pune, martial arts beginners free class" />
+        <meta
+          name="description"
+          content="Experience world-class training with a free trial class at P-Town West MMA in Pune, Baner. Try our MMA, Muay Thai, kickboxing, boxing, and wrestling programs, guided by expert trainers."
+        />
+        <meta
+          name="keywords"
+          content="Book free trial MMA Pune, free trial martial arts Baner, MMA trial class Pune, Kickboxing trial Baner, free Muay Thai session Pune, combat sports trial Pune, martial arts beginners free class"
+        />
       </Helmet>
 
       <Navbar />
@@ -158,7 +165,9 @@ function GuestDashboard() {
           Schedule an Appointment
         </div>
       </div>
-
+      <SchedulerProvider>
+        <ClientView />
+      </SchedulerProvider>
       {/* Main content */}
       <div className="flex flex-col-reverse lg:flex-row lg:h-screen justify-between mt-5 px-6 lg:mt-20 gap-y-20">
         {/* Left Section - All Classes */}
@@ -168,10 +177,11 @@ function GuestDashboard() {
           </h1>
           <div className="flex space-x-2 lg:space-x-4 mb-4 overflow-x-auto pb-5 md:p-0">
             <button
-              className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${selectedCategory === "All"
+              className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${
+                selectedCategory === "All"
                   ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
                   : "bg-white border-[1px] border-customBorderGray rounded-xl"
-                }`}
+              }`}
               onClick={() => handleCategoryClick("All")}
             >
               {selectedCategory === "All" && (
@@ -183,10 +193,11 @@ function GuestDashboard() {
             {categories.map((category) => (
               <button
                 key={category}
-                className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${selectedCategory === category
+                className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${
+                  selectedCategory === category
                     ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
                     : "bg-white border-[1px] border-customBorderGray rounded-xl"
-                  }`}
+                }`}
                 onClick={() => handleCategoryClick(category)}
               >
                 {selectedCategory === category && (
@@ -208,9 +219,7 @@ function GuestDashboard() {
                 >
                   <div className="div-1-container flex justify-between items-center w-full bg-black text-white h-20 rounded-t-3xl p-3">
                     <div className="div-1-cont flex flex-col justify-start items-start pl-2">
-                      <span className="text-2xl font-medium">
-                        {cls.name}
-                      </span>
+                      <span className="text-2xl font-medium">{cls.name}</span>
                       <span className="text-xs font-medium">
                         {cls.instructor}
                       </span>
@@ -234,13 +243,16 @@ function GuestDashboard() {
                         </span>
                       </div>
                       <div className="div-2 flex justify-start items-start text-start bg-customDark px-3 rounded-lg text-white hover:shadow-lg">
-                        <span className="text-start text-sm">{cls.category}</span>
+                        <span className="text-start text-sm">
+                          {cls.category}
+                        </span>
                       </div>
                     </div>
                     <div className="div-time-section flex flex-row justify-start items-center gap-x-2">
                       <FaRegClock className="text-sm" />
                       <span className="text-xs font-semibold">
-                        {convertTo12HourFormat(cls.timeIn)} - {convertTo12HourFormat(cls.timeOut)}
+                        {convertTo12HourFormat(cls.timeIn)} -{" "}
+                        {convertTo12HourFormat(cls.timeOut)}
                       </span>
                     </div>
                   </div>
@@ -262,10 +274,11 @@ function GuestDashboard() {
               ))
             ) : (
               <div className="flex justify-center items-center mt-6 w-full">
-                <span className="text-lg font-medium text-gray-500">No classes available</span>
+                <span className="text-lg font-medium text-gray-500">
+                  No classes available
+                </span>
               </div>
             )}
-
           </div>
 
           {/* Pagination Controls */}
@@ -273,18 +286,20 @@ function GuestDashboard() {
             <button
               onClick={handlePrevPage}
               disabled={currentPage === 1}
-              className={`px-4 py-2 flex flex-row justify-center items-center gap-x-2 rounded ${currentPage === 1 ? "bg-gray-300" : "bg-customPurple text-black"
-                }`}
+              className={`px-4 py-2 flex flex-row justify-center items-center gap-x-2 rounded ${
+                currentPage === 1 ? "bg-gray-300" : "bg-customPurple text-black"
+              }`}
             >
               <MoveLeftIcon /> Previous
             </button>
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
-              className={`px-4 flex flex-row justify-center items-center gap-x-2 py-2 rounded ${currentPage === totalPages
+              className={`px-4 flex flex-row justify-center items-center gap-x-2 py-2 rounded ${
+                currentPage === totalPages
                   ? "bg-gray-300"
                   : "bg-customPurple text-black"
-                }`}
+              }`}
             >
               Next <MoveRightIcon />
             </button>

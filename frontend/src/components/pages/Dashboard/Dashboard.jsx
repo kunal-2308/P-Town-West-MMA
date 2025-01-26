@@ -16,6 +16,8 @@ import { API_URL } from "../../../../configure";
 import { GiCancel } from "react-icons/gi";
 import { toast } from "sonner";
 import { Helmet } from "react-helmet";
+import ClientView from "./ViewClass";
+import { SchedulerProvider } from "../../../context/SchedulerContext";
 
 const Dashboard = () => {
   const [allClasses, setAllClasses] = useState([]);
@@ -34,7 +36,7 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
-  const token = Cookies.get('jwt_token');
+  const token = Cookies.get("jwt_token");
 
   useEffect(() => {
     const token = Cookies.get("jwt_token");
@@ -46,7 +48,7 @@ const Dashboard = () => {
         axios
           .get(`${API_URL}/api/classes/all-classes`, {
             headers: {
-              Authorization: `Bearer ${token}` // Add token as a header
+              Authorization: `Bearer ${token}`, // Add token as a header
             },
           })
           .then((response) => {
@@ -64,7 +66,7 @@ const Dashboard = () => {
         axios
           .get(`${API_URL}/api/auth/user/details`, {
             headers: {
-              Authorization: `Bearer ${token}` // Add token as a header
+              Authorization: `Bearer ${token}`, // Add token as a header
             },
           })
           .then((response) => {
@@ -173,17 +175,19 @@ const Dashboard = () => {
 
   const handleCancelBooking = async (_id) => {
     try {
-      let token = Cookies.get('jwt_token');
+      let token = Cookies.get("jwt_token");
       let response = await axios.get(`${API_URL}/api/classes/cancel/${_id}`, {
         headers: {
-          Authorization: `Bearer ${token}` // Add token as a header
+          Authorization: `Bearer ${token}`, // Add token as a header
         },
       });
-      if (response.status == 200) { toast.success('Class unbooked successfully'); }
+      if (response.status == 200) {
+        toast.success("Class unbooked successfully");
+      }
       axios
         .get(`${API_URL}/api/auth/user/details`, {
           headers: {
-            Authorization: `Bearer ${token}` // Add token as a header
+            Authorization: `Bearer ${token}`, // Add token as a header
           },
         })
         .then((response) => {
@@ -197,19 +201,24 @@ const Dashboard = () => {
         .catch((error) => {
           console.error("Error fetching user details:", error);
         });
-
     } catch (error) {
-      toast.error('Error occured while unbooking class');
+      toast.error("Error occured while unbooking class");
       console.log(error);
     }
-  }
+  };
 
   return (
     <>
       <Helmet>
         <title>P-Town West MMA | Book a Free Trial Class</title>
-        <meta name="description" content="Experience world-class training with a free trial class at P-Town West MMA in Pune, Baner. Try our MMA, Muay Thai, kickboxing, boxing, and wrestling programs, guided by expert trainers." />
-        <meta name="keywords" content="Book free trial MMA Pune, free trial martial arts Baner, MMA trial class Pune, Kickboxing trial Baner, free Muay Thai session Pune, combat sports trial Pune, martial arts beginners free class" />
+        <meta
+          name="description"
+          content="Experience world-class training with a free trial class at P-Town West MMA in Pune, Baner. Try our MMA, Muay Thai, kickboxing, boxing, and wrestling programs, guided by expert trainers."
+        />
+        <meta
+          name="keywords"
+          content="Book free trial MMA Pune, free trial martial arts Baner, MMA trial class Pune, Kickboxing trial Baner, free Muay Thai session Pune, combat sports trial Pune, martial arts beginners free class"
+        />
       </Helmet>
 
       <Navbar />
@@ -219,7 +228,9 @@ const Dashboard = () => {
           Schedule an Appointment
         </div>
       </div>
-
+      <SchedulerProvider>
+        <ClientView />
+      </SchedulerProvider>
       {/* Main content */}
       {loading ? (
         <div className="flex flex-col lg:flex-row lg:h-screen justify-between mt-36 px-6 lg:mt-20">
@@ -230,10 +241,11 @@ const Dashboard = () => {
             </h1>
             <div className="flex space-x-2 lg:space-x-4 mb-4 overflow-x-auto pl-5">
               <button
-                className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${selectedCategory === "All"
-                  ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
-                  : "bg-white border-[1px] border-customBorderGray rounded-xl"
-                  }`}
+                className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${
+                  selectedCategory === "All"
+                    ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
+                    : "bg-white border-[1px] border-customBorderGray rounded-xl"
+                }`}
                 onClick={() => handleCategoryClick("All")}
               >
                 {selectedCategory === "All" && (
@@ -245,10 +257,11 @@ const Dashboard = () => {
               {categories.map((category) => (
                 <button
                   key={category}
-                  className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${selectedCategory === category
-                    ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
-                    : "bg-white border-[1px] border-customBorderGray rounded-xl"
-                    }`}
+                  className={`flex items-center px-3 lg:px-4 py-1 lg:py-2 rounded ${
+                    selectedCategory === category
+                      ? "bg-customPurple text-black border-[1px] border-customBorderGray rounded-xl"
+                      : "bg-white border-[1px] border-customBorderGray rounded-xl"
+                  }`}
                   onClick={() => handleCategoryClick(category)}
                 >
                   {selectedCategory === category && (
@@ -270,9 +283,7 @@ const Dashboard = () => {
                   >
                     <div className="div-1-container flex justify-between items-center w-full bg-black text-white h-20 rounded-t-3xl p-3">
                       <div className="div-1-cont flex flex-col justify-start items-start pl-2">
-                        <span className="text-2xl font-medium">
-                          {cls.name}
-                        </span>
+                        <span className="text-2xl font-medium">{cls.name}</span>
                         <span className="text-xs font-medium">
                           {cls.instructor}
                         </span>
@@ -296,13 +307,16 @@ const Dashboard = () => {
                           </span>
                         </div>
                         <div className="div-2 flex justify-start items-start text-start bg-customDark px-3 rounded-lg text-white hover:shadow-lg">
-                          <span className="text-start text-sm">{cls.category}</span>
+                          <span className="text-start text-sm">
+                            {cls.category}
+                          </span>
                         </div>
                       </div>
                       <div className="div-time-section flex flex-row justify-start items-center gap-x-2">
                         <FaRegClock className="text-sm" />
                         <span className="text-xs font-semibold">
-                          {convertTo12HourFormat(cls.timeIn)} - {convertTo12HourFormat(cls.timeOut)}
+                          {convertTo12HourFormat(cls.timeIn)} -{" "}
+                          {convertTo12HourFormat(cls.timeOut)}
                         </span>
                       </div>
                     </div>
@@ -324,10 +338,11 @@ const Dashboard = () => {
                 ))
               ) : (
                 <div className="flex justify-center items-center mt-6 w-full">
-                  <span className="text-lg font-medium text-gray-500">No classes available</span>
+                  <span className="text-lg font-medium text-gray-500">
+                    No classes available
+                  </span>
                 </div>
               )}
-
             </div>
 
             {/* Pagination Controls */}
@@ -335,20 +350,22 @@ const Dashboard = () => {
               <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
-                className={`px-4 py-2 flex flex-row justify-center items-center gap-x-2 rounded ${currentPage === 1
-                  ? "bg-gray-300"
-                  : "bg-customPurple text-black"
-                  }`}
+                className={`px-4 py-2 flex flex-row justify-center items-center gap-x-2 rounded ${
+                  currentPage === 1
+                    ? "bg-gray-300"
+                    : "bg-customPurple text-black"
+                }`}
               >
                 <MoveLeftIcon /> Previous
               </button>
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className={`px-4 flex flex-row justify-center items-center gap-x-2 py-2 rounded ${currentPage === totalPages
-                  ? "bg-gray-300"
-                  : "bg-customPurple text-black"
-                  }`}
+                className={`px-4 flex flex-row justify-center items-center gap-x-2 py-2 rounded ${
+                  currentPage === totalPages
+                    ? "bg-gray-300"
+                    : "bg-customPurple text-black"
+                }`}
               >
                 Next <MoveRightIcon />
               </button>
@@ -400,7 +417,12 @@ const Dashboard = () => {
                             {convertTo12HourFormat(cls.timeOut)}
                           </span>
                         </div>
-                        <div className="cancel-booking-logo ml-10"><GiCancel className="size-5 hover:cursor-pointer" onClick={() => handleCancelBooking(cls._id)} /></div>
+                        <div className="cancel-booking-logo ml-10">
+                          <GiCancel
+                            className="size-5 hover:cursor-pointer"
+                            onClick={() => handleCancelBooking(cls._id)}
+                          />
+                        </div>
                       </div>
                     ))}
                     {upcomingClasses.length > 2 && (
@@ -450,7 +472,7 @@ const Dashboard = () => {
                 axios
                   .get(`${API_URL}/api/auth/user/details`, {
                     headers: {
-                      Authorization: `Bearer ${token}` // Add token as a header
+                      Authorization: `Bearer ${token}`, // Add token as a header
                     },
                   })
                   .then((response) => {
