@@ -90,7 +90,7 @@ function ClassForm({ classData }) {
         config
       );
 
-      console.log("Class added successfully:", response.data);
+      console.log("Class added successfully!", response.data);
 
       setFormData({
         id: uuidv4(),

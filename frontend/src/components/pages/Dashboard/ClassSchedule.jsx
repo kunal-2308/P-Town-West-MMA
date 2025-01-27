@@ -24,61 +24,49 @@ function ClassSchedule() {
     const getClassDetails = async () => {
       try {
         const response = await axios.get(`${API_URL}/api/admin/all`);
-        console.log("Classes API Response:", response.data);
+        // console.log("Classes API Response:", response.data);
         const { classes } = response.data;
 
         if (classes && classes.length > 0) {
           const mappedEvents = classes.flatMap((cls) => {
             const eventsForClass = [];
+            const recurringDays = cls.recurringDays.map((day) =>
+              WEEK_DAYS.indexOf(day)
+            );
 
-            if (!cls.isRecurring) {
-              // Non-recurring class logic
-              if (!cls.startTime || !cls.duration) {
-                console.warn(
-                  `Skipping non-recurring class with missing data: ${cls.title}`
-                );
-                return [];
-              }
+            const parseTime = (timeString) => {
+              const [time, period] = timeString.split(" "); // Split time and AM/PM
+              const [hours, minutes] = time.split(":").map(Number);
+              let startHours =
+                period === "PM" && hours !== 12 ? hours + 12 : hours;
+              if (period === "AM" && hours === 12) startHours = 0;
+              return { hours: startHours, minutes };
+            };
 
-              const startDate = new Date();
-              const startTime = convertTimeTo12Hour(cls.startTime);
-              if (!startTime) {
-                console.warn(
-                  `Invalid start time format for class: ${cls.title}`
-                );
-                return [];
-              }
+            const createEvent = (date, startTime) => {
+              const { hours, minutes } = parseTime(startTime);
+              const start = new Date(date);
+              start.setHours(hours, minutes, 0, 0);
 
-              const start = new Date(
-                `${startDate.toISOString().split("T")[0]}T${startTime}`
-              );
               const end = new Date(start.getTime() + cls.duration * 60000);
-
-              eventsForClass.push({
-                id: cls.id,
+              return {
+                id: `${cls.id}-${date.toISOString().split("T")[0]}`,
                 title: cls.title,
                 start,
                 end,
                 backgroundColor: cls.color || "#3788d8",
                 extendedProps: { type: cls.type, instructor: cls.instructor },
-              });
+              };
+            };
 
+            if (!cls.isRecurring) {
+              const event = createEvent(new Date(), cls.startTime);
+              eventsForClass.push(event);
               return eventsForClass;
             }
 
-            // Recurring class logic
-            if (!cls.recurringDays || !Array.isArray(cls.recurringDays)) {
-              console.warn(
-                `Skipping recurring class with missing recurringDays: ${cls.title}`
-              );
-              return [];
-            }
-
-            const recurringDays = cls.recurringDays.map((day) =>
-              WEEK_DAYS.indexOf(day)
-            );
-
-            const startDate = new Date(); // Start from today
+            // Recurring classes
+            const startDate = new Date();
             const endDate = new Date(startDate);
             endDate.setDate(startDate.getDate() + cls.recurrenceWeeks * 7);
 
@@ -87,29 +75,9 @@ function ClassSchedule() {
               currentDate <= endDate;
               currentDate.setDate(currentDate.getDate() + 1)
             ) {
-              const dayIndex = currentDate.getDay();
-              if (recurringDays.includes(dayIndex)) {
-                const startTime = convertTimeTo12Hour(cls.startTime);
-                if (!startTime) {
-                  console.warn(
-                    `Invalid start time format for class: ${cls.title}`
-                  );
-                  continue;
-                }
-
-                const start = new Date(
-                  `${currentDate.toISOString().split("T")[0]}T${startTime}`
-                );
-                const end = new Date(start.getTime() + cls.duration * 60000);
-
-                eventsForClass.push({
-                  id: `${cls.id}-${currentDate.toISOString().split("T")[0]}`,
-                  title: cls.title,
-                  start,
-                  end,
-                  backgroundColor: cls.color || "#3788d8",
-                  extendedProps: { type: cls.type, instructor: cls.instructor },
-                });
+              if (recurringDays.includes(currentDate.getDay())) {
+                const event = createEvent(currentDate, cls.startTime);
+                eventsForClass.push(event);
               }
             }
 
@@ -117,7 +85,7 @@ function ClassSchedule() {
           });
 
           setEvents(mappedEvents);
-          console.log("Mapped events:", mappedEvents);
+          // console.log("Mapped events:", mappedEvents);
         } else {
           setEvents([]);
         }
@@ -129,21 +97,6 @@ function ClassSchedule() {
 
     getClassDetails();
   }, []);
-
-  // Convert 24-hour time format to 12-hour time format with AM/PM
-  const convertTimeTo12Hour = (time) => {
-    if (!time || typeof time !== "string" || !time.includes(":")) {
-      console.warn(`Invalid time format: ${time}`);
-      return null;
-    }
-
-    const [hours, minutes] = time.split(":");
-    let hour = parseInt(hours, 10);
-    const period = hour >= 12 ? "PM" : "AM";
-    hour = hour % 12 || 12; // Convert to 12-hour format, handle '0' hour (midnight)
-
-    return `${hour}:${minutes.padStart(2, "0")} ${period}`;
-  };
 
   return (
     <Box sx={{ height: "calc(100vh - 200px)" }}>

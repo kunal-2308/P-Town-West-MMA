@@ -56,32 +56,28 @@ export const adminLogin = async (req, res) => {
   }
 };
 
-const WEEK_DAYS = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
+// const WEEK_DAYS = [
+//   "Sunday",
+//   "Monday",
+//   "Tuesday",
+//   "Wednesday",
+//   "Thursday",
+//   "Friday",
+//   "Saturday",
+// ];
 
-const convertTimeTo12Hour = (time) => {
-  if (!time || typeof time !== "string" || !time.includes(":")) {
-    console.warn(`Invalid time format: ${time}`);
-    return null; // Return null if invalid
-  }
-
-  const [hours, minutes] = time.split(":");
-  let hour = parseInt(hours, 10);
-  const period = hour >= 12 ? "PM" : "AM";
-  hour = hour % 12 || 12; // Convert to 12-hour format, handle '0' hour (midnight)
-
-  return `${hour}:${minutes.padStart(2, "0")} ${period}`;
-};
+// const formatTimeTo12Hour = (time) => {
+//   const [hour, minute] = time.split(":");
+//   const hourInt = parseInt(hour, 10);
+//   const isPM = hourInt >= 12;
+//   const formattedHour = isPM ? hourInt % 12 || 12 : hourInt;
+//   const period = isPM ? "PM" : "AM";
+//   return `${formattedHour}:${minute} ${period}`;
+// };
 
 export const addClass = async (req, res) => {
   try {
+    // Destructure the incoming data
     const {
       title,
       type,
@@ -95,9 +91,10 @@ export const addClass = async (req, res) => {
       isRecurring = false,
       recurrenceWeeks = 1,
       color = "#1976d2",
+      currentBookings = [],
     } = req.body;
 
-    // Validation for required fields
+    // Validate required fields
     if (
       !title ||
       !type ||
@@ -108,124 +105,46 @@ export const addClass = async (req, res) => {
       !description ||
       !difficulty
     ) {
-      return res.status(400).json({ message: "Missing required fields" });
+      return res
+        .status(400)
+        .json({ message: "All required fields must be provided." });
     }
 
-    // Ensure type is a string and not undefined
-    if (typeof type !== "string" || !type.trim()) {
-      return res.status(400).json({ message: "Invalid class type" });
-    }
+    // Generate a unique ID
+    const id = uuidv4();
 
-    // Ensure startTime is a string and not undefined
-    if (typeof startTime !== "string" || !startTime.trim()) {
-      return res.status(400).json({ message: "Invalid start time" });
-    }
+    // Create a new class instance
+    const newClass = new Class({
+      id,
+      title,
+      type,
+      instructor,
+      startTime,
+      duration,
+      capacity,
+      description,
+      difficulty,
+      recurringDays,
+      isRecurring,
+      recurrenceWeeks,
+      color,
+      currentBookings,
+    });
 
-    // Validate recurringDays if provided
-    if (
-      isRecurring &&
-      (!Array.isArray(recurringDays) || recurringDays.length === 0)
-    ) {
-      return res.status(400).json({
-        message:
-          "recurringDays must be a non-empty array for recurring classes",
-      });
-    }
+    // Save the class to the database
+    const savedClass = await newClass.save();
 
-    // Convert startTime to 24-hour format
-    const startTime24Hour = convertTimeTo12Hour(startTime);
-    if (!startTime24Hour) {
-      return res.status(400).json({ message: "Invalid start time format" });
-    }
-
-    // Create an array to store all class instances
-    const classInstances = [];
-    const uniqueDates = new Set(); // To avoid duplicate classes on the same day
-
-    if (isRecurring) {
-      // Handle recurring classes
-      const recurringDayIndexes = recurringDays.map((day) =>
-        WEEK_DAYS.indexOf(day)
-      );
-      if (recurringDayIndexes.includes(-1)) {
-        return res
-          .status(400)
-          .json({ message: "Invalid recurringDays values" });
-      }
-
-      const startDate = new Date(); // Start from today
-      const endDate = new Date(startDate);
-      endDate.setDate(startDate.getDate() + recurrenceWeeks * 7);
-
-      for (
-        let currentDate = new Date(startDate);
-        currentDate <= endDate;
-        currentDate.setDate(currentDate.getDate() + 1)
-      ) {
-        const dayIndex = currentDate.getDay();
-        if (recurringDayIndexes.includes(dayIndex)) {
-          const dateStr = currentDate.toISOString().split("T")[0];
-          if (!uniqueDates.has(dateStr)) {
-            uniqueDates.add(dateStr);
-
-            const start = new Date(`${dateStr}T${startTime24Hour}`);
-            const end = new Date(start.getTime() + duration * 60000);
-
-            classInstances.push(
-              new Class({
-                id: uuidv4(),
-                title,
-                type,
-                instructor,
-                startTime: start,
-                duration,
-                capacity,
-                description,
-                difficulty,
-                recurringDays,
-                isRecurring,
-                recurrenceWeeks,
-                color,
-                createdAt: new Date(),
-              })
-            );
-          }
-        }
-      }
-    } else {
-      // Handle a single, non-recurring class
-      const start = new Date(startTime24Hour);
-      const end = new Date(start.getTime() + duration * 60000);
-
-      classInstances.push(
-        new Class({
-          id: uuidv4(),
-          title,
-          type,
-          instructor,
-          startTime: start,
-          duration,
-          capacity,
-          description,
-          difficulty,
-          color,
-          createdAt: new Date(),
-        })
-      );
-    }
-
-    // Save the classes in the database
-    await Class.insertMany(classInstances);
-
-    res.status(200).json({ message: "Classes added successfully" });
+    res.status(201).json({
+      message: "Class added successfully.",
+      class: savedClass,
+    });
   } catch (error) {
-    console.error("Error adding class:", error); // More detailed log of the error
+    console.error("Error adding class:", error);
     res
       .status(500)
-      .json({ message: "Error adding class", error: error.message });
+      .json({ message: "An error occurred while adding the class." });
   }
 };
-
 // Admin: Update a class
 export const updateClass = async (req, res) => {
   const { id } = req.params;
