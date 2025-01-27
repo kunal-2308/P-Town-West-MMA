@@ -47,7 +47,7 @@ const AdminHome = ({ onViewAllClick }) => {
     const fetchCategoriesAndInstructors = async () => {
       try {
         const token = Cookies.get("jwt_token");
-        console.log("token", token);
+        // console.log("token", token);
         const res = await axios.get(`${API_URL}/api/admin/all`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -241,7 +241,7 @@ const AdminHome = ({ onViewAllClick }) => {
       {/* Modal for Viewing Class Details */}
       <ViewClassModal
         isOpen={isViewModalOpen}
-        onClose={async() => {
+        onClose={async () => {
           setIsViewModalOpen(false);
           try {
             let token = Cookies.get("jwt_token");
