@@ -4,9 +4,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Paper, Box } from "@mui/material";
-import { useScheduler } from "../../../context/SchedulerContext";
-import { API_URL } from "../../../../configure";
 import axios from "axios";
+import { API_URL } from "../../../../configure";
 
 const WEEK_DAYS = [
   "Sunday",
@@ -19,83 +18,132 @@ const WEEK_DAYS = [
 ];
 
 function ClassSchedule() {
-  const { state } = useScheduler();
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    let getClassDetails = async() =>{
-      let response = await axios.get(`${API_URL}/api/admin/all`);
-      console.log("Classes",response.data);
-      setEvents(response.data);
-    }
+    const getClassDetails = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/admin/all`);
+        console.log("Classes API Response:", response.data);
+        const { classes } = response.data;
+
+        if (classes && classes.length > 0) {
+          const mappedEvents = classes.flatMap((cls) => {
+            const eventsForClass = [];
+
+            if (!cls.isRecurring) {
+              // Non-recurring class logic
+              if (!cls.startTime || !cls.duration) {
+                console.warn(
+                  `Skipping non-recurring class with missing data: ${cls.title}`
+                );
+                return [];
+              }
+
+              const startDate = new Date();
+              const startTime = convertTimeTo12Hour(cls.startTime);
+              if (!startTime) {
+                console.warn(
+                  `Invalid start time format for class: ${cls.title}`
+                );
+                return [];
+              }
+
+              const start = new Date(
+                `${startDate.toISOString().split("T")[0]}T${startTime}`
+              );
+              const end = new Date(start.getTime() + cls.duration * 60000);
+
+              eventsForClass.push({
+                id: cls.id,
+                title: cls.title,
+                start,
+                end,
+                backgroundColor: cls.color || "#3788d8",
+                extendedProps: { type: cls.type, instructor: cls.instructor },
+              });
+
+              return eventsForClass;
+            }
+
+            // Recurring class logic
+            if (!cls.recurringDays || !Array.isArray(cls.recurringDays)) {
+              console.warn(
+                `Skipping recurring class with missing recurringDays: ${cls.title}`
+              );
+              return [];
+            }
+
+            const recurringDays = cls.recurringDays.map((day) =>
+              WEEK_DAYS.indexOf(day)
+            );
+
+            const startDate = new Date(); // Start from today
+            const endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + cls.recurrenceWeeks * 7);
+
+            for (
+              let currentDate = new Date(startDate);
+              currentDate <= endDate;
+              currentDate.setDate(currentDate.getDate() + 1)
+            ) {
+              const dayIndex = currentDate.getDay();
+              if (recurringDays.includes(dayIndex)) {
+                const startTime = convertTimeTo12Hour(cls.startTime);
+                if (!startTime) {
+                  console.warn(
+                    `Invalid start time format for class: ${cls.title}`
+                  );
+                  continue;
+                }
+
+                const start = new Date(
+                  `${currentDate.toISOString().split("T")[0]}T${startTime}`
+                );
+                const end = new Date(start.getTime() + cls.duration * 60000);
+
+                eventsForClass.push({
+                  id: `${cls.id}-${currentDate.toISOString().split("T")[0]}`,
+                  title: cls.title,
+                  start,
+                  end,
+                  backgroundColor: cls.color || "#3788d8",
+                  extendedProps: { type: cls.type, instructor: cls.instructor },
+                });
+              }
+            }
+
+            return eventsForClass;
+          });
+
+          setEvents(mappedEvents);
+          console.log("Mapped events:", mappedEvents);
+        } else {
+          setEvents([]);
+        }
+      } catch (error) {
+        console.error("Error fetching class details:", error);
+        setEvents([]);
+      }
+    };
 
     getClassDetails();
+  }, []);
 
-    if (!state.classes || state.classes.length === 0) {
-      setEvents([]);
-      return;
+  // Convert 24-hour time format to 12-hour time format with AM/PM
+  const convertTimeTo12Hour = (time) => {
+    if (!time || typeof time !== "string" || !time.includes(":")) {
+      console.warn(`Invalid time format: ${time}`);
+      return null;
     }
 
-    const mappedEvents = state.classes.flatMap((cls) => {
-      const eventsForClass = [];
+    const [hours, minutes] = time.split(":");
+    let hour = parseInt(hours, 10);
+    const period = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12 || 12; // Convert to 12-hour format, handle '0' hour (midnight)
 
-      if (!cls.isRecurring) {
-        // Handle non-recurring classes
-        const start = new Date(
-          `${new Date().toISOString().split("T")[0]}T${cls.startTime}`
-        );
-        const end = new Date(start.getTime() + cls.duration * 60000);
-
-        eventsForClass.push({
-          id: `${cls.id}`,
-          title: cls.title,
-          start,
-          end,
-          backgroundColor: cls.color || "#3788d8",
-          extendedProps: { type: cls.type, instructor: cls.instructor },
-        });
-
-        return eventsForClass;
-      }
-
-      // Recurring classes logic
-      const recurringDays = cls.recurringDays.map((day) =>
-        WEEK_DAYS.indexOf(day)
-      );
-
-      const startDate = new Date(); // Start from today
-      const endDate = new Date(startDate);
-      endDate.setDate(startDate.getDate() + cls.recurrenceWeeks * 7);
-
-      for (
-        let currentDate = new Date(startDate);
-        currentDate <= endDate;
-        currentDate.setDate(currentDate.getDate() + 1)
-      ) {
-        const dayIndex = currentDate.getDay();
-        if (recurringDays.includes(dayIndex)) {
-          const start = new Date(
-            `${currentDate.toISOString().split("T")[0]}T${cls.startTime}`
-          );
-          const end = new Date(start.getTime() + cls.duration * 60000);
-
-          eventsForClass.push({
-            id: `${cls.id}-${currentDate.toISOString().split("T")[0]}`,
-            title: cls.title,
-            start,
-            end,
-            backgroundColor: cls.color || "#3788d8",
-            extendedProps: { type: cls.type, instructor: cls.instructor },
-          });
-        }
-      }
-
-      return eventsForClass;
-    });
-
-    setEvents(mappedEvents);
-    console.log("Mapped Events:", mappedEvents);
-  }, [state.classes]);
+    return `${hour}:${minutes.padStart(2, "0")} ${period}`;
+  };
 
   return (
     <Box sx={{ height: "calc(100vh - 200px)" }}>

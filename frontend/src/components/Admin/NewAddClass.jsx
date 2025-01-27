@@ -15,6 +15,9 @@ import {
   ListItemText,
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
+import { API_URL } from "../../../configure";
+import Cookies from "js-cookie";
 
 const WEEK_DAYS = [
   "Sunday",
@@ -26,7 +29,7 @@ const WEEK_DAYS = [
   "Saturday",
 ];
 
-function ClassForm({ classData, onSubmit }) {
+function ClassForm({ classData }) {
   const [formData, setFormData] = React.useState({
     id: "",
     title: "",
@@ -39,7 +42,7 @@ function ClassForm({ classData, onSubmit }) {
     difficulty: "Beginner",
     recurringDays: [],
     isRecurring: false,
-    recurrenceWeeks: 1, // New field for number of weeks if recurring
+    recurrenceWeeks: 1,
     color: "#1976d2",
     currentBookings: [],
   });
@@ -52,10 +55,67 @@ function ClassForm({ classData, onSubmit }) {
     }
   }, [classData]);
 
-  const handleSubmit = (e) => {
+  // const handleChange = (e) => {
+  //   const { name, value, type, checked } = e.target;
+
+  //   if (type === "checkbox") {
+  //     setFormData((prev) => ({ ...prev, [name]: checked }));
+  //   } else if (type === "select-multiple") {
+  //     const options = Array.from(e.target.selectedOptions);
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       [name]: options.map((opt) => opt.value),
+  //     }));
+  //   } else {
+  //     setFormData((prev) => ({ ...prev, [name]: value }));
+  //   }
+  // };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitted form data:", formData);
-    onSubmit(formData);
+    const token = Cookies.get("jwt_token");
+
+    if (!token) {
+      throw new Error("Authorization token not found");
+    }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/admin/add`,
+        formData,
+        config
+      );
+
+      console.log("Class added successfully:", response.data);
+
+      setFormData({
+        id: uuidv4(),
+        title: "",
+        type: "MMA",
+        instructor: "",
+        startTime: "",
+        duration: 60,
+        capacity: "",
+        description: "",
+        difficulty: "Beginner",
+        recurringDays: [],
+        isRecurring: false,
+        recurrenceWeeks: 1,
+        color: "#1976d2",
+        currentBookings: [],
+      });
+
+      // Call the parent component's onSubmit handler if provided
+    } catch (error) {
+      console.error(
+        "Error submitting class:",
+        error.response?.data || error.message
+      );
+    }
   };
 
   return (
@@ -274,10 +334,7 @@ function ClassForm({ classData, onSubmit }) {
 }
 
 ClassForm.propTypes = {
-  open: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
   classData: PropTypes.object,
-  onSubmit: PropTypes.func.isRequired,
 };
 
 export default ClassForm;
