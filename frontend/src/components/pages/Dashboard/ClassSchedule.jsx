@@ -5,6 +5,8 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Paper, Box } from "@mui/material";
 import { useScheduler } from "../../../context/SchedulerContext";
+import { API_URL } from "../../../../configure";
+import axios from "axios";
 
 const WEEK_DAYS = [
   "Sunday",
@@ -21,7 +23,13 @@ function ClassSchedule() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    console.log("Classes in state:", state.classes);
+    let getClassDetails = async() =>{
+      let response = await axios.get(`${API_URL}/api/admin/all`);
+      console.log("Classes",response.data);
+      setEvents(response.data);
+    }
+
+    getClassDetails();
 
     if (!state.classes || state.classes.length === 0) {
       setEvents([]);

@@ -29,7 +29,7 @@ router.put("/update/:id", protectAdmin, updateClass);
 
 router.delete("/delete/:id", protectAdmin, deleteClass);
 
-router.get("/all", protectAdmin, getAllClasses);
+router.get("/all", getAllClasses);
 
 router.post('/add/admin',protectAdmin,addAdmin);
 
