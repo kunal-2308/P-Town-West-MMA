@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import customerModel from "../models/customerRepresentativeModel.js";
 import adminModel from "../models/adminModel.js";
 import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
 // Admin: Add a class
 
 const createToken = (userId, role) => {
@@ -56,34 +57,114 @@ export const adminLogin = async (req, res) => {
 };
 
 export const addClass = async (req, res) => {
-  const {
-    name,
-    date,
-    timeIn,
-    timeOut,
-    slots,
-    instructor,
-    description,
-    category,
-  } = req.body;
-
   try {
-    const classDate = new Date(date);
-    const newClass = await Class.create({
-      name,
-      date: classDate,
-      timeIn,
-      timeOut,
-      slots,
+    const {
+      title,
+      type,
       instructor,
+      startTime,
+      duration,
+      capacity,
       description,
-      category,
+      difficulty,
+      recurringDays,
+      isRecurring,
+      recurrenceWeeks,
+      color,
+    } = req.body;
+
+    // Validate required fields
+    if (
+      !title ||
+      !type ||
+      !instructor ||
+      !startTime ||
+      !duration ||
+      !capacity ||
+      !description ||
+      !difficulty
+    ) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    // Validate recurringDays if provided
+    if (recurringDays && !Array.isArray(recurringDays)) {
+      return res.status(400).json({ message: "recurringDays must be an array" });
+    }
+
+    // Create initial class entry
+    const classInstances = [];
+    const classId = uuidv4();
+
+    // Create class instances based on recurrence settings
+    if (isRecurring && recurringDays.length > 0) {
+      let currentDate = new Date();
+      for (let i = 0; i < recurrenceWeeks; i++) {
+        recurringDays.forEach((day) => {
+          const dayIndex = [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+          ].indexOf(day);
+
+          if (dayIndex !== -1) {
+            let nextClassDate = new Date(currentDate);
+            nextClassDate.setDate(currentDate.getDate() + ((dayIndex - currentDate.getDay() + 7) % 7));
+
+            classInstances.push(
+              new Class({
+                id: uuidv4(),
+                title,
+                type,
+                instructor,
+                startTime,
+                duration,
+                capacity,
+                description,
+                difficulty,
+                recurringDays,
+                isRecurring,
+                recurrenceWeeks,
+                color,
+                createdAt: nextClassDate,
+              })
+            );
+          }
+        });
+        currentDate.setDate(currentDate.getDate() + 7); // Move to the next week
+      }
+    } else {
+      classInstances.push(
+        new Class({
+          id: classId,
+          title,
+          type,
+          instructor,
+          startTime,
+          duration,
+          capacity,
+          description,
+          difficulty,
+          isRecurring,
+          recurrenceWeeks,
+          color,
+        })
+      );
+    }
+
+    // Save all class instances to the database
+    await Class.insertMany(classInstances);
+
+    res.status(201).json({
+      message: "Class(es) added successfully",
+      classes: classInstances,
     });
-    res.status(201).json(newClass);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Failed to add class", error: error.message });
+    res.status(500).json({ message: "Failed to add class", error: error.message });
   }
 };
 

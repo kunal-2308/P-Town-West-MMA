@@ -93,9 +93,11 @@ export const login = async (req, res) => {
 // Admin Login
 export const adminLogin = async (req, res) => {
   const { email } = req.body;
+  console.log("AdminEMail",email)
 
   try {
-    const admin = await User.findOne({ email, role: "admin" });
+    const admin = await User.findOne({ email});
+    console.log(admin);
     if (!admin) return res.status(404).json({ message: "Admin not found" });
 
     const token = createToken(admin._id, admin.role);

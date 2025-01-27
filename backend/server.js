@@ -27,16 +27,16 @@ app.use(cookieParser());
 app.use(
   cors({
     // origin: "https://ptownmma.vercel.app",
-    origin: "http://localhost:5173",
-    // origin:"*"
+    // origin: "http://localhost:5173",
+    origin:"*"
   })
 );
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 // For statically serving react files.
-app.use(express.static("static"));
+// app.use(express.static("static"));
 
 // Define routes:
 app.use("/api/classes", classRoutes);
@@ -104,8 +104,8 @@ app.get("/api/uploads", async (req, res) => {
 
 app.use("/uploads", express.static("uploads"));
 
-app.get("*", (req, res) => {
-  let filePath = path.resolve(__dirname, "static", "index.html");
-  filePath = path.normalize(filePath);
-  res.sendFile(filePath);
-});
+// app.get("*", (req, res) => {
+//   let filePath = path.resolve(__dirname, "static", "index.html");
+//   filePath = path.normalize(filePath);
+//   res.sendFile(filePath);
+// });

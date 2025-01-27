@@ -35,7 +35,7 @@ export const protectUser = async (req, res, next) => {
 // Protect Admin Middleware
 export const protectAdmin = async (req, res, next) => {
     const bearerToken = req.headers.authorization;
-    const token = bearerToken.split(' ')[1];
+    const token = bearerToken?.split(' ')[1];
 
   if (!token) {
     return res.status(401).json({ message: "Not authorized, no token" });
