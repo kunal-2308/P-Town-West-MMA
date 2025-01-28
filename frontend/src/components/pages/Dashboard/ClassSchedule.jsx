@@ -113,7 +113,8 @@ function ClassSchedule() {
           eventClick={(info) => {
             const classId = info.event.extendedProps.classId; // Get class ID
             // const classDate = info.event.start.toISOString().split("T")[0]; // Get class date in YYYY-MM-DD format
-            navigate(`/classes/${classId}`); // Include date as a query parameter
+            console.log(events);
+            navigate(`/guest/classes/${classId}`); // Include date as a query parameter
           }}
           slotMinTime="06:00:00"
           slotMaxTime="23:00:00"

@@ -16,6 +16,8 @@ import { MdOutlineCalendarMonth } from "react-icons/md";
 import { Button } from "../../ui/button";
 import { Helmet } from "react-helmet";
 import ClientView from "./ViewClass";
+
+
 function GuestDashboard() {
   const [allClasses, setAllClasses] = useState([]);
   const [upcomingClasses, setUpcomingClasses] = useState([]);

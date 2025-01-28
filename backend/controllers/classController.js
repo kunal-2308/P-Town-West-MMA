@@ -257,7 +257,7 @@ export const getListOfApplicants = async (req, res) => {
 export const guestClassDetails = async (req, res) => {
   try {
     let id = req.params.classId;
-    let classDetails = await Class.findById({ _id: id });
+    let classDetails = await Class.findOne({id});
     if (!classDetails) {
       return res.status(404).json({ message: "Class not found" });
     } else {
