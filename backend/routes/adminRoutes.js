@@ -21,7 +21,7 @@ import { tp } from "../controllers/tp.js";
 
 const router = express.Router();
 
-router.post('/admin/login',adminLogin);
+router.post("/admin/login", adminLogin);
 
 router.post("/add", protectAdmin, addClass);
 
@@ -31,25 +31,29 @@ router.delete("/delete/:id", protectAdmin, deleteClass);
 
 router.get("/all", getAllClasses);
 
-router.post('/add/admin',protectAdmin,addAdmin);
+router.post("/add/admin", protectAdmin, addAdmin);
 
 router.get("/view/:id", protectAdmin, viewParticularClass);
 
 router.get("/allAdmin", protectAdmin, getAllAdminList);
 
-router.put('/update/password/:id',protectAdmin,updatePassword)
+router.put("/update/password/:id", protectAdmin, updatePassword);
 
 router.delete("/deleteAdmin/:id", protectAdmin, deleteAdmin);
 
-router.post('/add/customer/representative',protectAdmin,addCustomerRepresentative);
+router.post(
+  "/add/customer/representative",
+  protectAdmin,
+  addCustomerRepresentative
+);
 
-router.get('/list/customer/representative',getRepresentativeList);
+router.get("/list/customer/representative", getRepresentativeList);
 
-router.post('/client/list',protectAdmin,getparticularRepresentative);
+router.post("/client/list", protectAdmin, getparticularRepresentative);
 
-router.delete('/delete/representative/:id',protectAdmin,deleteRepresentative);
+router.delete("/delete/representative/:id", protectAdmin, deleteRepresentative);
 
-router.get('/',getData);
+router.get("/", getData);
 
-router.get('/health',tp);
+router.get("/health", tp);
 export default router;
