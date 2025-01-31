@@ -269,60 +269,50 @@ export const viewParticularClass = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Run aggregation on the Application model
-    const result = await Application.aggregate([
-      // Match applications for the given classId
-      { $match: { classId: id } },
+    // Step 1: Fetch Applications with Population
+    const applications = await Application.find({ classId: id })
+      .populate("userId") // Populate user details
+      .exec();
 
-      // Lookup user details
-      {
-        $lookup: {
-          from: "users", // MongoDB collection name (ensure correct casing)
-          localField: "userId",
-          foreignField: "_id",
-          as: "userDetails",
-        },
-      },
+    // Check if applications are fetched correctly
+    if (!applications || applications.length === 0) {
+      return res.status(404).json({ message: "No applications found for this class" });
+    }
 
-      // Unwind the userDetails array to flatten the data
-      { $unwind: "$userDetails" },
+    
 
-      // Group by date to collect users per date
-      {
-        $group: {
-          _id: "$date",
-          applicants: {
-            $push: {
-              _id: "$userDetails._id",
-              name: "$userDetails.name",
-              email: "$userDetails.email",
-              phoneNumber: "$userDetails.phoneNumber",
-            },
-          },
-        },
-      },
+    // Step 2: Group Applications by Date
+    const applicantsByDate = {};
 
-      // Sort by date in ascending order
-      { $sort: { _id: 1 } },
-    ]);
+    applications.forEach((application) => {
+      const date = application.date;  // Using the 'date' field
+      const applicant = {
+        _id: application.userId._id,
+        name: application.userId.name,
+        email: application.userId.email,
+        phoneNumber: application.userId.phoneNumber,
+      };
 
-    // Fetch class details separately
+      // Group by date
+      if (!applicantsByDate[date]) {
+        applicantsByDate[date] = [];
+      }
+      applicantsByDate[date].push(applicant);
+    });
+
+    // Step 3: Fetch Class Details
     const classDetails = await Class.findById(id);
     if (!classDetails) {
       return res.status(404).json({ message: "Class not found" });
     }
 
-    // Transform result into the expected format
-    const applicantsByDate = {};
-    result.forEach((group) => {
-      applicantsByDate[group._id] = group.applicants;
-    });
-
+    // Final Response
     res.status(200).json({
       classDetails,
       applicantsByDate,
     });
   } catch (error) {
+    console.error("Error fetching class details:", error);
     res.status(500).json({ message: "Failed to fetch class details", error: error.message });
   }
 };
@@ -397,20 +387,28 @@ export const getRepresentativeList = async (req, res) => {
 
 export const getparticularRepresentative = async (req, res) => {
   try {
-    let { name } = req.body;
+    let { name } = req.body; // Make sure `name` is in the body.
+    
+    // Fetch the customer representative and their clients.
     let List = await customerModel
-      .findOne({ name }, { clients: 1 })
-      .populate({ path: "clients" });
+      .findOne({ name }, { clients: 1 })  // Only fetching clients field
+      .populate({ path: "clients", select: "name email phoneNumber" });  // Populate clients field with specific fields of User model
+
+    if (!List) {
+      return res.status(404).json({ message: "Representative not found" });
+    }
 
     return res.status(200).json({
-      array: List.clients,
+      clients: List.clients, // Send back the list of clients
     });
   } catch (error) {
-    return res.status(400).json({
-      error: error,
+    console.error("Error:", error);
+    return res.status(500).json({
+      error: error.message,
     });
   }
 };
+
 
 export const updatePassword = async (req, res) => {
   try {

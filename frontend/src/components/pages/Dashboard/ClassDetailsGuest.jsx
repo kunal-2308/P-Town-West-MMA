@@ -21,7 +21,10 @@ function ClassDetailsGuest() {
         const response = await axios.get(
           `${API_URL}/api/classes/guest/${classId}`
         );
-        setClassDetails(response.data);
+        setClassDetails({
+          ...response.data, // Add the response data from the API
+          selectedDate: date, // Add the date from useParams to the state
+        });
         console.log("class data:", response.data);
       } catch (error) {
         console.error("Failed to load class details:", error);
@@ -32,7 +35,7 @@ function ClassDetailsGuest() {
     };
 
     fetchClassDetails();
-  }, [classId]);
+  }, [classId, date]); // Adding date to the dependency array ensures the effect runs when `date` changes
 
   const handleClose = () => {
     navigate("/guest/dashboard");
@@ -119,7 +122,7 @@ function ClassDetailsGuest() {
               {classDetails.capacity}
             </p>
             <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
-              <span className="font-semibold">Selected Date:</span> {date}
+              <span className="font-semibold">Selected Date:</span> {classDetails.selectedDate}
             </p>
             <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Recurring:</span>{" "}
