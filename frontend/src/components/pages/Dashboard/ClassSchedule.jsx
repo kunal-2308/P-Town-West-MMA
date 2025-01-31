@@ -86,6 +86,7 @@ function ClassSchedule() {
           });
 
           setEvents(mappedEvents);
+          console.log("Mapped events:", mappedEvents);
         } else {
           setEvents([]);
         }
@@ -99,7 +100,10 @@ function ClassSchedule() {
   }, []);
 
   return (
-    <Box sx={{ height: "calc(100vh - 200px)" }}>
+    <Box
+      sx={{ height: "calc(100vh - 200px)" }}
+      className="m-10 sm:mt-20 sm:text-sm text-xs"
+    >
       <Paper elevation={3} sx={{ p: 2, height: "100%" }}>
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -111,10 +115,17 @@ function ClassSchedule() {
           }}
           events={events}
           eventClick={(info) => {
-            const classId = info.event.extendedProps.classId; // Get class ID
-            // const classDate = info.event.start.toISOString().split("T")[0]; // Get class date in YYYY-MM-DD format
-            console.log(events);
-            navigate(`/guest/classes/${classId}`); // Include date as a query parameter
+            const classId = info.event.extendedProps.classId;
+            const dateObj = new Date(info.event.start);
+            const formattedDate = `${String(dateObj.getDate()).padStart(
+              2,
+              "0"
+            )}-${String(dateObj.getMonth() + 1).padStart(
+              2,
+              "0"
+            )}-${dateObj.getFullYear()}`;
+
+            navigate(`/guest/classes/${classId}/${formattedDate}`);
           }}
           slotMinTime="06:00:00"
           slotMaxTime="23:00:00"

@@ -31,7 +31,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/kickboxing" element={<KickBoxing />} />
           <Route path="/jitsu" element={<Jitsu />} />
-          <Route path="/muay-thai" element={<Muay/>} />
+          <Route path="/muay-thai" element={<Muay />} />
           <Route path="/kids" element={<Kids />} />
           <Route path="/about" element={<About />} />
           <Route path="/nutrition" element={<Nutrition />} />
@@ -44,7 +44,7 @@ function App() {
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/classes/:classId" element={<ClassDetails />} />
           <Route
-            path="/guest/classes/:classId"
+            path="/guest/classes/:classId/:date"
             element={<ClassDetailsGuest />}
           />
           <Route path="/class/schedule" element={<Dashboard />} />
