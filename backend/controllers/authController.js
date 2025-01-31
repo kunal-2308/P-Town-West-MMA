@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
 import User from "../models/userModel.js";
-
+import Application from '../models/bookingModel.js'
 // Helper function to create token
 const createToken = (userId, role) => {
   return jwt.sign({ id: userId, role }, process.env.JWT_SECRET);
@@ -57,11 +57,18 @@ export const login = async (req, res) => {
   const { email } = req.body;
 
   try {
-    const user = await User.findOne({ email }).populate("bookedClasses"); // Populate booked classes
+    // Find the user by email and populate the "bookedClasses" field from the Application model
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    // Fetch the booked classes for the user by checking the Application model
+    const bookedClasses = await Application.find({ userId: user._id }).populate("classId");
+
+    // Calculate the total number of booked classes
+    const totalBookedClasses = bookedClasses.length;
 
     // Generate JWT token
     const token = createToken(user._id, user.role);
@@ -71,16 +78,18 @@ export const login = async (req, res) => {
     res.cookie("userName", user.name, { maxAge: 3 * 24 * 60 * 60 * 1000 });
     res.cookie("role", user.role, { maxAge: 3 * 24 * 60 * 60 * 1000 });
 
-    // Send the token and user details back (excluding password for security)
+    // Send the token, total number of booked classes, and user details back (excluding password for security)
     res.status(200).json({
       token,
       user: {
         _id: user._id,
         name: user.name,
         role: user.role,
-        bookedClasses: user.bookedClasses, // Include booked classes if needed
+        totalBookedClasses,  // Include total booked classes
+        bookedClasses: bookedClasses, // Include the details of booked classes
       },
     });
+
     console.log(user.name);
   } catch (error) {
     return res
@@ -88,6 +97,7 @@ export const login = async (req, res) => {
       .json({ message: "Something went wrong", error: error.message });
   }
 };
+
 
 
 // Admin Login
@@ -138,14 +148,28 @@ export const logout = async (req, res) => {
 
 export const getUserDetails = async (req, res) => {
   try {
-    let userId = req.user._id;
+    const userId = req.user._id;
 
-    // Fetch user details and populate bookedClasses
-    let userDetails = await User.findById(userId).populate("bookedClasses");
+    // Fetch user details and populate necessary fields (optional)
+    const userDetails = await User.findById(userId);
+
+    if (!userDetails) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Fetch all applications for the user and populate the class details
+    const applications = await Application.find({ userId }).populate("classId");
+
+    // Calculate the total number of booked classes
+    const totalBookedClasses = applications.length;
 
     res.status(200).json({
       message: "User fetched successfully",
-      userDetails,
+      userDetails: {
+        ...userDetails.toObject(),  // Convert userDetails to plain object
+        totalBookedClasses,
+        bookedClasses: applications.map((application) => application.classId), // Extract class details from the populated classId
+      },
     });
   } catch (error) {
     return res.status(400).json({
@@ -153,4 +177,6 @@ export const getUserDetails = async (req, res) => {
     });
   }
 };
+
+
 

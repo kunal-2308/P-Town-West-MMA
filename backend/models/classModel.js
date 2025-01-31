@@ -15,7 +15,7 @@ const classSchema = new mongoose.Schema(
     isRecurring: { type: Boolean, default: false },
     recurrenceWeeks: { type: Number, default: 1 },
     color: { type: String, default: "#1976d2" },
-    currentBookings: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    // currentBookings: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   {
     timestamps: true,

@@ -1,5 +1,6 @@
 import Class from "../models/classModel.js";
 import userModel from "../models/userModel.js";
+import Application from '../models/bookingModel.js'
 import bcrypt from "bcryptjs";
 import customerModel from "../models/customerRepresentativeModel.js";
 import adminModel from "../models/adminModel.js";
@@ -91,7 +92,6 @@ export const addClass = async (req, res) => {
       isRecurring = false,
       recurrenceWeeks = 1,
       color = "#1976d2",
-      currentBookings = [],
     } = req.body;
 
     // Validate required fields
@@ -128,7 +128,6 @@ export const addClass = async (req, res) => {
       isRecurring,
       recurrenceWeeks,
       color,
-      currentBookings,
     });
 
     // Save the class to the database
@@ -146,31 +145,42 @@ export const addClass = async (req, res) => {
   }
 };
 // Admin: Update a class
+
 export const updateClass = async (req, res) => {
   const { id } = req.params;
   const updates = req.body;
 
   try {
-    // Find the class to check current values
-    const existingClass = await Class.findById(id);
-    if (!existingClass) {
-      return res.status(404).json({ message: "Class not found" });
+    // Count the number of applications (booked slots) for this class
+    const bookedSlots = await Application.countDocuments({ classId: id });
+
+    // Ensure capacity is never less than booked slots
+    if (updates.capacity && updates.capacity < bookedSlots) {
+      return res.status(400).json({
+        message: `Capacity cannot be less than the number of booked slots (${bookedSlots})`,
+      });
     }
 
-    // Check if `slots` is being updated
-    if (updates.slots && updates.slots > existingClass.bookedSlots) {
-      updates.isFull = false; // Set isFull to false if slots > bookedSlots
+    // Validate `recurringDays`
+    if (updates.recurringDays) {
+      const validDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      const isValid = updates.recurringDays.every(day => validDays.includes(day));
+      if (!isValid) {
+        return res.status(400).json({ message: "Invalid recurring days provided" });
+      }
     }
 
-    const updatedClass = await Class.findByIdAndUpdate(id, updates, {
-      new: true,
-    });
+    // Validate `difficulty`
+    if (updates.difficulty && !["Beginner", "Intermediate", "Advanced"].includes(updates.difficulty)) {
+      return res.status(400).json({ message: "Invalid difficulty level" });
+    }
+
+    // Update class details
+    const updatedClass = await Class.findByIdAndUpdate(id, updates, { new: true });
 
     res.status(200).json(updatedClass);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Failed to update class", error: error.message });
+    res.status(500).json({ message: "Failed to update class", error: error.message });
   }
 };
 
@@ -196,21 +206,13 @@ export const deleteClass = async (req, res) => {
       return res.status(404).json({ message: "Class not found" });
     }
 
-    // Remove the class from each user's bookedClasses
-    const removePromises = classData.applicants.map((userId) =>
-      deleteUserClass(userId, id)
-    );
-    const results = await Promise.all(removePromises);
+    // Delete all applications related to this class
+    await Application.deleteMany({ classId: id });
 
-    // Check if any deletion failed
-    if (results.includes(false)) {
-      return res.status(400).json({ message: "Failed to update some users" });
-    }
-
-    // Delete the class
+    // Delete the class itself
     await Class.findByIdAndDelete(id);
 
-    return res.status(200).json({ message: "Deletion successful!" });
+    return res.status(200).json({ message: "Class and related applications deleted successfully!" });
   } catch (error) {
     return res
       .status(500)
@@ -226,7 +228,7 @@ export const getAllClasses = async (req, res) => {
 
     // Extract unique instructors and categories
     const instructors = [...new Set(classes.map((cls) => cls.instructor))];
-    const categories = [...new Set(classes.map((cls) => cls.category))];
+    const categories = [...new Set(classes.map((cls) => cls.type))];
 
     // Send the classes, unique instructors, and unique categories
     res.status(200).json({ classes, instructors, categories });
@@ -265,15 +267,63 @@ export const addAdmin = async (req, res) => {
 
 export const viewParticularClass = async (req, res) => {
   const { id } = req.params;
+
   try {
-    let response = await Class.findById(id).populate({
-      path: "applicants",
-      select: "name email phoneNumber",
-      options: { sort: { createdAt: -1 } },
+    // Run aggregation on the Application model
+    const result = await Application.aggregate([
+      // Match applications for the given classId
+      { $match: { classId: id } },
+
+      // Lookup user details
+      {
+        $lookup: {
+          from: "users", // MongoDB collection name (ensure correct casing)
+          localField: "userId",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+
+      // Unwind the userDetails array to flatten the data
+      { $unwind: "$userDetails" },
+
+      // Group by date to collect users per date
+      {
+        $group: {
+          _id: "$date",
+          applicants: {
+            $push: {
+              _id: "$userDetails._id",
+              name: "$userDetails.name",
+              email: "$userDetails.email",
+              phoneNumber: "$userDetails.phoneNumber",
+            },
+          },
+        },
+      },
+
+      // Sort by date in ascending order
+      { $sort: { _id: 1 } },
+    ]);
+
+    // Fetch class details separately
+    const classDetails = await Class.findById(id);
+    if (!classDetails) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    // Transform result into the expected format
+    const applicantsByDate = {};
+    result.forEach((group) => {
+      applicantsByDate[group._id] = group.applicants;
     });
-    res.status(200).json(response);
+
+    res.status(200).json({
+      classDetails,
+      applicantsByDate,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Failed to fetch class details", error: error.message });
   }
 };
 
