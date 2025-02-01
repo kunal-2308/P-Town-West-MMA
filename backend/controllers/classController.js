@@ -317,11 +317,12 @@ export const bookGuestClasses = async (req, res) => {
       return res.status(400).json({ message: "All fields are required." });
     }
 
+    console.log("This is CR",CR);
     // Find the customer representative
-    const customer = await Customer.findOne({ name: CR });
+    const customer = await Customer.findById(CR);
     if (!customer) {
       return res
-        .status(404)
+        .status(400)
         .json({ message: "Customer Representative not found." });
     }
 
