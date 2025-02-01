@@ -10,6 +10,7 @@ export const generateToken = (userId) => {
 };
 
 export const bookClass = async (req, res) => {
+  console.log(req.body);
   const classId = req.params.id;
   const userId = req.user.id;
   const selectedDate = req.body.selectedDate; // Get selected date from request body
@@ -305,6 +306,8 @@ export const guestClassDetails = async (req, res) => {
 };
 
 export const bookGuestClasses = async (req, res) => {
+  console.log(req.body);
+
   const { classId } = req.params;
   const { name, email, phoneNumber, CR, selectedDate } = req.body;
 
@@ -322,6 +325,10 @@ export const bookGuestClasses = async (req, res) => {
         .json({ message: "Customer Representative not found." });
     }
 
+    // ✅ Fix: Use a different variable name (formattedDate) instead of redeclaring selectedDate
+    const [day, month, year] = selectedDate.split('-'); // "01-02-2025" -> [01, 02, 2025]
+    const formattedDate = `${year}-${month}-${day}`; // "YYYY-MM-DD"
+  
     let user = await User.findOne({ email });
 
     if (user) {
@@ -329,16 +336,13 @@ export const bookGuestClasses = async (req, res) => {
       const existingApplication = await Application.findOne({
         userId: user._id,
         classId,
-        date: selectedDate,
+        date: formattedDate, // Use formattedDate
       });
 
       if (existingApplication) {
-        return res
-          .status(400)
-          .json({
-            message:
-              "You have already booked this class for the selected date.",
-          });
+        return res.status(400).json({
+          message: "You have already booked this class for the selected date.",
+        });
       }
     } else {
       // Create a new user if they do not exist
@@ -356,7 +360,7 @@ export const bookGuestClasses = async (req, res) => {
     }
 
     // Fetch the class details
-    const classToBook = await Class.findById(classId);
+    const classToBook = await Class.findOne({ _id: classId }); // Fix query: Use _id instead of id
     if (!classToBook) {
       return res.status(404).json({ message: "Class not found." });
     }
@@ -367,7 +371,7 @@ export const bookGuestClasses = async (req, res) => {
     }
 
     // Get the list of applicants on the selected date
-    const applicantsOnDate = classToBook.applicantsByDate[selectedDate] || [];
+    const applicantsOnDate = classToBook.applicantsByDate[formattedDate] || [];
 
     // Check if the class is already full
     if (applicantsOnDate.length >= classToBook.capacity) {
@@ -379,13 +383,13 @@ export const bookGuestClasses = async (req, res) => {
     // Create a new application
     const newApplication = new Application({
       userId: user._id,
-      classId,
-      date: selectedDate,
+      classId: classToBook._id,
+      date: formattedDate, // Use formattedDate
     });
     await newApplication.save();
 
     // Add the user to the class's applicantsByDate for the selected date
-    classToBook.applicantsByDate[selectedDate] = [
+    classToBook.applicantsByDate[formattedDate] = [
       ...applicantsOnDate,
       user._id,
     ];
@@ -396,7 +400,6 @@ export const bookGuestClasses = async (req, res) => {
     res.status(200).json({
       message: "Class booked successfully.",
       user,
-      isNewUser: !user._id, // Returns true if the user was newly created
     });
   } catch (error) {
     console.error("Error booking class:", error);

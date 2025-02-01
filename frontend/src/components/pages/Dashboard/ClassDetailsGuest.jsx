@@ -84,7 +84,7 @@ function ClassDetailsGuest() {
 
     try {
       const bookingResponse = await axios.post(
-        `${API_URL}/api/classes/guest/book/class/${classId}`,
+        `${API_URL}/api/classes/guest/book/class/${classDetails._id}`,
         formData
       );
 
