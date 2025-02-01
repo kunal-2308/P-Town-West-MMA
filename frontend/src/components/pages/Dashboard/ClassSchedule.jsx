@@ -125,7 +125,7 @@ function ClassSchedule() {
               "0"
             )}-${dateObj.getFullYear()}`;
 
-            navigate(`/guest/classes/${classId}/${formattedDate}`);
+            navigate(`/guest/classes/${classId}/${formattedDate}`); // Updated navigation
           }}
           slotMinTime="06:00:00"
           slotMaxTime="23:00:00"

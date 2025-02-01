@@ -1,10 +1,12 @@
-import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify"; // If using toast notifications
+import { MoveRightIcon } from "lucide-react";
+import { FaSpinner } from "react-icons/fa";
 import Navbar from "../../../components/shared/Navbar";
 import Footer from "../../../components/shared/Footer";
-import { MoveRightIcon } from "lucide-react";
-import axios from "axios";
-import { FaSpinner } from "react-icons/fa";
 import { API_URL } from "../../../../configure";
 
 function ClassDetailsGuest() {
@@ -13,19 +15,30 @@ function ClassDetailsGuest() {
   const [classDetails, setClassDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [viewModal, setViewModal] = useState(false);
+  const [representatives, setRepresentatives] = useState([]);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phoneNumber: "",
+    CR: "",
+    selectedDate: date || "",
+  });
 
   useEffect(() => {
     const fetchClassDetails = async () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${API_URL}/api/classes/guest/${classId}`
+          `${API_URL}/api/classes/guest/${classId}?date=${date}`
         );
-        setClassDetails({
-          ...response.data, // Add the response data from the API
-          selectedDate: date, // Add the date from useParams to the state
-        });
-        console.log("class data:", response.data);
+        setClassDetails(
+          { ...response.data },
+          {
+            selectedDate: date,
+          }
+        );
       } catch (error) {
         console.error("Failed to load class details:", error);
         setError("Failed to load class details.");
@@ -34,11 +47,79 @@ function ClassDetailsGuest() {
       }
     };
 
+    const fetchRepresentatives = async () => {
+      try {
+        let str = `${API_URL}/api/admin/list/customer/representative`;
+        console.log(str);
+        const response = await axios.get(str);
+        const reps = response.data.list.map((rep) => ({
+          id: rep._id,
+          name: rep.name,
+        }));
+        setRepresentatives(reps);
+      } catch (error) {
+        console.error("Error fetching representatives:", error);
+        toast.error("Failed to load customer representatives.");
+      }
+    };
+
     fetchClassDetails();
-  }, [classId, date]); // Adding date to the dependency array ensures the effect runs when `date` changes
+    fetchRepresentatives();
+  }, [classId, date]);
 
   const handleClose = () => {
-    navigate("/guest/dashboard");
+    setViewModal(false);
+  };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    if (formData.phoneNumber.length !== 10) {
+      toast.error("Please enter a valid 10-digit phone number!");
+      return;
+    }
+
+    try {
+      const bookingResponse = await axios.post(
+        `${API_URL}/api/classes/guest/book/class/${classId}`,
+        formData
+      );
+
+      const { token } = bookingResponse.data;
+
+      if (token) {
+        localStorage.setItem("jwt_token", token);
+        toast.success("Class booked successfully!");
+
+        const loginResponse = await axios.post(`${API_URL}/api/auth/login`, {
+          email: formData.email,
+        });
+
+        if (loginResponse.status === 200) {
+          const { token, user } = loginResponse.data;
+
+          Cookies.set("jwt_token", token, { secure: true });
+          Cookies.set("userName", user.name, { secure: true });
+          Cookies.set("email", user.email, { secure: true });
+
+          toast.success("Login successful!");
+
+          setTimeout(() => {
+            navigate(user.role === "admin" ? "/admin/dashboard" : "/dashboard");
+            localStorage.setItem("role", user.role);
+          }, 1000);
+        } else {
+          toast.error(loginResponse.data.message || "Login failed. Try again.");
+        }
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Booking failed.");
+    } finally {
+      setViewModal(false);
+    }
   };
 
   if (loading) {
@@ -56,14 +137,6 @@ function ClassDetailsGuest() {
     return (
       <div className="flex justify-center items-center h-screen">
         <p className="text-xl font-semibold text-red-500">{error}</p>
-      </div>
-    );
-  }
-
-  if (!classDetails) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-xl font-semibold text-gray-600">No class found.</p>
       </div>
     );
   }
@@ -122,9 +195,10 @@ function ClassDetailsGuest() {
               {classDetails.capacity}
             </p>
             <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
-              <span className="font-semibold">Selected Date:</span> {classDetails.selectedDate}
+              <span className="font-semibold">Date:</span>{" "}
+              {classDetails.selectedDate}
             </p>
-            <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
+            {/* <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Recurring:</span>{" "}
               {classDetails.isRecurring
                 ? `Yes (${classDetails.recurrenceWeeks} weeks)`
@@ -135,12 +209,12 @@ function ClassDetailsGuest() {
                 <span className="font-semibold">Recurring Days:</span>{" "}
                 {classDetails.recurringDays.join(", ")}
               </p>
-            )}
+            )} */}
           </div>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-y-4 sm:gap-y-0 sm:gap-x-4">
             <button
               className="px-5 py-2 text-base flex flex-row gap-x-2 bg-customYellow text-black font-light rounded-full shadow-md hover:bg-gray-900 hover:text-white duration-300 ease-linear"
-              // onClick={handleBookClass}
+              onClick={() => setViewModal(true)}
             >
               Book Now <MoveRightIcon />
             </button>
@@ -154,6 +228,91 @@ function ClassDetailsGuest() {
         </div>
       </div>
       <Footer />
+      {/* Booking Modal */}
+      {viewModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-4">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
+              Book Your Class
+            </h2>
+            <form onSubmit={onSubmit} className="space-y-4">
+              <input
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+              <input
+                type="tel"
+                name="phoneNumber"
+                placeholder="Phone Number"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+              <div>
+                <label
+                  htmlFor="CR"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Customer Representative
+                </label>
+                <select
+                  id="CR"
+                  name="CR"
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                  value={formData.CR}
+                  required
+                  onChange={handleChange}
+                >
+                  <option value="">-- Choose your representative --</option>
+                  {representatives.map((rep) => (
+                    <option key={rep.id} value={rep.id}>
+                      {rep.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Selected Date
+                </label>
+                <p className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700">
+                  {classDetails.selectedDate}
+                </p>
+              </div>
+              <div className="flex justify-between pt-4">
+                <button
+                  type="button"
+                  onClick={() => setViewModal(false)}
+                  className="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }

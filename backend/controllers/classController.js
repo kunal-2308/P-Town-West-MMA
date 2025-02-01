@@ -1,8 +1,8 @@
 import Class from "../models/classModel.js";
 import User from "../models/userModel.js";
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
-import Application from '../models/bookingModel.js';
+import Application from "../models/bookingModel.js";
 import Customer from "../models/customerRepresentativeModel.js";
 // User: Book a class
 export const generateToken = (userId) => {
@@ -29,30 +29,35 @@ export const bookClass = async (req, res) => {
     // Check if the class already has the maximum number of applicants for the selected date
     const applicantsOnDate = classToBook.applicantsByDate[selectedDate] || [];
     if (applicantsOnDate.length >= classToBook.capacity) {
-      return res.status(400).json({ message: "Class is already fully booked for this date." });
+      return res
+        .status(400)
+        .json({ message: "Class is already fully booked for this date." });
     }
 
     // Continue with the rest of the logic (check if user is already booked, etc.)
     const applicationExists = await Application.findOne({
       userId,
       classId,
-      date: selectedDate
+      date: selectedDate,
     });
 
     if (applicationExists) {
-      return res.status(400).json({ message: "You are already booked for this class on this date." });
+      return res.status(400).json({
+        message: "You are already booked for this class on this date.",
+      });
     }
 
     // Proceed with booking
     const newApplication = new Application({
       userId,
       classId,
-      date: selectedDate
+      date: selectedDate,
     });
     await newApplication.save();
 
     // Add this application to the class's applicantsByDate for the selected date
-    classToBook.applicantsByDate[selectedDate] = applicantsOnDate.concat(userId);
+    classToBook.applicantsByDate[selectedDate] =
+      applicantsOnDate.concat(userId);
 
     // Save the updated class document
     await classToBook.save();
@@ -60,10 +65,11 @@ export const bookClass = async (req, res) => {
     res.status(200).json({ message: "Class booked successfully" });
   } catch (error) {
     console.error("Error booking class:", error);
-    res.status(500).json({ message: "Failed to book class", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to book class", error: error.message });
   }
 };
-
 
 export const cancelBooking = async (req, res) => {
   const { id: classId } = req.params; // Class ID from route params
@@ -101,7 +107,6 @@ export const cancelBooking = async (req, res) => {
   }
 };
 
-
 // User: Get booked classes
 export const getBookedClasses = async (req, res) => {
   const userId = req.user.id;
@@ -109,11 +114,13 @@ export const getBookedClasses = async (req, res) => {
   try {
     // Find all applications where the userId matches and sort by date in descending order
     const bookedClasses = await Application.find({ userId })
-      .populate('classId') // Populate class details if needed
-      .sort({ date: -1 });  // Sort by date in descending order (most recent first)
+      .populate("classId") // Populate class details if needed
+      .sort({ date: -1 }); // Sort by date in descending order (most recent first)
 
     if (!bookedClasses || bookedClasses.length === 0) {
-      return res.status(404).json({ message: "No booked classes found for this user" });
+      return res
+        .status(404)
+        .json({ message: "No booked classes found for this user" });
     }
 
     // Send the sorted list of booked classes
@@ -126,12 +133,13 @@ export const getBookedClasses = async (req, res) => {
   }
 };
 
-
 //ISSUE FUNCTIONS -------------------------------------------------------
 // User: Get available classes
 export const getAvailableClasses = async (req, res) => {
   try {
-    let allClasses = await Class.find({ date: { $gt: Date.now() } }).sort({ date: 1 });
+    let allClasses = await Class.find({ date: { $gt: Date.now() } }).sort({
+      date: 1,
+    });
     res.status(200).json(allClasses);
   } catch (error) {
     res
@@ -139,7 +147,6 @@ export const getAvailableClasses = async (req, res) => {
       .json({ message: "Failed to retrieve classes", error: error.message });
   }
 };
-
 
 // User: Get previous classes (past classes)
 export const getPreviousClasses = async (req, res) => {
@@ -166,7 +173,9 @@ export const getPreviousClasses = async (req, res) => {
 // User: Get all classes (with optional category and week filter)
 export const getAllClasses = async (req, res) => {
   try {
-    let allClasses = await Class.find({ date: { $gt: Date.now() } }).sort({date:1});
+    let allClasses = await Class.find({ date: { $gt: Date.now() } }).sort({
+      date: 1,
+    });
     res.status(200).json(allClasses);
   } catch (error) {
     res
@@ -193,7 +202,9 @@ export const getClassById = async (req, res) => {
 
 export const getListOfUpcomingClasses = async (req, res) => {
   try {
-    let allClasses = await Class.find({ date: { $gt: Date.now() } }).sort({ date: 1 });
+    let allClasses = await Class.find({ date: { $gt: Date.now() } }).sort({
+      date: 1,
+    });
     res.status(200).json({
       message: "Upcoming classes fetched successfully",
       upcomingClasses: allClasses,
@@ -209,7 +220,9 @@ export const getListOfUpcomingClasses = async (req, res) => {
 
 export const getListOfPreviousClasses = async (req, res) => {
   try {
-    let allClasses = await Class.find({ date: { $lt: Date.now() } }).sort({ date: -1 });
+    let allClasses = await Class.find({ date: { $lt: Date.now() } }).sort({
+      date: -1,
+    });
     res.status(200).json({
       message: "Previous classes fetched successfully",
       previousClasses: allClasses,
@@ -222,7 +235,6 @@ export const getListOfPreviousClasses = async (req, res) => {
     });
   }
 };
-
 
 export const getListOfApplicants = async (req, res) => {
   try {
@@ -268,37 +280,52 @@ export const getListOfApplicants = async (req, res) => {
 
 export const guestClassDetails = async (req, res) => {
   try {
-    let id = req.params.classId;
-    let classDetails = await Class.findOne({_id:id});
+    const { classId } = req.params;
+    const { date } = req.query;
+
+    console.log("Received classId:", classId);
+    console.log("Received date:", date);
+
+    // Ensure we query using `_id` as a STRING since it's a UUID
+    const classDetails = await Class.findOne({ id: classId });
+
     if (!classDetails) {
       return res.status(404).json({ message: "Class not found" });
-    } else {
-      res.status(200).json(classDetails);
     }
+
+    console.log("Class found:", classDetails);
+
+    res
+      .status(200)
+      .json({ ...classDetails.toObject(), selectedDate: date || null });
   } catch (error) {
-    res.status(400).json(error);
+    console.error("Error fetching class details:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
 export const bookGuestClasses = async (req, res) => {
-  const classId = req.params.classId;
-  const { name, email, phoneNumber, CR, selectedDate } = req.body; // selectedDate passed in body
+  const { classId } = req.params;
+  const { name, email, phoneNumber, CR, selectedDate } = req.body;
 
   try {
-    // Check if user exists by email
-    let user = await User.findOne({ email });
-    let customer = await Customer.findOne({ name: CR });
-
-    if (!customer) {
-      return res.status(404).json({
-        message: "Customer Representative not found",
-      });
+    // Ensure all required fields are present
+    if (!name || !email || !phoneNumber || !CR || !selectedDate) {
+      return res.status(400).json({ message: "All fields are required." });
     }
 
-    let customerId = customer._id;
+    // Find the customer representative
+    const customer = await Customer.findOne({ name: CR });
+    if (!customer) {
+      return res
+        .status(404)
+        .json({ message: "Customer Representative not found." });
+    }
+
+    let user = await User.findOne({ email });
 
     if (user) {
-      // Check if the user has already booked the class for the selected date
+      // Check if user has already booked this class for the selected date
       const existingApplication = await Application.findOne({
         userId: user._id,
         classId,
@@ -306,44 +333,47 @@ export const bookGuestClasses = async (req, res) => {
       });
 
       if (existingApplication) {
-        return res.status(400).json({
-          message: "You have already booked this class for the selected date.",
-        });
+        return res
+          .status(400)
+          .json({
+            message:
+              "You have already booked this class for the selected date.",
+          });
       }
     } else {
-      // Create a new user if not exists
+      // Create a new user if they do not exist
       user = new User({
         name,
         email,
         phoneNumber,
-        CR: customerId, // Customer Representative ID
+        CR: customer._id, // Store Customer Representative ID
       });
       await user.save();
 
-      // After saving the new user, update the Customer representative's client list
+      // Add this new user to the customer representative's client list
       customer.clients.push(user._id);
       await customer.save();
     }
 
     // Fetch the class details
     const classToBook = await Class.findById(classId);
-
     if (!classToBook) {
-      return res.status(404).json({ message: "Class not found" });
+      return res.status(404).json({ message: "Class not found." });
     }
 
-    // Initialize applicantsByDate if it doesn't exist
+    // Ensure `applicantsByDate` is initialized as an object
     if (!classToBook.applicantsByDate) {
-      classToBook.applicantsByDate = {}; // Initialize if not present
+      classToBook.applicantsByDate = {};
     }
 
-    // Check if the class has reached its capacity for the selected date
+    // Get the list of applicants on the selected date
     const applicantsOnDate = classToBook.applicantsByDate[selectedDate] || [];
 
+    // Check if the class is already full
     if (applicantsOnDate.length >= classToBook.capacity) {
-      return res.status(400).json({
-        message: "Class is fully booked for the selected date.",
-      });
+      return res
+        .status(400)
+        .json({ message: "Class is fully booked for the selected date." });
     }
 
     // Create a new application
@@ -354,8 +384,11 @@ export const bookGuestClasses = async (req, res) => {
     });
     await newApplication.save();
 
-    // Add this application to the class's applicantsByDate for the selected date
-    classToBook.applicantsByDate[selectedDate] = applicantsOnDate.concat(user._id);
+    // Add the user to the class's applicantsByDate for the selected date
+    classToBook.applicantsByDate[selectedDate] = [
+      ...applicantsOnDate,
+      user._id,
+    ];
 
     // Save the updated class document
     await classToBook.save();
@@ -363,7 +396,7 @@ export const bookGuestClasses = async (req, res) => {
     res.status(200).json({
       message: "Class booked successfully.",
       user,
-      isNewUser: !user._id, // returns true if the user was newly created
+      isNewUser: !user._id, // Returns true if the user was newly created
     });
   } catch (error) {
     console.error("Error booking class:", error);
@@ -373,5 +406,3 @@ export const bookGuestClasses = async (req, res) => {
     });
   }
 };
-
-
