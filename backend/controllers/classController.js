@@ -317,7 +317,7 @@ export const bookGuestClasses = async (req, res) => {
       return res.status(400).json({ message: "All fields are required." });
     }
 
-    console.log("This is CR",CR);
+    console.log("This is CR", CR);
     // Find the customer representative
     const customer = await Customer.findById(CR);
     if (!customer) {
@@ -327,9 +327,9 @@ export const bookGuestClasses = async (req, res) => {
     }
 
     // ✅ Fix: Use a different variable name (formattedDate) instead of redeclaring selectedDate
-    const [day, month, year] = selectedDate.split('-'); // "01-02-2025" -> [01, 02, 2025]
+    const [day, month, year] = selectedDate.split("-"); // "01-02-2025" -> [01, 02, 2025]
     const formattedDate = `${year}-${month}-${day}`; // "YYYY-MM-DD"
-  
+
     let user = await User.findOne({ email });
 
     if (user) {

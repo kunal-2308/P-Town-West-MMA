@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify"; // If using toast notifications
+import { toast } from "sonner"; // If using toast notifications
 import { MoveRightIcon } from "lucide-react";
 import { FaSpinner } from "react-icons/fa";
 import Navbar from "../../../components/shared/Navbar";
@@ -25,6 +25,8 @@ function ClassDetailsGuest() {
     CR: "",
     selectedDate: date || "",
   });
+
+  const token = Cookies.get("jwt_token");
 
   useEffect(() => {
     const fetchClassDetails = async () => {
@@ -67,8 +69,12 @@ function ClassDetailsGuest() {
     fetchRepresentatives();
   }, [classId, date]);
 
-  const handleClose = () => {
-    setViewModal(false);
+  const handleCloseBtn = () => {
+    if (token) {
+      navigate("/dashboard");
+    } else {
+      navigate("/guest/dashboard");
+    }
   };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -77,23 +83,28 @@ function ClassDetailsGuest() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate phone number length
     if (formData.phoneNumber.length !== 10) {
       toast.error("Please enter a valid 10-digit phone number!");
       return;
     }
 
     try {
+      // Attempt to book the class
       const bookingResponse = await axios.post(
         `${API_URL}/api/classes/guest/book/class/${classDetails._id}`,
         formData
       );
 
-      const { token } = bookingResponse.data;
+      const { token, message } = bookingResponse.data;
+
+      // Show success message from API
+      toast.success(message || "Class booked successfully!");
 
       if (token) {
         localStorage.setItem("jwt_token", token);
-        toast.success("Class booked successfully!");
 
+        // Log in the user
         const loginResponse = await axios.post(`${API_URL}/api/auth/login`, {
           email: formData.email,
         });
@@ -107,6 +118,7 @@ function ClassDetailsGuest() {
 
           toast.success("Login successful!");
 
+          // Redirect user to the correct dashboard based on the role
           setTimeout(() => {
             navigate(user.role === "admin" ? "/admin/dashboard" : "/dashboard");
             localStorage.setItem("role", user.role);
@@ -114,11 +126,72 @@ function ClassDetailsGuest() {
         } else {
           toast.error(loginResponse.data.message || "Login failed. Try again.");
         }
+      } else {
+        toast.success("Class booked successfully! Redirecting...");
+        setTimeout(() => {
+          navigate("/dashboard"); // Redirect to /dashboard if token exists
+        }, 500);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Booking failed.");
+      if (error.response) {
+        const { data, status } = error.response;
+
+        if (status === 400 && data.message.includes("already booked")) {
+          toast.error("You have already booked this class for this date!");
+        } else if (status === 404) {
+          toast.error("Class not found. Please check the details.");
+        } else {
+          toast.error(data.message || "Booking failed. Please try again.");
+        }
+      } else {
+        toast.error(
+          "Network error. Please check your connection and try again."
+        );
+      }
     } finally {
       setViewModal(false);
+    }
+  };
+
+  const handleBookNow = async () => {
+    if (token) {
+      try {
+        // Fetch user details before booking
+        const userResponse = await axios.get(
+          `${API_URL}/api/auth/user/details`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const user = userResponse.data.userDetails;
+
+        // Send user's details directly to the API
+        const bookingResponse = await axios.post(
+          `${API_URL}/api/classes/guest/book/class/${classDetails._id}`,
+          {
+            name: user.name,
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            CR: user.CR || "",
+            selectedDate: date || "",
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        toast.success(
+          bookingResponse.data.message || "Class booked successfully!"
+        );
+        navigate("/dashboard");
+      } catch (error) {
+        toast.error(
+          error?.response?.data?.message || "Booking failed. Please try again."
+        );
+      }
+    } else {
+      setViewModal(true); // Show the form if the user is not logged in
     }
   };
 
@@ -214,13 +287,13 @@ function ClassDetailsGuest() {
           <div className="flex flex-col sm:flex-row justify-center items-center gap-y-4 sm:gap-y-0 sm:gap-x-4">
             <button
               className="px-5 py-2 text-base flex flex-row gap-x-2 bg-customYellow text-black font-light rounded-full shadow-md hover:bg-gray-900 hover:text-white duration-300 ease-linear"
-              onClick={() => setViewModal(true)}
+              onClick={handleBookNow}
             >
               Book Now <MoveRightIcon />
             </button>
             <button
               className="px-5 py-2 text-base flex flex-row gap-x-2 bg-white text-gray-800 font-light rounded-full shadow-md hover:bg-gray-900 hover:text-white duration-300 ease-linear"
-              onClick={handleClose}
+              onClick={handleCloseBtn}
             >
               Close
             </button>
@@ -275,7 +348,6 @@ function ClassDetailsGuest() {
                   name="CR"
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none bg-white"
                   value={formData.CR}
-                  required
                   onChange={handleChange}
                 >
                   <option value="">-- Choose your representative --</option>

@@ -1,98 +1,125 @@
-import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
 import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 import Cookies from "js-cookie";
-import Navbar from "../../../components/shared/Navbar";
-import Footer from "../../../components/shared/Footer";
+import { toast } from "sonner";
 import { MoveRightIcon } from "lucide-react";
 import { IoClose } from "react-icons/io5";
-import { toast } from "sonner";
+import { FaSpinner } from "react-icons/fa";
+import Navbar from "../../../components/shared/Navbar";
+import Footer from "../../../components/shared/Footer";
 import { API_URL } from "../../../../configure";
-import axios from "axios";
-import { ClipLoader } from "react-spinners";
 
-const ClassDetails = () => {
-  const { classId } = useParams();
-  const navigate = useNavigate(); // Initialize useNavigate
+// eslint-disable-next-line react/prop-types
+const ClassDetails = ({ isGuest = false }) => {
+  const { classId, date } = useParams();
+  const navigate = useNavigate();
   const [classDetails, setClassDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [bookingLoading, setBookingLoading] = useState(false);
-
+  const [viewModal, setViewModal] = useState(false);
+  const [representatives, setRepresentatives] = useState([]);
   const token = Cookies.get("jwt_token");
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phoneNumber: "",
+    CR: "",
+    selectedDate: date || "",
+  });
 
   useEffect(() => {
     const fetchClassDetails = async () => {
-      if (token) {
-        try {
-          let token = Cookies.get("jwt_token");
-          const response = await axios.get(
-            `${API_URL}/api/classes/view/${classId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+      try {
+        setLoading(true);
+        const url = isGuest
+          ? `${API_URL}/api/classes/guest/${classId}?date=${date}`
+          : `${API_URL}/api/classes/view/${classId}`;
 
-          if (response.status > 200 && response.status < 600) {
-            const errorMessage = await response.text(); // Get the response body as text
-            throw new Error(`Error ${response.status}: ${errorMessage}`);
-          }
-
-          const data = response.data;
-          setClassDetails(data);
-        } catch (err) {
-          console.error("Error fetching class details:", err);
-          setError(err.message);
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        setError("User is not authenticated");
+        const headers = isGuest ? {} : { Authorization: `Bearer ${token}` };
+        const response = await axios.get(url, { headers });
+        setClassDetails(response.data);
+      } catch (error) {
+        console.error("Error fetching class details:", error);
+        setError("Failed to load class details.");
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchClassDetails();
-  }, [classId, token]);
-
-  const handleBookClass = async () => {
-    if (token) {
-      setBookingLoading(true); // Start booking loader
+    const fetchRepresentatives = async () => {
+      if (!isGuest) return;
       try {
-        const response = await fetch(`${API_URL}/api/classes/book/${classId}`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        const parsedData = await response.json();
-        if (response.status === 200) {
-          toast.success("Class booked successfully!");
-          setTimeout(() => {
-            navigate("/dashboard");
-          }, 1000);
-        } else {
-          toast.error(parsedData.message);
-        }
+        const response = await axios.get(
+          `${API_URL}/api/admin/list/customer/representative`
+        );
+        const reps = response.data.list.map((rep) => ({
+          id: rep._id,
+          name: rep.name,
+        }));
+        setRepresentatives(reps);
       } catch (error) {
-        console.error("Error booking class:", error);
-      } finally {
-        setBookingLoading(false);
+        console.error("Error fetching representatives:", error);
+        toast.error("Failed to load customer representatives.");
       }
-    }
-  };
+    };
 
-  const handleClose = () => {
-    navigate("/dashboard");
+    fetchClassDetails();
+    fetchRepresentatives();
+  }, [classId, date, isGuest, token]);
+
+  const handleClose = () => setViewModal(false);
+
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleBookClass = async (e) => {
+    if (e) e.preventDefault();
+
+    if (isGuest && formData.phoneNumber.length !== 10) {
+      toast.error("Please enter a valid 10-digit phone number!");
+      return;
+    }
+
+    setBookingLoading(true);
+    try {
+      const url = isGuest
+        ? `${API_URL}/api/classes/guest/book/class/${classDetails._id}`
+        : `${API_URL}/api/classes/book/${classId}`;
+
+      const headers = isGuest ? {} : { Authorization: `Bearer ${token}` };
+      const data = isGuest ? formData : {};
+      const response = await axios.post(url, data, { headers });
+
+      if (isGuest) {
+        const { token, user } = response.data;
+        if (token) {
+          Cookies.set("jwt_token", token, { secure: true });
+          Cookies.set("userName", user.name, { secure: true });
+          Cookies.set("email", user.email, { secure: true });
+          toast.success("Login successful!");
+        }
+      }
+
+      toast.success("Class booked successfully!");
+      setTimeout(() => navigate("/dashboard"), 1000);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Booking failed.");
+    } finally {
+      setBookingLoading(false);
+      setViewModal(false);
+    }
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <ClipLoader size={50} color={"#FFD700"} loading={loading} />
+      <div className="flex justify-center items-center h-screen gap-x-3">
+        <FaSpinner className="animate-spin text-indigo-600" />
+        <p className="text-xl font-semibold text-gray-600">
+          Loading class details...
+        </p>
       </div>
     );
   }
@@ -105,32 +132,17 @@ const ClassDetails = () => {
     );
   }
 
-  if (!classDetails) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-xl font-semibold text-gray-600">No class found.</p>
-      </div>
-    );
-  }
-
-  function convertTo12HourFormat(time24) {
-    const [hours, minutes] = time24.split(":").map(Number);
-    const suffix = hours >= 12 ? "PM" : "AM";
-    const hours12 = ((hours + 11) % 12) + 1; // Converts 24-hour to 12-hour
-    return `${hours12}:${minutes.toString().padStart(2, "0")} ${suffix}`;
-  }
-
   return (
     <>
       <Navbar />
-      <div className="div-1-herosection relative mt-10 mb-20 overflow-hidden">
+      <div className="relative mt-10 mb-20 overflow-hidden">
         <img src="/images/Training/3.png" alt="" className="w-screen" />
-        <div className="absolute inset-y-1/2 left-0 transform -translate-y-1/2 text-customYellow text-2xl md:text-5xl sm:text-6xl font-medium sm:pl-40 pl-10 w-[50%] sm:w-full">
+        <div className="absolute inset-y-1/2 left-0 transform -translate-y-1/2 text-customYellow text-2xl md:text-5xl font-medium sm:pl-40 pl-10">
           Schedule an Appointment
         </div>
       </div>
-      <div className="bg-white w-full max-w-[90%] md:max-w-[70%] h-auto shadow-lg mb-20 rounded-lg p-8 mt-20 mx-auto py-12 px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row justify-start items-center gap-y-10 lg:gap-x-20">
-        <div className="w-full lg:w-[30vw] flex-shrink-0">
+      <div className="bg-white w-full max-w-[70%] shadow-lg mb-20 rounded-lg p-8 mt-20 mx-auto flex flex-col lg:flex-row gap-10">
+        <div className="w-full lg:w-[30vw]">
           <img
             src="/images/Home/Popper/1.png"
             alt=""
@@ -138,58 +150,72 @@ const ClassDetails = () => {
           />
         </div>
         <div className="flex flex-col justify-start items-start text-center lg:text-left">
-          <h1 className="text-2xl md:text-4xl font-bold text-black mb-6">
-            {classDetails.name}
+          <h1 className="text-2xl lg:text-4xl font-bold text-black mb-6">
+            {classDetails.title || "Class Name"}
           </h1>
           <div className="mb-6 flex flex-col justify-start items-start lg:pl-5">
-            <p className="text-base md:text-lg font-medium text-gray-700 mb-2">
+            <p className="text-lg font-medium text-gray-700">
               <span className="font-semibold">Date:</span>{" "}
-              {classDetails.date.split("T")[0]}
+              {classDetails.startTime.split("T")[0]}
             </p>
-            <p className="text-base md:text-lg font-medium text-gray-700 mb-2">
-              <span className="font-semibold">Time In:</span>{" "}
-              {convertTo12HourFormat(classDetails.timeIn)}
+            <p className="text-lg font-medium text-gray-700">
+              <span className="font-semibold">Time:</span>{" "}
+              {classDetails.startTime}
             </p>
-            <p className="text-base md:text-lg font-medium text-gray-700 mb-2">
-              <span className="font-semibold">Time Out:</span>{" "}
-              {convertTo12HourFormat(classDetails.timeOut)}
-            </p>
-            <p className="text-base md:text-lg font-medium text-gray-700 mb-2">
-              <span className="font-semibold">Slots:</span> {classDetails.slots}
-            </p>
-            <p className="text-base md:text-lg font-medium text-gray-700 mb-2">
-              <span className="font-semibold">Booked Slots:</span>{" "}
-              {classDetails.bookedSlots}
-            </p>
-            <p className="text-base md:text-lg font-medium text-gray-700 mb-2">
-              <span className="font-semibold">Category:</span>{" "}
-              {classDetails.category}
+            <p className="text-lg font-medium text-gray-700">
+              <span className="font-semibold">Instructor:</span>{" "}
+              {classDetails.instructor}
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-10">
+          <div className="flex gap-4">
             <button
-              className="px-5 py-2 text-base flex items-center gap-x-2 bg-customYellow text-black font-light rounded-full transition duration-300 ease-in-out"
-              onClick={handleBookClass}
+              className="px-5 py-2 text-base flex items-center gap-x-2 bg-customYellow text-black font-light rounded-full transition"
+              onClick={() => setViewModal(true)}
               disabled={bookingLoading}
             >
               {bookingLoading ? (
-                <ClipLoader size={20} color={"#000"} loading={bookingLoading} />
+                <FaSpinner className="animate-spin" />
               ) : (
-                <>
-                  Book Your Slot <MoveRightIcon />
-                </>
+                "Book Now"
               )}
+              <MoveRightIcon />
             </button>
             <button
-              className="px-5 py-2 text-base flex items-center gap-x-2 bg-customYellow text-black font-light rounded-full transition duration-300 ease-in-out"
+              className="px-5 py-2 text-base flex items-center gap-x-2 bg-gray-400 text-white rounded-full transition"
               onClick={handleClose}
             >
-              Close <IoClose className="font-semibold" />
+              Close <IoClose />
             </button>
           </div>
         </div>
       </div>
       <Footer />
+      {viewModal && isGuest && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-4">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
+              Book Your Class
+            </h2>
+            <form onSubmit={handleBookClass} className="space-y-4">
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border border-gray-300 rounded-md"
+                placeholder="Full Name"
+              />
+              <button
+                type="submit"
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 };
