@@ -398,9 +398,12 @@ export const bookGuestClasses = async (req, res) => {
     // Save the updated class document
     await classToBook.save();
 
+    let token = generateToken(user._id);
+
     res.status(200).json({
       message: "Class booked successfully.",
       user,
+      token
     });
   } catch (error) {
     console.error("Error booking class:", error);
