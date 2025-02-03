@@ -4,8 +4,6 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import AdminHome from "./AdminHome";
-import AdminUpcoming from "./AdminUpcoming";
-import AdminPrevious from "./AdminPrevious";
 import NewAddClass from "./NewAddClass";
 import AdminView from "./AdminView";
 import AdminChangePassword from "./AdminChangePassword ";
@@ -13,7 +11,7 @@ import AdminAdd from "./AdminAdd";
 import AddSchedule from "./AddSchedule";
 import { MdSchedule } from "react-icons/md";
 import { GoHomeFill } from "react-icons/go";
-import { FaRegCalendarAlt, FaClipboardList, FaUserPlus } from "react-icons/fa";
+import { FaRegCalendarAlt, FaUserPlus } from "react-icons/fa";
 import { IoLogOut, IoMenu, IoClose } from "react-icons/io5";
 import DisplayUploadedImage from "./DisplaySchedule";
 import CustomerRelationship from "./CustomerRelationship";
@@ -32,10 +30,6 @@ const AdminDashboard = () => {
     switch (selectedTab) {
       case "Home":
         return <AdminHome onViewAllClick={setSelectedTab} />;
-      case "Upcoming Classes":
-        return <AdminUpcoming />;
-      case "Previous Classes":
-        return <AdminPrevious />;
       case "Schedule a Class":
         return <NewAddClass />;
       case "Add Admin":
@@ -86,8 +80,6 @@ const AdminDashboard = () => {
           <ul className="space-y-4 mt-10 w-full">
             {[
               { label: "Home", icon: <GoHomeFill /> },
-              { label: "Upcoming Classes", icon: <FaRegCalendarAlt /> },
-              { label: "Previous Classes", icon: <FaClipboardList /> },
               { label: "Schedule a Class", icon: <FaRegCalendarAlt /> },
               { label: "Add Admin", icon: <FaUserPlus /> },
               { label: "View Admins", icon: <FaUserPlus /> },

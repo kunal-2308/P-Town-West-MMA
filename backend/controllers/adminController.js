@@ -1,6 +1,6 @@
 import Class from "../models/classModel.js";
 import userModel from "../models/userModel.js";
-import Application from '../models/bookingModel.js'
+import Application from "../models/bookingModel.js";
 import bcrypt from "bcryptjs";
 import customerModel from "../models/customerRepresentativeModel.js";
 import adminModel from "../models/adminModel.js";
@@ -163,24 +163,43 @@ export const updateClass = async (req, res) => {
 
     // Validate `recurringDays`
     if (updates.recurringDays) {
-      const validDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-      const isValid = updates.recurringDays.every(day => validDays.includes(day));
+      const validDays = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
+      const isValid = updates.recurringDays.every((day) =>
+        validDays.includes(day)
+      );
       if (!isValid) {
-        return res.status(400).json({ message: "Invalid recurring days provided" });
+        return res
+          .status(400)
+          .json({ message: "Invalid recurring days provided" });
       }
     }
 
     // Validate `difficulty`
-    if (updates.difficulty && !["Beginner", "Intermediate", "Advanced"].includes(updates.difficulty)) {
+    if (
+      updates.difficulty &&
+      !["Beginner", "Intermediate", "Advanced"].includes(updates.difficulty)
+    ) {
       return res.status(400).json({ message: "Invalid difficulty level" });
     }
 
     // Update class details
-    const updatedClass = await Class.findByIdAndUpdate(id, updates, { new: true });
+    const updatedClass = await Class.findByIdAndUpdate(id, updates, {
+      new: true,
+    });
 
     res.status(200).json(updatedClass);
   } catch (error) {
-    res.status(500).json({ message: "Failed to update class", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to update class", error: error.message });
   }
 };
 
@@ -212,7 +231,11 @@ export const deleteClass = async (req, res) => {
     // Delete the class itself
     await Class.findByIdAndDelete(id);
 
-    return res.status(200).json({ message: "Class and related applications deleted successfully!" });
+    return res
+      .status(200)
+      .json({
+        message: "Class and related applications deleted successfully!",
+      });
   } catch (error) {
     return res
       .status(500)
@@ -276,16 +299,16 @@ export const viewParticularClass = async (req, res) => {
 
     // Check if applications are fetched correctly
     if (!applications || applications.length === 0) {
-      return res.status(404).json({ message: "No applications found for this class" });
+      return res
+        .status(404)
+        .json({ message: "No applications found for this class" });
     }
-
-    
 
     // Step 2: Group Applications by Date
     const applicantsByDate = {};
 
     applications.forEach((application) => {
-      const date = application.date;  // Using the 'date' field
+      const date = application.date; // Using the 'date' field
       const applicant = {
         _id: application.userId._id,
         name: application.userId.name,
@@ -313,7 +336,9 @@ export const viewParticularClass = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching class details:", error);
-    res.status(500).json({ message: "Failed to fetch class details", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch class details", error: error.message });
   }
 };
 
@@ -388,11 +413,11 @@ export const getRepresentativeList = async (req, res) => {
 export const getparticularRepresentative = async (req, res) => {
   try {
     let { name } = req.body; // Make sure `name` is in the body.
-    
+
     // Fetch the customer representative and their clients.
     let List = await customerModel
-      .findOne({ name }, { clients: 1 })  // Only fetching clients field
-      .populate({ path: "clients", select: "name email phoneNumber" });  // Populate clients field with specific fields of User model
+      .findOne({ name }, { clients: 1 }) // Only fetching clients field
+      .populate({ path: "clients", select: "name email phoneNumber" }); // Populate clients field with specific fields of User model
 
     if (!List) {
       return res.status(404).json({ message: "Representative not found" });
@@ -408,7 +433,6 @@ export const getparticularRepresentative = async (req, res) => {
     });
   }
 };
-
 
 export const updatePassword = async (req, res) => {
   try {

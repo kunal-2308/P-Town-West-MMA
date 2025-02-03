@@ -20,7 +20,8 @@ const Dashboard = () => {
     if (!token) {
       navigate("/guest/dashboard");
     } else {
-      setUserEmail(Cookies.get("email") || "User");
+      const mailCookie = Cookies.get("email");
+      setUserEmail(mailCookie || "User");
       fetchBookedClasses(token);
     }
   }, [navigate]);
