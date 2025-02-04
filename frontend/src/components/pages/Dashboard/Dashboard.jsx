@@ -85,33 +85,53 @@ const Dashboard = () => {
         <h2 className="text-xl text-customYellow font-semibold mb-4">
           Your Booked Classes
         </h2>
+
         {bookedClasses.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {bookedClasses.map((cls) => (
-              <div key={cls._id} className="bg-customGray p-3 rounded-lg">
-                <div className="div-content text-white flex flex-col justify-start items-start">
-                  <h3 className="text-lg font-semibold">
-                    {cls.classId?.title}
-                  </h3>
-                  <p className="text-[11px] font-light w-full text-start">
-                    {new Date(cls.date).toLocaleDateString()} -{" "}
-                    {cls.classId?.startTime} ({cls.classId?.duration} mins)
-                  </p>
-                  <p className="text-[11px] font-light w-full text-start">
-                    Description:{" "}
-                    <span className="w-24">{cls.classId?.description}</span>
-                  </p>
-                  <p className="text-[11px] font-light w-full text-start">
-                    Instructor: {cls.classId?.instructor}
-                  </p>
-                </div>
+          bookedClasses.map((cls) => (
+            <div key={cls._id} className="bg-customGray p-3 rounded-lg mb-4">
+              <div className="div-content text-white flex flex-col justify-start items-start">
+                <h3 className="text-lg font-semibold">{cls.classId?.title}</h3>
+                <p className="text-[11px] font-light w-full text-start">
+                  {new Date(cls.date).toLocaleDateString()} -{" "}
+                  {cls.classId?.startTime} ({cls.classId?.duration} mins)
+                </p>
+                <p className="text-[11px] font-light w-full text-start">
+                  Type: {cls.classId?.type}
+                </p>
+                <p className="text-[11px] font-light w-full text-start">
+                  Difficulty: {cls.classId?.difficulty}
+                </p>
+                <p className="text-[11px] font-light w-full text-start">
+                  Capacity: {cls.classId?.capacity}
+                </p>
+                <p className="text-[11px] font-light w-full text-start">
+                  Description:{" "}
+                  <span className="w-24">{cls.classId?.description}</span>
+                </p>
+                <p className="text-[11px] font-light w-full text-start">
+                  Instructor: {cls.classId?.instructor}
+                </p>
+                <p className="text-[11px] font-light w-full text-start">
+                  Recurring: {cls.classId?.isRecurring ? "Yes" : "No"}
+                </p>
+                {cls.classId?.isRecurring && (
+                  <>
+                    <p className="text-[11px] font-light w-full text-start">
+                      Recurrence Weeks: {cls.classId?.recurrenceWeeks}
+                    </p>
+                    <p className="text-[11px] font-light w-full text-start">
+                      Recurring Days: {cls.classId?.recurringDays?.join(", ")}
+                    </p>
+                  </>
+                )}
               </div>
-            ))}
-          </div>
+            </div>
+          ))
         ) : (
           <p className="text-gray-500">You have not booked any classes yet.</p>
         )}
       </div>
+
       <div className="h-16"></div>
       <Footer />
     </>

@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
 import User from "../models/userModel.js";
-import Application from '../models/bookingModel.js'
+import Application from "../models/bookingModel.js";
 // Helper function to create token
 const createToken = (userId, role) => {
   return jwt.sign({ id: userId, role }, process.env.JWT_SECRET);
@@ -28,7 +28,7 @@ export const register = async (req, res) => {
       name,
       email,
       phoneNumber,
-      CR
+      CR,
     });
 
     const token = createToken(user._id, user.role);
@@ -37,6 +37,7 @@ export const register = async (req, res) => {
     res.cookie("token", token);
     res.cookie("userName", user.name);
     res.cookie("role", user.role);
+    res.cookie("email", user.email);
 
     res.status(201).json({
       message: "User registered successfully",
@@ -65,7 +66,9 @@ export const login = async (req, res) => {
     }
 
     // Fetch the booked classes for the user by checking the Application model
-    const bookedClasses = await Application.find({ userId: user._id }).populate("classId");
+    const bookedClasses = await Application.find({ userId: user._id }).populate(
+      "classId"
+    );
 
     // Calculate the total number of booked classes
     const totalBookedClasses = bookedClasses.length;
@@ -77,6 +80,7 @@ export const login = async (req, res) => {
     res.cookie("jwt_token", token, { maxAge: 3 * 24 * 60 * 60 * 1000 }); // 3 days expiry
     res.cookie("userName", user.name, { maxAge: 3 * 24 * 60 * 60 * 1000 });
     res.cookie("role", user.role, { maxAge: 3 * 24 * 60 * 60 * 1000 });
+    res.cookie("email", user.email, { maxAge: 3 * 24 * 60 * 60 * 1000 });
 
     // Send the token, total number of booked classes, and user details back (excluding password for security)
     res.status(200).json({
@@ -85,7 +89,8 @@ export const login = async (req, res) => {
         _id: user._id,
         name: user.name,
         role: user.role,
-        totalBookedClasses,  // Include total booked classes
+        email: user.email,
+        totalBookedClasses, // Include total booked classes
         bookedClasses: bookedClasses, // Include the details of booked classes
       },
     });
@@ -98,15 +103,13 @@ export const login = async (req, res) => {
   }
 };
 
-
-
 // Admin Login
 export const adminLogin = async (req, res) => {
   const { email } = req.body;
-  console.log("AdminEMail",email)
+  console.log("AdminEMail", email);
 
   try {
-    const admin = await User.findOne({ email});
+    const admin = await User.findOne({ email });
     console.log(admin);
     if (!admin) return res.status(404).json({ message: "Admin not found" });
 
@@ -166,7 +169,7 @@ export const getUserDetails = async (req, res) => {
     res.status(200).json({
       message: "User fetched successfully",
       userDetails: {
-        ...userDetails.toObject(),  // Convert userDetails to plain object
+        ...userDetails.toObject(), // Convert userDetails to plain object
         totalBookedClasses,
         bookedClasses: applications.map((application) => application.classId), // Extract class details from the populated classId
       },
@@ -177,6 +180,3 @@ export const getUserDetails = async (req, res) => {
     });
   }
 };
-
-
-

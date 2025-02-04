@@ -95,7 +95,7 @@ function ClassDetailsGuest() {
         `${API_URL}/api/classes/guest/book/class/${classDetails._id}`,
         formData
       );
-
+      console.log(bookingResponse);
       const { token, message } = bookingResponse.data;
 
       // Show success message from API
@@ -111,7 +111,7 @@ function ClassDetailsGuest() {
 
         if (loginResponse.status === 200) {
           const { token, user } = loginResponse.data;
-
+          localStorage.setItem("email", user.email);
           Cookies.set("jwt_token", token, { secure: true });
           Cookies.set("userName", user.name, { secure: true });
           Cookies.set("email", user.email, { secure: true });
@@ -322,7 +322,7 @@ function ClassDetailsGuest() {
                 type="email"
                 name="email"
                 placeholder="Email Address"
-                value={formData.email}
+                value={formData.email || ""}
                 onChange={handleChange}
                 required
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"

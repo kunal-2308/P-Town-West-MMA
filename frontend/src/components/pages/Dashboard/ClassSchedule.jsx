@@ -86,7 +86,6 @@ function ClassSchedule() {
           });
 
           setEvents(mappedEvents);
-          console.log("Mapped events:", mappedEvents);
         } else {
           setEvents([]);
         }
