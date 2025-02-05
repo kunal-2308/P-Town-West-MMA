@@ -11,7 +11,7 @@ import ClientView from "./ViewClass";
 import { SchedulerProvider } from "../../../context/SchedulerContext";
 
 const Dashboard = () => {
-  const [userEmail, setUserEmail] = useState("");
+  const [userName, setUserName] = useState("");
   const [bookedClasses, setBookedClasses] = useState([]);
   const navigate = useNavigate();
 
@@ -20,8 +20,9 @@ const Dashboard = () => {
     if (!token) {
       navigate("/guest/dashboard");
     } else {
-      const mailCookie = Cookies.get("email");
-      setUserEmail(mailCookie || "User");
+      // const mailCookie = Cookies.get("email");
+      const userNameCookie = Cookies.get("userName");
+      setUserName(userNameCookie || "User");
       fetchBookedClasses(token);
     }
   }, [navigate]);
@@ -68,7 +69,7 @@ const Dashboard = () => {
       </div>
 
       <div className="flex justify-between items-center px-6 mt-8">
-        <h1 className="text-2xl font-semibold">Welcome, {userEmail}</h1>
+        <h1 className="text-2xl font-semibold">Welcome, {userName}</h1>
         <button
           onClick={handleLogout}
           className="bg-red-600 text-white z-10 px-4 py-2 rounded-md hover:bg-red-400 transition"
@@ -85,51 +86,44 @@ const Dashboard = () => {
         <h2 className="text-xl text-customYellow font-semibold mb-4">
           Your Booked Classes
         </h2>
-
-        {bookedClasses.length > 0 ? (
-          bookedClasses.map((cls) => (
-            <div key={cls._id} className="bg-customGray p-3 rounded-lg mb-4">
-              <div className="div-content text-white flex flex-col justify-start items-start">
-                <h3 className="text-lg font-semibold">{cls.classId?.title}</h3>
-                <p className="text-[11px] font-light w-full text-start">
-                  {new Date(cls.date).toLocaleDateString()} -{" "}
-                  {cls.classId?.startTime} ({cls.classId?.duration} mins)
-                </p>
-                <p className="text-[11px] font-light w-full text-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
+          {bookedClasses.length > 0 ? (
+            bookedClasses.map((cls) => (
+              <div
+                key={cls._id}
+                className="bg-neutral-800 p-4 rounded-lg shadow-md flex flex-col"
+              >
+                <div className="flex flex-row justify-between">
+                  <h3 className="text-lg font-semibold text-white">
+                    {cls.classId?.title}
+                  </h3>
+                  <p className="flex flex-col text-sm text-right text-gray-300">
+                    {new Date(cls.date).toLocaleDateString()}{" "}
+                    <span>
+                      {cls.classId?.startTime} ({cls.classId?.duration} mins)
+                    </span>
+                  </p>
+                </div>
+                <p className="text-xs text-gray-400 mt-2">
                   Type: {cls.classId?.type}
                 </p>
-                <p className="text-[11px] font-light w-full text-start">
+                <p className="text-xs text-gray-400">
                   Difficulty: {cls.classId?.difficulty}
                 </p>
-                <p className="text-[11px] font-light w-full text-start">
-                  Capacity: {cls.classId?.capacity}
-                </p>
-                <p className="text-[11px] font-light w-full text-start">
-                  Description:{" "}
-                  <span className="w-24">{cls.classId?.description}</span>
-                </p>
-                <p className="text-[11px] font-light w-full text-start">
+                <p className="text-xs text-gray-400">
                   Instructor: {cls.classId?.instructor}
                 </p>
-                <p className="text-[11px] font-light w-full text-start">
-                  Recurring: {cls.classId?.isRecurring ? "Yes" : "No"}
+                <p className="text-xs text-gray-400">
+                  Description: {cls.classId?.description}
                 </p>
-                {cls.classId?.isRecurring && (
-                  <>
-                    <p className="text-[11px] font-light w-full text-start">
-                      Recurrence Weeks: {cls.classId?.recurrenceWeeks}
-                    </p>
-                    <p className="text-[11px] font-light w-full text-start">
-                      Recurring Days: {cls.classId?.recurringDays?.join(", ")}
-                    </p>
-                  </>
-                )}
               </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500">You have not booked any classes yet.</p>
-        )}
+            ))
+          ) : (
+            <p className="text-gray-500 col-span-full text-center">
+              You have not booked any classes yet.
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="h-16"></div>

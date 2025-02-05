@@ -13,6 +13,7 @@ import {
   Grid,
   Checkbox,
   ListItemText,
+  Autocomplete,
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
@@ -117,7 +118,7 @@ function ClassForm({ classData }) {
       );
     }
   };
-
+  const options = ["MMA", "Boxing", "Yoga", "Dance"];
   return (
     <form onSubmit={handleSubmit}>
       <DialogTitle>{classData ? "Edit Class" : "Add New Class"}</DialogTitle>
@@ -135,25 +136,23 @@ function ClassForm({ classData }) {
               required
             />
           </Grid>
-
           {/* Type */}
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <InputLabel>Type</InputLabel>
-              <Select
+              <Autocomplete
+                freeSolo
+                options={options}
                 value={formData.type}
-                onChange={(e) =>
-                  setFormData({ ...formData, type: e.target.value })
+                onChange={(event, newValue) =>
+                  setFormData({ ...formData, type: newValue })
                 }
-              >
-                <MenuItem value="MMA">MMA</MenuItem>
-                <MenuItem value="Boxing">Boxing</MenuItem>
-                <MenuItem value="Yoga">Yoga</MenuItem>
-                <MenuItem value="Dance">Dance</MenuItem>
-              </Select>
+                onInputChange={(event, newValue) =>
+                  setFormData({ ...formData, type: newValue })
+                }
+                renderInput={(params) => <TextField {...params} label="Type" />}
+              />
             </FormControl>
           </Grid>
-
           {/* Instructor */}
           <Grid item xs={12} sm={6}>
             <TextField
@@ -166,7 +165,6 @@ function ClassForm({ classData }) {
               required
             />
           </Grid>
-
           {/* Start Time */}
           <Grid item xs={12} sm={6}>
             <TextField
@@ -181,7 +179,6 @@ function ClassForm({ classData }) {
               required
             />
           </Grid>
-
           {/* Duration */}
           <Grid item xs={12} sm={6}>
             <TextField
@@ -198,7 +195,6 @@ function ClassForm({ classData }) {
               required
             />
           </Grid>
-
           {/* Capacity */}
           <Grid item xs={12} sm={6}>
             <TextField
@@ -215,7 +211,6 @@ function ClassForm({ classData }) {
               required
             />
           </Grid>
-
           {/* Description */}
           <Grid item xs={12}>
             <TextField
@@ -229,7 +224,6 @@ function ClassForm({ classData }) {
               }
             />
           </Grid>
-
           {/* Difficulty */}
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
@@ -246,11 +240,10 @@ function ClassForm({ classData }) {
               </Select>
             </FormControl>
           </Grid>
-
           {/* Recurring Days */}
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <InputLabel>Recurring Days</InputLabel>
+              <InputLabel>Choose Days</InputLabel>
               <Select
                 multiple
                 value={formData.recurringDays}
@@ -270,7 +263,6 @@ function ClassForm({ classData }) {
               </Select>
             </FormControl>
           </Grid>
-
           {/* Is Recurring */}
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
@@ -289,7 +281,6 @@ function ClassForm({ classData }) {
               </Select>
             </FormControl>
           </Grid>
-
           {/* Recurrence Weeks */}
           {formData.isRecurring && (
             <Grid item xs={12} sm={6}>
@@ -308,7 +299,6 @@ function ClassForm({ classData }) {
               />
             </Grid>
           )}
-
           {/* Color */}
           <Grid item xs={12} sm={6}>
             <TextField

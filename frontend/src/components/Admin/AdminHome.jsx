@@ -35,6 +35,7 @@ const AdminHome = () => {
       setClasses(
         Array.isArray(response.data.classes) ? response.data.classes : []
       );
+      console.log(response.data);
     } catch {
       toast.error("Failed to fetch class details.");
     }
@@ -82,30 +83,28 @@ const AdminHome = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
         {Array.isArray(classes) && classes.length > 0 ? (
           classes.map((cls) => (
-            <>
-              <div
-                key={cls._id}
-                className="bg-neutral-700 text-white p-4 rounded-lg shadow-md"
+            <div
+              key={cls._id}
+              className="bg-neutral-700 text-white p-4 rounded-lg shadow-md"
+            >
+              <h3 className="text-xl mb-5 font-bold text-customPurple">
+                {cls.title}
+              </h3>
+              <p className="text-sm">Type: {cls.type}</p>
+              <p className="text-sm">Instructor: {cls.instructor}</p>
+              <p className="text-sm">Description: {cls.description}</p>
+              <p className="text-sm">Time: {cls.startTime}</p>
+              <p className="text-sm">
+                Recurring Days: {cls.recurringDays.join(", ")}
+              </p>
+              <p className="text-sm">Weeks: {cls.recurrenceWeeks}</p>
+              <button
+                onClick={() => fetchApplicants(cls._id)}
+                className="flex items-center mt-3 text-sm bg-customYellow text-black p-2 rounded hover:bg-customYellow/70 transition"
               >
-                <h3 className="text-xl mb-5 font-bold text-customPurple">
-                  {cls.title}
-                </h3>
-                <p className="text-sm">Type: {cls.type}</p>
-                <p className="text-sm">Instructor: {cls.instructor}</p>
-                <p className="text-sm">Description: {cls.description}</p>
-                <p className="text-sm">Time: {cls.startTime}</p>
-                <p className="text-sm">
-                  Recurring Days: {cls.recurringDays.join(", ")}
-                </p>
-                <p className="text-sm">Weeks: {cls.recurrenceWeeks}</p>
-                <button
-                  onClick={() => fetchApplicants(cls._id)}
-                  className="flex items-center mt-3 text-sm bg-customYellow text-black p-2 rounded hover:bg-customYellow/70 transition"
-                >
-                  <FaUsers className="mr-2" /> View Applicants
-                </button>
-              </div>
-            </>
+                <FaUsers className="mr-2" /> View Applicants
+              </button>
+            </div>
           ))
         ) : (
           <p className="text-gray-500">No classes available.</p>
