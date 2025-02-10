@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { API_URL } from '../../../configure';
-import { toast } from 'sonner';
-import { CSVLink } from 'react-csv';
-import Cookies from 'js-cookie';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { API_URL } from "../../../configure";
+import { toast } from "sonner";
+import { CSVLink } from "react-csv";
+import Cookies from "js-cookie";
 
 function CustomerRelationship() {
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState("");
   const [list, setList] = useState([]);
   const [selectedRepresentative, setSelectedRepresentative] = useState(null);
   const [clients, setClientsList] = useState([]);
@@ -18,7 +18,7 @@ function CustomerRelationship() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let token = Cookies.get('jwt_token');
+      let token = Cookies.get("jwt_token");
       const response = await axios.post(
         `${API_URL}/api/admin/add/customer/representative`,
         { name: userName },
@@ -30,32 +30,32 @@ function CustomerRelationship() {
       );
       if (response.status === 200) {
         toast.success(response.data.message);
-        setList((prev) => [
-          ...prev,
-          { name: userName, visibility: false },
-        ]);
-        setUserName('');
+        setList((prev) => [...prev, { name: userName, visibility: false }]);
+        setUserName("");
       }
-    } catch (error) {
-      toast.error('Failed to add representative');
+    } catch {
+      toast.error("Failed to add representative");
     }
   };
 
   const handleDelete = async (name, _id) => {
     try {
-      let token = Cookies.get('jwt_token');
-      const response = await axios.delete(`${API_URL}/api/admin/delete/representative/${_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      let token = Cookies.get("jwt_token");
+      const response = await axios.delete(
+        `${API_URL}/api/admin/delete/representative/${_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.status === 200) {
-        toast.success('Representative deleted successfully');
+        toast.success("Representative deleted successfully");
         setList((prev) => prev.filter((rep) => rep.name !== name));
       }
-    } catch (error) {
-      toast.error('Failed to delete representative');
+    } catch {
+      toast.error("Failed to delete representative");
     }
   };
 
@@ -66,7 +66,7 @@ function CustomerRelationship() {
       )
     );
     try {
-      let token = Cookies.get('jwt_token');
+      let token = Cookies.get("jwt_token");
       const response = await axios.post(
         `${API_URL}/api/admin/client/list`,
         { name: ele.name },
@@ -78,23 +78,24 @@ function CustomerRelationship() {
       );
       console.log(response.data);
       if (response.status === 200) {
-        const newClients = response.data.array.map((client) => ({
+        const newClients = response.data.clients.map((client) => ({
           name: client.name,
           email: client.email,
           phoneNumber: client.phoneNumber,
         }));
+
         setClientsList(newClients);
         setSelectedRepresentative(ele);
       }
-    } catch (error) {
-      toast.error('Failed to fetch client list');
+    } catch {
+      toast.error("Failed to fetch client list");
     }
   };
 
   useEffect(() => {
     const fetchRepresentatives = async () => {
       try {
-        let token = Cookies.get('jwt_token');
+        let token = Cookies.get("jwt_token");
         const response = await axios.get(
           `${API_URL}/api/admin/list/customer/representative`,
           {
@@ -108,8 +109,8 @@ function CustomerRelationship() {
           visibility: false,
         }));
         setList(fetchedList);
-      } catch (error) {
-        toast.error('Error loading representatives');
+      } catch {
+        toast.error("Error loading representatives");
       }
     };
 
@@ -120,24 +121,36 @@ function CustomerRelationship() {
     <>
       {selectedRepresentative && (
         <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-40">
-          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-lg sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-lg sm:max-w-2xl max-h-[70vh] overflow-y-auto">
             <h2 className="text-lg font-semibold mb-4 text-center">
               Clients of {selectedRepresentative.name}
             </h2>
             <table className="w-full border-collapse border border-gray-300 text-left shadow-md">
               <thead className="bg-gray-200 text-gray-600">
                 <tr>
-                  <th className="border border-gray-300 px-2 sm:px-4 py-2">Client Name</th>
-                  <th className="border border-gray-300 px-2 sm:px-4 py-2">Email</th>
-                  <th className="border border-gray-300 px-2 sm:px-4 py-2">Phone Number</th>
+                  <th className="border border-gray-300 px-2 sm:px-4 py-2">
+                    Client Name
+                  </th>
+                  <th className="border border-gray-300 px-2 sm:px-4 py-2">
+                    Email
+                  </th>
+                  <th className="border border-gray-300 px-2 sm:px-4 py-2">
+                    Phone Number
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {clients.map((client, index) => (
                   <tr key={index}>
-                    <td className="border border-gray-300 px-2 sm:px-4 py-2">{client.name}</td>
-                    <td className="border border-gray-300 px-2 sm:px-4 py-2">{client.email}</td>
-                    <td className="border border-gray-300 px-2 sm:px-4 py-2">{client.phoneNumber}</td>
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2">
+                      {client.name}
+                    </td>
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2">
+                      {client.email}
+                    </td>
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2">
+                      {client.phoneNumber}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -152,9 +165,9 @@ function CustomerRelationship() {
               <CSVLink
                 data={clients}
                 headers={[
-                  { label: 'Name', key: 'name' },
-                  { label: 'Email', key: 'email' },
-                  { label: 'Phone Number', key: 'phoneNumber' },
+                  { label: "Name", key: "name" },
+                  { label: "Email", key: "email" },
+                  { label: "Phone Number", key: "phoneNumber" },
                 ]}
                 filename={`clients_of_${selectedRepresentative.name}.csv`}
                 className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-full"
@@ -171,7 +184,10 @@ function CustomerRelationship() {
           Customer Representatives
         </h1>
 
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-md">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-md"
+        >
           <input
             type="text"
             name="name"
@@ -195,15 +211,23 @@ function CustomerRelationship() {
             <table className="w-full border-collapse border border-gray-300 text-left shadow-md">
               <thead className="bg-gray-200 text-gray-600">
                 <tr>
-                  <th className="border border-gray-300 px-2 sm:px-4 py-2">Name</th>
-                  <th className="border border-gray-300 px-2 sm:px-4 py-2">View Clients</th>
-                  <th className="border border-gray-300 px-2 sm:px-4 py-2">Actions</th>
+                  <th className="border border-gray-300 px-2 sm:px-4 py-2">
+                    Name
+                  </th>
+                  <th className="border border-gray-300 px-2 sm:px-4 py-2">
+                    View Clients
+                  </th>
+                  <th className="border border-gray-300 px-2 sm:px-4 py-2">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {list.map((ele, index) => (
                   <tr key={index} className="hover:bg-gray-100">
-                    <td className="border border-gray-300 px-2 sm:px-4 py-2">{ele.name}</td>
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2">
+                      {ele.name}
+                    </td>
                     <td className="border border-gray-300 px-2 sm:px-4 py-2 text-center">
                       <button
                         className="bg-red-500 text-white px-4 py-1 rounded-full hover:bg-red-600 transition"
@@ -225,7 +249,9 @@ function CustomerRelationship() {
               </tbody>
             </table>
           ) : (
-            <p className="text-gray-500 text-center mt-4">No representatives found.</p>
+            <p className="text-gray-500 text-center mt-4">
+              No representatives found.
+            </p>
           )}
         </div>
       </div>
