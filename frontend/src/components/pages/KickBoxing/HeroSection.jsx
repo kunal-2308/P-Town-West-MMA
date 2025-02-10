@@ -12,7 +12,7 @@ function HeroSection() {
           absolute top-0 left-0 w-full h-full
           bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url('/images/Home/Hero.png')`,
+            backgroundImage: `url('/images/Kickboxing/Kick_hero.png')`,
           }}
         ></div>
 
