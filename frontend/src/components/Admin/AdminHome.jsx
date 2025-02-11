@@ -12,6 +12,8 @@ const AdminHome = () => {
   const [filterDate, setFilterDate] = useState("");
   const [availableDates, setAvailableDates] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [selectedClass, setSelectedClass] = useState(null);
 
   useEffect(() => {
     fetchClasses();
@@ -70,6 +72,36 @@ const AdminHome = () => {
     }
   };
 
+  const openEditModal = (cls) => {
+    setSelectedClass(cls);
+    setEditModal(true);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      await axios.put(
+        `${API_URL}/api/admin/update/${selectedClass._id}`,
+        selectedClass
+      );
+      toast.success("Class updated successfully.");
+      setEditModal(false);
+      fetchClasses();
+    } catch {
+      toast.error("Failed to update class.");
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`${API_URL}/api/admin/delete/${selectedClass._id}`);
+      toast.success("Class deleted successfully.");
+      setEditModal(false);
+      fetchClasses();
+    } catch {
+      toast.error("Failed to delete class.");
+    }
+  };
+
   const filteredApplicants = filterDate
     ? applicants.filter((app) => app.date === filterDate)
     : applicants;
@@ -98,12 +130,20 @@ const AdminHome = () => {
                 Recurring Days: {cls.recurringDays.join(", ")}
               </p>
               <p className="text-sm">Weeks: {cls.recurrenceWeeks}</p>
-              <button
-                onClick={() => fetchApplicants(cls._id)}
-                className="flex items-center mt-3 text-sm bg-customYellow text-black p-2 rounded hover:bg-customYellow/70 transition"
-              >
-                <FaUsers className="mr-2" /> View Applicants
-              </button>
+              <div className="flex flex-row gap-2">
+                <button
+                  onClick={() => fetchApplicants(cls._id)}
+                  className="flex items-center mt-3 text-sm bg-customYellow text-black p-2 rounded hover:bg-customYellow/70 transition"
+                >
+                  <FaUsers className="mr-2" /> View Applicants
+                </button>
+                <button
+                  onClick={() => openEditModal(cls)}
+                  className="flex items-center mt-3 text-sm bg-customYellow text-black p-2 rounded hover:bg-customYellow/70 transition"
+                >
+                  Edit Class
+                </button>
+              </div>
             </div>
           ))
         ) : (
@@ -144,6 +184,184 @@ const AdminHome = () => {
               ) : (
                 <p className="text-gray-500">No applicants found.</p>
               )}
+            </div>
+          </div>
+        </Modal>
+      )}
+      {editModal && selectedClass && (
+        <Modal title="Edit Class" onClose={() => setEditModal(false)}>
+          <div className="bg-white p-6 rounded-lg w-full h-[60vh] overflow-y-auto">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Title
+            </label>
+            <input
+              type="text"
+              value={selectedClass.title}
+              onChange={(e) =>
+                setSelectedClass({ ...selectedClass, title: e.target.value })
+              }
+              className="w-full p-2 border border-gray-300 rounded-md mb-4"
+            />
+
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Type
+            </label>
+            <input
+              type="text"
+              value={selectedClass.type}
+              onChange={(e) =>
+                setSelectedClass({ ...selectedClass, type: e.target.value })
+              }
+              className="w-full p-2 border border-gray-300 rounded-md mb-4"
+            />
+
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Instructor
+            </label>
+            <input
+              type="text"
+              value={selectedClass.instructor}
+              onChange={(e) =>
+                setSelectedClass({
+                  ...selectedClass,
+                  instructor: e.target.value,
+                })
+              }
+              className="w-full p-2 border border-gray-300 rounded-md mb-4"
+            />
+
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Start Time
+            </label>
+            <input
+              type="time"
+              value={selectedClass.startTime}
+              onChange={(e) =>
+                setSelectedClass({
+                  ...selectedClass,
+                  startTime: e.target.value,
+                })
+              }
+              className="w-full p-2 border border-gray-300 rounded-md mb-4"
+            />
+
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Duration (minutes)
+            </label>
+            <input
+              type="number"
+              value={selectedClass.duration}
+              onChange={(e) =>
+                setSelectedClass({
+                  ...selectedClass,
+                  duration: Number(e.target.value),
+                })
+              }
+              className="w-full p-2 border border-gray-300 rounded-md mb-4"
+            />
+
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Capacity
+            </label>
+            <input
+              type="number"
+              value={selectedClass.capacity}
+              onChange={(e) =>
+                setSelectedClass({
+                  ...selectedClass,
+                  capacity: Number(e.target.value),
+                })
+              }
+              className="w-full p-2 border border-gray-300 rounded-md mb-4"
+            />
+
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Description
+            </label>
+            <textarea
+              value={selectedClass.description}
+              onChange={(e) =>
+                setSelectedClass({
+                  ...selectedClass,
+                  description: e.target.value,
+                })
+              }
+              className="w-full p-2 border border-gray-300 rounded-md mb-4"
+            />
+
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Difficulty
+            </label>
+            <select
+              value={selectedClass.difficulty}
+              onChange={(e) =>
+                setSelectedClass({
+                  ...selectedClass,
+                  difficulty: e.target.value,
+                })
+              }
+              className="w-full p-2 border border-gray-300 rounded-md mb-4"
+            >
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+            </select>
+
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Recurring Days
+            </label>
+            <input
+              type="text"
+              value={selectedClass.recurringDays.join(", ")}
+              onChange={(e) =>
+                setSelectedClass({
+                  ...selectedClass,
+                  recurringDays: e.target.value.split(", "),
+                })
+              }
+              className="w-full p-2 border border-gray-300 rounded-md mb-4"
+            />
+
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Recurring Weeks
+            </label>
+            <input
+              type="number"
+              value={selectedClass.recurrenceWeeks}
+              onChange={(e) =>
+                setSelectedClass({
+                  ...selectedClass,
+                  recurrenceWeeks: Number(e.target.value),
+                })
+              }
+              className="w-full p-2 border border-gray-300 rounded-md mb-4"
+            />
+
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Color
+            </label>
+            <input
+              type="color"
+              value={selectedClass.color}
+              onChange={(e) =>
+                setSelectedClass({ ...selectedClass, color: e.target.value })
+              }
+              className="w-full p-2 border border-gray-300 rounded-md mb-4"
+            />
+
+            <div className="flex justify-between">
+              <button
+                onClick={handleUpdate}
+                className="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition"
+              >
+                Update Class
+              </button>
+              <button
+                onClick={handleDelete}
+                className="bg-red-500 text-white p-2 rounded hover:bg-red-600 transition"
+              >
+                Delete
+              </button>
             </div>
           </div>
         </Modal>
