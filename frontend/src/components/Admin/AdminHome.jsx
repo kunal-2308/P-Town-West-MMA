@@ -77,11 +77,28 @@ const AdminHome = () => {
     setEditModal(true);
   };
 
+  useEffect(() => {
+    if (!selectedClass) {
+      setEditModal(false);
+    }
+  }, [selectedClass]);
+
   const handleUpdate = async () => {
     try {
+      const token = Cookies.get("jwt_token");
+      if (!token) {
+        toast.error("User not authenticated.");
+        return;
+      }
       await axios.put(
         `${API_URL}/api/admin/update/${selectedClass._id}`,
-        selectedClass
+        selectedClass,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            withCredentials: true,
+          },
+        }
       );
       toast.success("Class updated successfully.");
       setEditModal(false);
@@ -93,7 +110,17 @@ const AdminHome = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`${API_URL}/api/admin/delete/${selectedClass._id}`);
+      const token = Cookies.get("jwt_token");
+      if (!token) {
+        toast.error("User not authenticated.");
+        return;
+      }
+      await axios.delete(`${API_URL}/api/admin/delete/${selectedClass._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          withCredentials: true,
+        },
+      });
       toast.success("Class deleted successfully.");
       setEditModal(false);
       fetchClasses();
@@ -189,7 +216,10 @@ const AdminHome = () => {
         </Modal>
       )}
       {editModal && selectedClass && (
-        <Modal title="Edit Class" onClose={() => setEditModal(false)}>
+        <Modal
+          title={selectedClass?.title || "Edit Class"}
+          onClose={() => setEditModal(false)}
+        >
           <div className="bg-white p-6 rounded-lg w-full h-[60vh] overflow-y-auto">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Title
