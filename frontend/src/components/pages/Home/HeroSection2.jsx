@@ -35,12 +35,13 @@ function HeroSection2() {
           </Button>
         </div>
         <div className="block h-auto md:hidden mt-1 lg:mt-5 justify-start items-start md:justify-end md:items-end sm:pt-24">
-          <Button className="bg-customYellow text-black rounded-full flex items-center px-6 sm:px-8 md:px-5 lg:px-10 hover:bg-customYellow">
-            <Link to="/guest/dashboard" className="flex items-center font-semibold text-sm sm:text-base lg:text-base">
+          <Link to='/contact'><Button className="bg-customYellow text-black rounded-full flex items-center px-6 sm:px-8 md:px-5 lg:px-10 hover:bg-customYellow">
+            <span className="flex items-center font-semibold text-sm sm:text-base lg:text-base">
               Book a free trial
               <MoveRight className="ml-2" />
-            </Link>
+            </span>
           </Button>
+          </Link>
         </div>
       </div>
     </div>

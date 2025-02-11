@@ -28,13 +28,13 @@ function Navbar() {
       <nav className="fixed top-0 z-[1000] bg-white w-screen shadow-lg">
         <div className="lg:h-[100px] h-auto flex justify-between items-center px-6 lg:px-20 w-full md:mt-0">
           <div className="flex items-center">
-            <div className="logo sm:mt-10 md:mt-0 mb-2">
+            <Link to='/'><div className="logo sm:mt-10 md:mt-0 mb-2">
               <img
                 src="/images/logo/mainLogo.png"
                 alt="logo"
                 className="h-16 lg:h-20"
               />
-            </div>
+            </div></Link>
           </div>
 
           <div className="hidden md:block ml-6 lg:ml-10">

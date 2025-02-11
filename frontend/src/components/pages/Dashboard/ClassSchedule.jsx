@@ -101,7 +101,7 @@ function ClassSchedule() {
   return (
     <Box
       sx={{ height: "calc(100vh - 200px)" }}
-      className="m-10 sm:mt-20 sm:text-sm text-xs"
+      className="sm:mt-5 sm:text-sm text-xs"
     >
       <Paper elevation={3} sx={{ p: 2, height: "100%" }}>
         <FullCalendar

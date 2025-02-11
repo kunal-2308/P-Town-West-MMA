@@ -51,9 +51,9 @@ function HeroSection1() {
                     <span className="text-white text-sm sm:text-base md:text-sm font-thin">
                         Unlock the Art of Eight Limbs with Muay Thai Training. Discover the power, precision, and discipline of Muay Thai, the "Art of Eight Limbs," with our specialized training program. Our program is tailored to help you master striking, clinching, and defensive strategies under the expert guidance of our seasoned coaches.
                     </span>
-                    <Button className="bg-customYellow text-black w-[150px] flex justify-center items-center gap-x-3 rounded-full mt-5 h-[30px] hover:bg-customYellow hover:cursor-pointer">
+                    <Link to='/contact'><Button className="bg-customYellow text-black w-[150px] flex justify-center items-center gap-x-3 rounded-full mt-5 h-[30px] hover:bg-customYellow hover:cursor-pointer">
                         Contact Us <MoveRight />
-                    </Button>
+                    </Button></Link>
                 </div>
             </div>
 

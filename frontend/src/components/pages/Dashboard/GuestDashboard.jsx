@@ -30,7 +30,7 @@ function GuestDashboard() {
       {/* Hero Section */}
       <div className="relative mt-10 mb-20 overflow-hidden">
         <img src="/images/Training/3.png" alt="Training" className="w-screen" />
-        <div className="absolute inset-y-1/2 left-0 transform -translate-y-1/2 text-customYellow text-2xl md:text-5xl font-medium sm:pl-40 pl-10">
+        <div className="absolute inset-y-1/2 left-0 transform -translate-y-1/2 pb-5 text-customYellow text-2xl md:text-5xl font-medium sm:pl-40 pl-10">
           Welcome to P-Town West MMA
         </div>
       </div>
@@ -40,7 +40,7 @@ function GuestDashboard() {
         <ClientView />
       </SchedulerProvider>
 
-      <div className="flex justify-center mb-8">
+      <div className="flex justify-center mb-8 mt-6">
         <Button
           className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800"
           onClick={handleLogin}

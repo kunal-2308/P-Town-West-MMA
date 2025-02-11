@@ -20,7 +20,7 @@ function HeroSection() {
         <div className="w-screen mt-40 relative z-10 flex flex-col items-center justify-center">
           {/* Boxing/Kickboxing Text */}
           <div className="div1 mt-36 lg:mt-28 xl:mt-[200px]">
-            <span className=" font-semibold md:font-extrabold text-white text-2xl md:text-7xl">
+            <span className="sm:hidden md:block font-semibold md:font-extrabold text-white text-2xl md:text-7xl">
               BOXING / KICK BOXING
             </span>
           </div>
