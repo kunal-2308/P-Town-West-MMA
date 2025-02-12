@@ -79,7 +79,9 @@ const Dashboard = () => {
       </div>
 
       <div className="flex justify-between items-center px-6 mt-8">
-        <h1 className="text-2xl font-semibold">Welcome, {userName}</h1>
+        <h1 className="text-2xl font-semibold">
+          Welcome, {userName && userName !== "undefined" ? userName : "User"}
+        </h1>
         <button
           onClick={handleLogout}
           className="bg-red-600 text-white z-10 px-4 py-2 rounded-md hover:bg-red-400 transition"

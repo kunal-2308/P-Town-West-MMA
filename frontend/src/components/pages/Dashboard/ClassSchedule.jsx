@@ -110,7 +110,7 @@ function ClassSchedule() {
           headerToolbar={{
             left: "prev,next today",
             center: "title",
-            right: "timeGridWeek",
+            right: "",
           }}
           events={events}
           eventClick={(info) => {
