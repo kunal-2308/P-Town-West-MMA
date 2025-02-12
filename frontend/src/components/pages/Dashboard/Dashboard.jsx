@@ -20,9 +20,8 @@ const Dashboard = () => {
     if (!token) {
       navigate("/guest/dashboard");
     } else {
-      // const mailCookie = Cookies.get("email");
-      const userNameCookie = Cookies.get("userName");
-      setUserName(userNameCookie || "User");
+      const userName = Cookies.get("userName");
+      setUserName(userName || "User");
       fetchBookedClasses(token);
     }
   }, [navigate]);
@@ -46,6 +45,17 @@ const Dashboard = () => {
     localStorage.clear();
     navigate("/login");
   };
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const upcomingClasses = bookedClasses.filter(
+    (cls) => new Date(cls.date).toISOString().split("T")[0] >= today
+  );
+
+  const previousClasses = bookedClasses.filter(
+    (cls) => new Date(cls.date).toISOString().split("T")[0] < today
+  );
+
   return (
     <>
       <Helmet>
@@ -87,8 +97,8 @@ const Dashboard = () => {
           Your Booked Classes
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
-          {bookedClasses.length > 0 ? (
-            bookedClasses.map((cls) => (
+          {upcomingClasses.length > 0 ? (
+            upcomingClasses.map((cls) => (
               <div
                 key={cls._id}
                 className="bg-neutral-800 p-4 rounded-lg shadow-md flex flex-col"
@@ -120,7 +130,51 @@ const Dashboard = () => {
             ))
           ) : (
             <p className="text-gray-500 col-span-full text-center">
-              You have not booked any classes yet.
+              You have not booked any upcoming classes.
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto mt-12 p-6 bg-customDark rounded-lg">
+        <h2 className="text-xl text-customYellow font-semibold mb-4">
+          Your Previous Classes
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
+          {previousClasses.length > 0 ? (
+            previousClasses.map((cls) => (
+              <div
+                key={cls._id}
+                className="bg-neutral-800 p-4 rounded-lg shadow-md flex flex-col"
+              >
+                <div className="flex flex-row justify-between">
+                  <h3 className="text-lg font-semibold text-white">
+                    {cls.classId?.title}
+                  </h3>
+                  <p className="flex flex-col text-sm text-right text-gray-300">
+                    {new Date(cls.date).toLocaleDateString()}{" "}
+                    <span>
+                      {cls.classId?.startTime} ({cls.classId?.duration} mins)
+                    </span>
+                  </p>
+                </div>
+                <p className="text-xs text-gray-400 mt-2">
+                  Type: {cls.classId?.type}
+                </p>
+                <p className="text-xs text-gray-400">
+                  Difficulty: {cls.classId?.difficulty}
+                </p>
+                <p className="text-xs text-gray-400">
+                  Instructor: {cls.classId?.instructor}
+                </p>
+                <p className="text-xs text-gray-400">
+                  Description: {cls.classId?.description}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500 col-span-full text-center">
+              No previous classes.
             </p>
           )}
         </div>
