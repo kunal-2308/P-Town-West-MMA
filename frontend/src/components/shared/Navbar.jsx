@@ -64,7 +64,7 @@ function Navbar() {
                     }`}
                 >
                   <Link to="/jitsu"><li className="px-4 py-2 text-sm hover:bg-gray-200">
-                    Brazilian Jitsu
+                    Brazilian Ju-Jitsu
                   </li></Link>
                   <Link to="/muay-thai"><li className="px-4 py-2 text-sm hover:bg-gray-200">
                     Muay Thai

@@ -63,6 +63,7 @@ const AdminHome = () => {
       );
 
       setApplicants(flattenedApplicants);
+      console.log(applicants);
       setAvailableDates(Object.keys(applicantsData));
       setFilterDate("");
       setShowModal(true);
@@ -204,6 +205,7 @@ const AdminHome = () => {
                     <li key={`${app._id}-${app.date}`} className="p-3 border-b">
                       <p className="text-sm font-semibold">{app.name}</p>
                       <p className="text-xs">{app.email}</p>
+                      <p className="text-xs">{app.phoneNumber}</p>
                       <p className="text-xs">Date: {app.date}</p>
                     </li>
                   ))}

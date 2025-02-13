@@ -42,7 +42,7 @@ function Reviews() {
     };
 
     return (
-        <div className="div-main-container  w-screen bg-white p-6 sm:p-10 md:p-20">
+        <div className="div-main-container w-screen bg-white p-6 sm:p-10 md:p-20">
             {/* Title Section */}
             <div className="div-1 flex md:hidden justify-center items-center">
                 <span className="text-black text-4xl md:text-4xl font-semibold text-center">WHAT <br />THEY SAY</span>
@@ -51,10 +51,14 @@ function Reviews() {
                 <div className="mr-3">
                     <span className="text-gray-400 text-xl sm:text-2xl md:text-3xl font-semibold">////</span>
                 </div>
-                <div className='pt-1'>
+                <div className='pt-1 flex justify-start items-center gap-x-5 '>
                     <span className="text-black text-4xl md:text-4xl font-semibold text-center">
                         WHAT THEY SAY
                     </span>
+                    <div className="div-2 flex flex-row-reverse justify-start items-center">
+                    <img src="https://static.vecteezy.com/system/resources/previews/013/948/549/non_2x/google-logo-on-transparent-white-background-free-vector.jpg" alt="" className='w-8 pt-2'/>
+                    <span className='pt-2 text-xs font-semibold text-neutral-500'>Trusted by</span>
+                    </div>
                 </div>
             </div>
 

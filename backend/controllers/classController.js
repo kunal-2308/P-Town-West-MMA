@@ -262,6 +262,7 @@ export const getListOfApplicants = async (req, res) => {
       applications: applicant.bookedClasses.map((bookedClass) => ({
         classId: bookedClass._id,
         className: bookedClass.name,
+        
         classDate: bookedClass.date,
       })),
     }));
