@@ -34,7 +34,7 @@ function InfoSection() {
             <div className="div-2-2-content bg-black flex flex-col w-full max-w-[360px] sm:max-w-[440px] h-auto md:h-[260px] rounded-lg p-4 md:p-6 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-105">
               <span className="text-white font-semibold text-lg sm:text-xl md:text-2xl">
                 Top Tier Coaches {"–"} One of the Five Gyms in India with a
-                Black BJJ Coach
+                Black Belt BJJ Coach
               </span>
               <span className="font-thin text-xs sm:text-sm md:text-sm text-white mt-6">
                 One of the five gyms in India with a black BJJ coach. Our
