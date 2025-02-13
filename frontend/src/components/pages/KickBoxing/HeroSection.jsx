@@ -73,7 +73,7 @@ function HeroSection() {
             Master Kickboxing with Expert Training
           </span>
         </div>
-        <div className="div-b flex justify-start items-start mt-3 pl-4  w-screen pr-10">
+        <div className="div-b flex justify-start items-start mt-3 pl-4  w-full pr-10">
           <span className=" text-customYellow text-3xl md:text-4xl lg:text-5xl font-medium">
             Kickboxing / Boxing <br />
             Training Program in Pune, Baner

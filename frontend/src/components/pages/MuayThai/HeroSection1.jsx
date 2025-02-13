@@ -67,7 +67,7 @@ function HeroSection1() {
                         Master Muay Thai with Expert Training
                     </span>
                 </div>
-                <div className="div-b flex flex-col justify-start items-start mt-3 pl-4  w-screen pr-10">
+                <div className="div-b flex flex-col justify-start items-start mt-3 pl-4  w-max">
                     <span className=" text-customYellow text-3xl md:text-4xl lg:text-5xl font-medium">
                     Muay Thai GI Training
                     </span>

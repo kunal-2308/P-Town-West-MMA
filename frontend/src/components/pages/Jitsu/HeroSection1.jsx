@@ -35,7 +35,7 @@ function HeroSection1() {
               Master Jiu-Jitsu with Expert Training
             </span>
           </div>
-          <div className="div-b flex justify-start items-start mt-4 pl-4 sm:pl-8 md:pl-12 flex-col gap-y-2">
+          <div className="div-b w-full flex justify-start items-start mt-4 pl-4 sm:pl-8 md:pl-12 flex-col gap-y-2">
             <span className="text-customYellow text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium">
               Jiu-Jitsu GI Training
             </span>
@@ -70,7 +70,7 @@ function HeroSection1() {
           Master Jiu-Jitsu with Expert Training
           </span>
         </div>
-        <div className="div-b flex flex-col justify-start items-start mt-3 pl-4  w-screen pr-10">
+        <div className="div-b flex flex-col justify-start items-start mt-3 pl-4  w-full pr-10">
           <span className=" text-customYellow text-3xl md:text-4xl lg:text-5xl font-medium">
           Jiu-Jitsu GI Training
           </span>
