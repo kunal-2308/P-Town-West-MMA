@@ -12,12 +12,12 @@ const userSchema = new mongoose.Schema(
     },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     favorites: [{ type: String }],
-    // bookedClasses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Class" }], 
+    // bookedClasses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Class" }],
     CR: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'customerModel',
-      required: true
-    }
+      ref: "customerModel",
+      default: null,
+    },
   },
   {
     timestamps: true,

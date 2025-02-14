@@ -66,7 +66,7 @@ const Login = () => {
 
       if (response.ok) {
         Cookies.set("jwt_token", data.token, { secure: true });
-        Cookies.set("userName", data.name, { secure: true });
+        Cookies.set("userName", data.user.name, { secure: true });
         Cookies.set("email", formData.email, { secure: true });
         toast.success("Login successful!");
 

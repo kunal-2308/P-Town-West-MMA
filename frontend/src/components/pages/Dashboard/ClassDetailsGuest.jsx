@@ -77,7 +77,12 @@ function ClassDetailsGuest() {
     }
   };
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: name === "CR" && value.trim() === "" ? "N/A" : value,
+    });
   };
 
   const onSubmit = async (e) => {
@@ -89,12 +94,18 @@ function ClassDetailsGuest() {
       return;
     }
 
+    const submissionData = {
+      ...formData,
+      CR: formData.CR || "N/A",
+    };
+
     try {
       // Attempt to book the class
       const bookingResponse = await axios.post(
         `${API_URL}/api/classes/guest/book/class/${classDetails._id}`,
-        formData
+        submissionData
       );
+      console.log(submissionData);
       console.log(bookingResponse);
       const { token, message } = bookingResponse.data;
 
@@ -347,10 +358,11 @@ function ClassDetailsGuest() {
                   id="CR"
                   name="CR"
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none bg-white"
-                  value={formData.CR}
+                  value={formData.CR || "N/A"}
                   onChange={handleChange}
                 >
                   <option value="">-- Choose your representative --</option>
+                  <option value="N/A">No Representative (N/A)</option>
                   {representatives.map((rep) => (
                     <option key={rep.id} value={rep.id}>
                       {rep.name}

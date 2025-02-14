@@ -262,7 +262,7 @@ export const getListOfApplicants = async (req, res) => {
       applications: applicant.bookedClasses.map((bookedClass) => ({
         classId: bookedClass._id,
         className: bookedClass.name,
-        
+
         classDate: bookedClass.date,
       })),
     }));
@@ -310,21 +310,26 @@ export const bookGuestClasses = async (req, res) => {
   console.log(req.body);
 
   const { classId } = req.params;
-  const { name, email, phoneNumber, CR, selectedDate } = req.body;
+  let { name, email, phoneNumber, CR, selectedDate } = req.body;
 
   try {
-    // Ensure all required fields are present
-    if (!name || !email || !phoneNumber || !CR || !selectedDate) {
-      return res.status(400).json({ message: "All fields are required." });
+    // Ensure all required fields except CR are present
+    if (!name || !email || !phoneNumber || !selectedDate) {
+      return res
+        .status(400)
+        .json({ message: "All fields except CR are required." });
     }
 
     console.log("This is CR", CR);
-    // Find the customer representative
-    const customer = await Customer.findById(CR);
-    if (!customer) {
-      return res
-        .status(400)
-        .json({ message: "Customer Representative not found." });
+
+    let customer = null; // Default to null if no representative is provided
+    if (CR && CR !== "N/A") {
+      customer = await Customer.findById(CR);
+      if (!customer) {
+        return res
+          .status(400)
+          .json({ message: "Customer Representative not found." });
+      }
     }
 
     // ✅ Fix: Use a different variable name (formattedDate) instead of redeclaring selectedDate
@@ -352,17 +357,19 @@ export const bookGuestClasses = async (req, res) => {
         name,
         email,
         phoneNumber,
-        CR: customer._id, // Store Customer Representative ID
+        CR: CR === "N/A" ? null : customer?._id, // Store CR only if available
       });
       await user.save();
 
       // Add this new user to the customer representative's client list
-      customer.clients.push(user._id);
-      await customer.save();
+      if (customer) {
+        customer.clients.push(user._id);
+        await customer.save();
+      }
     }
 
     // Fetch the class details
-    const classToBook = await Class.findOne({ _id: classId }); // Fix query: Use _id instead of id
+    const classToBook = await Class.findOne({ _id: classId });
     if (!classToBook) {
       return res.status(404).json({ message: "Class not found." });
     }
@@ -386,7 +393,7 @@ export const bookGuestClasses = async (req, res) => {
     const newApplication = new Application({
       userId: user._id,
       classId: classToBook._id,
-      date: formattedDate, // Use formattedDate
+      date: formattedDate,
     });
     await newApplication.save();
 
@@ -404,7 +411,7 @@ export const bookGuestClasses = async (req, res) => {
     res.status(200).json({
       message: "Class booked successfully.",
       user,
-      token
+      token,
     });
   } catch (error) {
     console.error("Error booking class:", error);
