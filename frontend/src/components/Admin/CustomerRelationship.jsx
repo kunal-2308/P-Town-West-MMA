@@ -53,6 +53,8 @@ function CustomerRelationship() {
       if (response.status === 200) {
         toast.success("Representative deleted successfully");
         setList((prev) => prev.filter((rep) => rep.name !== name));
+      }else if(response.status === 205){
+        toast.error("Cannot Delete No Customer Representative!");
       }
     } catch {
       toast.error("Failed to delete representative");

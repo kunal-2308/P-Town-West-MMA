@@ -369,7 +369,7 @@ function ClassDetailsGuest() {
                   value={formData.CR}
                   onChange={handleChange}
                 >
-                  <option value="N/A">No Representative (N/A)</option>
+                  <option>---- SELECT REPRESENTATIVE ---</option>
                   {representatives.map((rep) => (
                     <option key={rep.id} value={rep.id}>
                       {rep.name}

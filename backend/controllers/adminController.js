@@ -6,6 +6,7 @@ import customerModel from "../models/customerRepresentativeModel.js";
 import adminModel from "../models/adminModel.js";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
+import { set } from "mongoose";
 // Admin: Add a class
 
 const createToken = (userId, role) => {
@@ -462,16 +463,28 @@ export const deleteRepresentative = async (req, res) => {
   try {
     let id = req.params.id;
     let response = await customerModel.findById(id);
-    if (response.name == "No Customer representative") {
-      return res.status(201).json({ message: "Cannot delete this representative" });
-    } else {
-      let clientsList = response.clients;
-      clientsList.forEach((ele) => {
-        
-      })
-    }
 
+    if (response.name === "No Customer representative") {
+      return res.status(205).json({ message: "Cannot delete this representative" });
+    } else {
+      let { _id } = await customerModel.findOne({ name: "No Customer representative" }, { _id: 1 });
+
+      let clientsList = response.clients;
+
+      // Push all clients to "No Customer representative"
+      let updatedCr = await customerModel.findByIdAndUpdate(
+        _id,
+        { $push: { clients: { $each: clientsList } } },
+        { new: true }
+      );
+
+      // Delete the original representative
+      await customerModel.findByIdAndDelete(id);
+
+      return res.status(200).json({ message: "Representative deleted successfully", updatedCr });
+    }
   } catch (error) {
-    return res.status(400).json({ error: "occured" });
+    return res.status(400).json({ error: "An error occurred" });
   }
 };
+
