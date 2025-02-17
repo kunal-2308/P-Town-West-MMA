@@ -37,7 +37,7 @@ function InfoSection() {
                 Black Belt BJJ Coach
               </span>
               <span className="font-thin text-xs sm:text-sm md:text-sm text-white mt-6">
-                One of the five gyms in India with a black BJJ coach. Our
+                One of the five gyms in India with a black Belt BJJ coach. Our
                 experienced coach is dedicated to helping you achieve your
                 fitness goals and improve your BJJ skills. Join our community
                 today and take your training to the next level!

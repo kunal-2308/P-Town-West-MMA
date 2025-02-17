@@ -461,17 +461,16 @@ export const updatePassword = async (req, res) => {
 export const deleteRepresentative = async (req, res) => {
   try {
     let id = req.params.id;
-
-    let response = await customerModel.findByIdAndDelete(id);
-    if (response) {
-      return res.status(200).json({
-        message: "Representative deleted successfully",
-      });
+    let response = await customerModel.findById(id);
+    if (response.name == "No Customer representative") {
+      return res.status(201).json({ message: "Cannot delete this representative" });
     } else {
-      return res.status(400).json({
-        message: "Error occured while deleting a respresentative",
-      });
+      let clientsList = response.clients;
+      clientsList.forEach((ele) => {
+        
+      })
     }
+
   } catch (error) {
     return res.status(400).json({ error: "occured" });
   }
