@@ -35,7 +35,7 @@ app.use(
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-For statically serving react files.
+// For statically serving react files.
 app.use(express.static("static"));
 
 // Define routes:
