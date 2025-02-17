@@ -322,14 +322,22 @@ export const bookGuestClasses = async (req, res) => {
 
     console.log("This is CR", CR);
 
-    let customer = null; // Default to null if no representative is provided
+    const DEFAULT_CR_ID = "65f1e6f2a9b4a8b6c8d12345";
+
+    let customer = null;
     if (CR && CR !== "N/A") {
-      customer = await Customer.findById(CR);
-      if (!customer) {
-        return res
-          .status(400)
-          .json({ message: "Customer Representative not found." });
+      if (!mongoose.Types.ObjectId.isValid(CR)) {
+        console.warn("Invalid CR ID, assigning default CR.");
+        CR = DEFAULT_CR_ID; // Assign default CR
+      } else {
+        customer = await Customer.findById(CR);
+        if (!customer) {
+          console.warn("CR not found, assigning default CR.");
+          CR = DEFAULT_CR_ID; // Assign default CR
+        }
       }
+    } else {
+      CR = DEFAULT_CR_ID; // Assign default CR when "N/A"
     }
 
     // ✅ Fix: Use a different variable name (formattedDate) instead of redeclaring selectedDate

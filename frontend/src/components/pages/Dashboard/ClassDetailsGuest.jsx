@@ -94,6 +94,13 @@ function ClassDetailsGuest() {
       return;
     }
 
+    const isRepresentativeValid = representatives.some(
+      (rep) => rep.id === formData.CR
+    );
+    if (!isRepresentativeValid) {
+      formData.CR = null;
+    }
+
     const submissionData = {
       ...formData,
       CR: formData.CR || "N/A",
@@ -167,7 +174,6 @@ function ClassDetailsGuest() {
   const handleBookNow = async () => {
     if (token) {
       try {
-        // Fetch user details before booking
         const userResponse = await axios.get(
           `${API_URL}/api/auth/user/details`,
           {
@@ -177,19 +183,21 @@ function ClassDetailsGuest() {
 
         const user = userResponse.data.userDetails;
 
-        // Send user's details directly to the API
+        const isCRValid = representatives.some((rep) => rep.id === user.CR);
+        const assignedCR = isCRValid ? user.CR : "N/A"; // ✅ Default CR will be hidden on the frontend
+
+        const bookingData = {
+          name: user.name,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          CR: assignedCR,
+          selectedDate: date || "",
+        };
+
         const bookingResponse = await axios.post(
           `${API_URL}/api/classes/guest/book/class/${classDetails._id}`,
-          {
-            name: user.name,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            CR: user.CR || "",
-            selectedDate: date || "",
-          },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          bookingData,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         toast.success(
@@ -202,7 +210,7 @@ function ClassDetailsGuest() {
         );
       }
     } else {
-      setViewModal(true); // Show the form if the user is not logged in
+      setViewModal(true);
     }
   };
 
@@ -358,10 +366,9 @@ function ClassDetailsGuest() {
                   id="CR"
                   name="CR"
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none bg-white"
-                  value={formData.CR || "N/A"}
+                  value={formData.CR}
                   onChange={handleChange}
                 >
-                  <option value="">-- Choose your representative --</option>
                   <option value="N/A">No Representative (N/A)</option>
                   {representatives.map((rep) => (
                     <option key={rep.id} value={rep.id}>
