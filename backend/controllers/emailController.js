@@ -21,7 +21,7 @@ export const sendMail = async (req, res) => {
     html: `
       <div style="background-color:#f0f4f8; padding:20px; font-family:Arial, sans-serif;">
        <img src="https://i.ibb.co/b5HLcsw/mainLogo.png" alt="P-Town West MMA" style="width:200px; height:auto; margin:0 auto; display:block;" />
-        <h1 style="color:#d32f2f;">Thank You, ${name}!</h1>
+        <h1 style="color:#000000;">Thank You, ${name}!</h1>
         <p style="color:#333; font-size:16px;">We are excited to welcome you to P-Town West MMA, Pune's premier Mixed Martial Arts academy! Here's a summary of the details you provided:</p>
         <ul style="background-color:#ffffff; padding:15px; border-radius:8px; list-style-type:none; color:#222;">
           <li><strong>Name:</strong> ${name}</li>
@@ -29,7 +29,7 @@ export const sendMail = async (req, res) => {
           <li><strong>Phone:</strong> ${phone}</li>
         </ul>
         <p style="color:#333; font-size:16px;">At P-Town West MMA, we offer expert training in disciplines like Boxing, Brazilian Jiu-Jitsu (BJJ), Muay Thai, and Judo. Our inclusive environment is perfect for everyone, from beginners to experienced fighters. We can't wait to have you train with us!</p>
-        <p style="color:#d32f2f; font-weight:bold;">Best regards,</p>
+        <p style="color:#000000; font-weight:bold;">Best regards,</p>
         <p><strong>P-Town West MMA Team</strong></p>
       </div>
     `,
@@ -42,7 +42,7 @@ export const sendMail = async (req, res) => {
     html: `
       <div style="background-color:#f8f9fa; padding:20px; font-family:Arial, sans-serif;">
        <img src="https://i.ibb.co/b5HLcsw/mainLogo.png" alt="P-Town West MMA" style="width:200px; height:auto; margin:0 auto; display:block;" />
-        <h2 style="color:#1976d2;">New Membership Inquiry</h2>
+        <h2 style="color:#000000;">New Membership Inquiry</h2>
         <p style="color:#444; font-size:16px;">A new inquiry has been received with the following details:</p>
         <ul style="background-color:#ffffff; padding:15px; border-radius:8px; list-style-type:none; color:#555;">
           <li><strong>Name:</strong> ${name}</li>
