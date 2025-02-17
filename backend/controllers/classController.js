@@ -10,67 +10,43 @@ export const generateToken = (userId) => {
 };
 
 export const bookClass = async (req, res) => {
-  console.log(req.body);
-  const classId = req.params.id;
-  const userId = req.user.id;
-  const selectedDate = req.body.selectedDate; // Get selected date from request body
+  const { id: classId } = req.params;
+  const { id: userId } = req.user;
+  const { selectedDate } = req.body; // Extract selected date from request body
 
   try {
-    // Find the class first
+    // Find the class
     const classToBook = await Class.findById(classId);
     if (!classToBook) {
       return res.status(404).json({ message: "Class not found." });
     }
 
-    // Initialize applicantsByDate if it doesn't exist
-    if (!classToBook.applicantsByDate) {
-      classToBook.applicantsByDate = {}; // Initialize if not present
+    // Count current bookings for this class on the selected date
+    const bookedCount = await Application.countDocuments({ classId, date: selectedDate });
+
+    // Check if the class is already full
+    if (bookedCount >= classToBook.capacity) {
+      return res.status(400).json({ message: "Class is fully booked for this date." });
     }
 
-    // Check if the class already has the maximum number of applicants for the selected date
-    const applicantsOnDate = classToBook.applicantsByDate[selectedDate] || [];
-    if (applicantsOnDate.length >= classToBook.capacity) {
-      return res
-        .status(400)
-        .json({ message: "Class is already fully booked for this date." });
-    }
-
-    // Continue with the rest of the logic (check if user is already booked, etc.)
-    const applicationExists = await Application.findOne({
-      userId,
-      classId,
-      date: selectedDate,
-    });
+    // Check if the user is already booked for this class on the selected date
+    const applicationExists = await Application.findOne({ userId, classId, date: selectedDate });
 
     if (applicationExists) {
-      return res.status(400).json({
-        message: "You are already booked for this class on this date.",
-      });
+      return res.status(400).json({ message: "You are already booked for this class on this date." });
     }
 
     // Proceed with booking
-    const newApplication = new Application({
-      userId,
-      classId,
-      date: selectedDate,
-    });
+    const newApplication = new Application({ userId, classId, date: selectedDate });
     await newApplication.save();
 
-    // Add this application to the class's applicantsByDate for the selected date
-    classToBook.applicantsByDate[selectedDate] =
-      applicantsOnDate.concat(userId);
-
-    // Save the updated class document
-    await classToBook.save();
-
-    res.status(200).json({ message: "Class booked successfully" });
+    res.status(200).json({ message: "Class booked successfully." });
   } catch (error) {
     console.error("Error booking class:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to book class", error: error.message });
+    res.status(500).json({ message: "Failed to book class", error: error.message });
   }
 };
+
 
 export const cancelBooking = async (req, res) => {
   const { id: classId } = req.params; // Class ID from route params
@@ -285,17 +261,12 @@ export const guestClassDetails = async (req, res) => {
     const { classId } = req.params;
     const { date } = req.query;
 
-    console.log("Received classId:", classId);
-    console.log("Received date:", date);
-
     // Ensure we query using `_id` as a STRING since it's a UUID
     const classDetails = await Class.findOne({ id: classId });
 
     if (!classDetails) {
       return res.status(404).json({ message: "Class not found" });
     }
-
-    console.log("Class found:", classDetails);
 
     res
       .status(200)
@@ -307,112 +278,90 @@ export const guestClassDetails = async (req, res) => {
 };
 
 export const bookGuestClasses = async (req, res) => {
-  console.log(req.body);
-
   const { classId } = req.params;
   let { name, email, phoneNumber, CR, selectedDate } = req.body;
 
   try {
-    // Ensure all required fields except CR are present
+    // Validate required fields
     if (!name || !email || !phoneNumber || !selectedDate) {
-      return res
-        .status(400)
-        .json({ message: "All fields except CR are required." });
+      return res.status(400).json({ message: "All fields except CR are required." });
     }
 
-    console.log("This is CR", CR);
+    // ✅ Convert date to YYYY-MM-DD format (assuming input is DD-MM-YYYY)
+    const [day, month, year] = selectedDate.split("-");
+    const formattedDate = `${year}-${month}-${day}`;
 
+    // ✅ Ensure a default Customer Representative (CR) ID
     const DEFAULT_CR_ID = "65f1e6f2a9b4a8b6c8d12345";
-
     let customer = null;
+
     if (CR && CR !== "N/A") {
-      if (!mongoose.Types.ObjectId.isValid(CR)) {
-        console.warn("Invalid CR ID, assigning default CR.");
-        CR = DEFAULT_CR_ID; // Assign default CR
-      } else {
+      if (mongoose.Types.ObjectId.isValid(CR)) {
         customer = await Customer.findById(CR);
         if (!customer) {
           console.warn("CR not found, assigning default CR.");
-          CR = DEFAULT_CR_ID; // Assign default CR
+          CR = DEFAULT_CR_ID;
         }
+      } else {
+        console.warn("Invalid CR ID, assigning default CR.");
+        CR = DEFAULT_CR_ID;
       }
     } else {
-      CR = DEFAULT_CR_ID; // Assign default CR when "N/A"
+      CR = DEFAULT_CR_ID;
     }
 
-    // ✅ Fix: Use a different variable name (formattedDate) instead of redeclaring selectedDate
-    const [day, month, year] = selectedDate.split("-"); // "01-02-2025" -> [01, 02, 2025]
-    const formattedDate = `${year}-${month}-${day}`; // "YYYY-MM-DD"
-
+    // ✅ Check if the user already exists
     let user = await User.findOne({ email });
 
     if (user) {
-      // Check if user has already booked this class for the selected date
+      // Check if user has already booked this class on the selected date
       const existingApplication = await Application.findOne({
         userId: user._id,
         classId,
-        date: formattedDate, // Use formattedDate
+        date: formattedDate,
       });
 
       if (existingApplication) {
-        return res.status(400).json({
-          message: "You have already booked this class for the selected date.",
-        });
+        return res.status(400).json({ message: "You have already booked this class for the selected date." });
       }
     } else {
-      // Create a new user if they do not exist
+      // ✅ Create new user if not found
       user = new User({
         name,
         email,
         phoneNumber,
-        CR: CR === "N/A" ? null : customer?._id, // Store CR only if available
+        CR: CR !== "N/A" ? customer?._id : null, // Store CR only if valid
       });
       await user.save();
 
-      // Add this new user to the customer representative's client list
+      // ✅ Assign user to customer representative if applicable
       if (customer) {
         customer.clients.push(user._id);
         await customer.save();
       }
     }
 
-    // Fetch the class details
-    const classToBook = await Class.findOne({ _id: classId });
+    // ✅ Fetch class details
+    const classToBook = await Class.findById(classId);
     if (!classToBook) {
       return res.status(404).json({ message: "Class not found." });
     }
 
-    // Ensure `applicantsByDate` is initialized as an object
-    if (!classToBook.applicantsByDate) {
-      classToBook.applicantsByDate = {};
+    // ✅ Count current bookings for this class on the selected date
+    const bookedCount = await Application.countDocuments({ classId, date: formattedDate });
+
+    // ✅ Ensure the class has availability
+    if (bookedCount >= classToBook.capacity) {
+      return res.status(400).json({ message: "Class is fully booked for the selected date." });
     }
 
-    // Get the list of applicants on the selected date
-    const applicantsOnDate = classToBook.applicantsByDate[formattedDate] || [];
-
-    // Check if the class is already full
-    if (applicantsOnDate.length >= classToBook.capacity) {
-      return res
-        .status(400)
-        .json({ message: "Class is fully booked for the selected date." });
-    }
-
-    // Create a new application
+    // ✅ Create a new application
     const newApplication = new Application({
       userId: user._id,
-      classId: classToBook._id,
+      classId,
       date: formattedDate,
     });
     await newApplication.save();
-
-    // Add the user to the class's applicantsByDate for the selected date
-    classToBook.applicantsByDate[formattedDate] = [
-      ...applicantsOnDate,
-      user._id,
-    ];
-
-    // Save the updated class document
-    await classToBook.save();
 
     let token = generateToken(user._id);
 
@@ -423,9 +372,6 @@ export const bookGuestClasses = async (req, res) => {
     });
   } catch (error) {
     console.error("Error booking class:", error);
-    res.status(500).json({
-      message: "Failed to book class",
-      error: error.message,
-    });
+    res.status(500).json({ message: "Failed to book class", error: error.message });
   }
 };

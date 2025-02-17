@@ -261,7 +261,7 @@ function ClassDetailsGuest() {
             </p>
             <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Date:</span>{" "}
-              {classDetails.startTime.split("T")[0] || "N/A"}
+              {classDetails.selectedDate}
             </p>
             <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Time:</span>{" "}
@@ -286,10 +286,7 @@ function ClassDetailsGuest() {
               <span className="font-semibold">Capacity:</span>{" "}
               {classDetails.capacity}
             </p>
-            <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
-              <span className="font-semibold">Date:</span>{" "}
-              {classDetails.selectedDate}
-            </p>
+            
             {/* <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
               <span className="font-semibold">Recurring:</span>{" "}
               {classDetails.isRecurring

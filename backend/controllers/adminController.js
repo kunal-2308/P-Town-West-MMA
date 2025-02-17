@@ -356,7 +356,7 @@ export const deleteAdmin = async (req, res) => {
   try {
     const { id } = req.params;
     await adminModel.findByIdAndDelete(id);
-    console.log("Admin Deleted Successfully");
+    // console.log("Admin Deleted Successfully");
     res.status(200).json({ message: "Admin deleted successfully" });
   } catch (error) {
     console.log(error);
@@ -438,7 +438,7 @@ export const getparticularRepresentative = async (req, res) => {
 export const updatePassword = async (req, res) => {
   try {
     let { password } = req.body;
-    console.log(password);
+    // console.log(password);
     let id = req.params.id;
     let hashedPassword = await bcrypt.hash(password, 12);
 
