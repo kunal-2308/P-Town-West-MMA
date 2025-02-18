@@ -6,7 +6,7 @@ import customerModel from "../models/customerRepresentativeModel.js";
 import adminModel from "../models/adminModel.js";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
-import { set } from "mongoose";
+import mongoose from "mongoose";
 // Admin: Add a class
 
 const createToken = (userId, role) => {
@@ -232,11 +232,9 @@ export const deleteClass = async (req, res) => {
     // Delete the class itself
     await Class.findByIdAndDelete(id);
 
-    return res
-      .status(200)
-      .json({
-        message: "Class and related applications deleted successfully!",
-      });
+    return res.status(200).json({
+      message: "Class and related applications deleted successfully!",
+    });
   } catch (error) {
     return res
       .status(500)
@@ -385,7 +383,7 @@ export const addCustomerRepresentative = async (req, res) => {
     let newUser = new customerModel({ name: name });
 
     let response = await newUser.save();
-    console.log("CR : ",response);
+    console.log("CR : ", response);
     if (response) {
       return res.status(200).json({
         message: "Customer respresentative added successfully",
@@ -462,27 +460,53 @@ export const updatePassword = async (req, res) => {
 export const deleteRepresentative = async (req, res) => {
   try {
     let id = req.params.id;
-    console.log(id);
-    let response = await customerModel.findById(id);
-    if (response.name === "No Customer representative") {
-      return res.status(205).json({ message: "Cannot delete this representative" });
-    } else {
-      let { _id } = await customerModel.findOne({ name: "No Customer representative" }, { _id: 1 });
-      let clientsList = response.clients;
+    console.log("Received Delete Request for ID:", id);
 
-      // Push all clients to "No Customer representative"
-      let updatedCr = await customerModel.findByIdAndUpdate(
-        _id,
-        { $push: { clients: { $each: clientsList } } },
-        { new: true }
-      );
-      // Delete the original representative
-      await customerModel.findByIdAndDelete(id);
-
-      return res.status(200).json({ message: "Representative deleted successfully", updatedCr });
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      console.error("Invalid ID format:", id);
+      return res
+        .status(400)
+        .json({ error: "Invalid representative ID format" });
     }
+
+    let response = await customerModel.findById(id);
+    if (!response) {
+      console.error("Representative not found in DB:", id);
+      return res.status(404).json({ error: "Representative not found" });
+    }
+
+    if (response.name === "No Customer representative") {
+      return res
+        .status(205)
+        .json({ message: "Cannot delete this representative" });
+    }
+
+    let noRep = await customerModel.findOne(
+      { name: "No Customer representative" },
+      { _id: 1 }
+    );
+    if (!noRep) {
+      console.error("No 'No Customer representative' found in DB.");
+      return res
+        .status(500)
+        .json({ error: "No Customer Representative entry missing" });
+    }
+
+    await customerModel.findByIdAndUpdate(
+      noRep._id,
+      { $push: { clients: { $each: response.clients } } },
+      { new: true }
+    );
+
+    await customerModel.findByIdAndDelete(id);
+
+    return res
+      .status(200)
+      .json({ message: "Representative deleted successfully" });
   } catch (error) {
-    return res.status(400).json({ error: "An error occurred" });
+    console.error("DELETE ERROR:", error);
+    return res
+      .status(400)
+      .json({ error: "An error occurred", details: error.message });
   }
 };
-

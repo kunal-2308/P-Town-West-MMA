@@ -11,6 +11,33 @@ function CustomerRelationship() {
   const [selectedRepresentative, setSelectedRepresentative] = useState(null);
   const [clients, setClientsList] = useState([]);
 
+  const fetchRepresentatives = async () => {
+    try {
+      let token = Cookies.get("jwt_token");
+      const response = await axios.get(
+        `${API_URL}/api/admin/list/customer/representative`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const fetchedList = response.data.list.map((rep) => ({
+        _id: rep._id,
+        name: rep.name,
+        visibility: false,
+      }));
+
+      setList(fetchedList);
+    } catch (error) {
+      toast.error("Error loading representatives");
+      console.error("Fetch representatives error:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRepresentatives();
+  }, []);
+
   const handleChange = (e) => {
     setUserName(e.target.value);
   };
@@ -23,40 +50,44 @@ function CustomerRelationship() {
         `${API_URL}/api/admin/add/customer/representative`,
         { name: userName },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
+
       if (response.status === 200) {
         toast.success(response.data.message);
-        setList((prev) => [...prev, { name: userName, visibility: false }]);
         setUserName("");
+        fetchRepresentatives();
       }
-    } catch {
+    } catch (error) {
       toast.error("Failed to add representative");
+      console.error("Add representative error:", error);
     }
   };
 
-  const handleDelete = async (name, _id) => {
+  // 🔹 Delete Representative
+  const handleDelete = async (_id) => {
+    console.log("Attempting to delete ID:", _id);
+
     try {
       let token = Cookies.get("jwt_token");
       const response = await axios.delete(
         `${API_URL}/api/admin/delete/representative/${_id}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
+      console.log("Server response:", response);
+
       if (response.status === 200) {
         toast.success("Representative deleted successfully");
-        setList((prev) => prev.filter((rep) => rep.name !== name));
-      }else if(response.status === 205){
+        fetchRepresentatives();
+      } else if (response.status === 205) {
         toast.error("Cannot Delete No Customer Representative!");
       }
-    } catch {
+    } catch (error) {
+      console.error("Delete request error:", error.response?.data || error);
       toast.error("Failed to delete representative");
     }
   };
@@ -67,18 +98,18 @@ function CustomerRelationship() {
         i === index ? { ...rep, visibility: !rep.visibility } : rep
       )
     );
+
     try {
       let token = Cookies.get("jwt_token");
       const response = await axios.post(
         `${API_URL}/api/admin/client/list`,
         { name: ele.name },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log(response.data);
+
+      console.log("Client data:", response.data);
       if (response.status === 200) {
         const newClients = response.data.clients.map((client) => ({
           name: client.name,
@@ -89,35 +120,11 @@ function CustomerRelationship() {
         setClientsList(newClients);
         setSelectedRepresentative(ele);
       }
-    } catch {
+    } catch (error) {
       toast.error("Failed to fetch client list");
+      console.error("Fetch clients error:", error);
     }
   };
-
-  useEffect(() => {
-    const fetchRepresentatives = async () => {
-      try {
-        let token = Cookies.get("jwt_token");
-        const response = await axios.get(
-          `${API_URL}/api/admin/list/customer/representative`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const fetchedList = response.data.list.map((rep) => ({
-          ...rep,
-          visibility: false,
-        }));
-        setList(fetchedList);
-      } catch {
-        toast.error("Error loading representatives");
-      }
-    };
-
-    fetchRepresentatives();
-  }, []);
 
   return (
     <>
@@ -192,8 +199,6 @@ function CustomerRelationship() {
         >
           <input
             type="text"
-            name="name"
-            id="name"
             required
             value={userName}
             onChange={handleChange}
@@ -208,54 +213,31 @@ function CustomerRelationship() {
           </button>
         </form>
 
-        <div className="w-full max-w-3xl overflow-x-auto">
-          {list.length > 0 ? (
-            <table className="w-full border-collapse border border-gray-300 text-left shadow-md">
-              <thead className="bg-gray-200 text-gray-600">
-                <tr>
-                  <th className="border border-gray-300 px-2 sm:px-4 py-2">
-                    Name
-                  </th>
-                  <th className="border border-gray-300 px-2 sm:px-4 py-2">
-                    View Clients
-                  </th>
-                  <th className="border border-gray-300 px-2 sm:px-4 py-2">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {list.map((ele, index) => (
-                  <tr key={index} className="hover:bg-gray-100">
-                    <td className="border border-gray-300 px-2 sm:px-4 py-2">
-                      {ele.name}
-                    </td>
-                    <td className="border border-gray-300 px-2 sm:px-4 py-2 text-center">
-                      <button
-                        className="bg-red-500 text-white px-4 py-1 rounded-full hover:bg-red-600 transition"
-                        onClick={() => toggleVisibility(index, ele)}
-                      >
-                        View
-                      </button>
-                    </td>
-                    <td className="border border-gray-300 px-2 sm:px-4 py-2 text-center">
-                      <button
-                        onClick={() => handleDelete(ele.name, ele._id)}
-                        className="bg-red-500 text-white px-4 py-1 rounded-full hover:bg-red-600 transition"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p className="text-gray-500 text-center mt-4">
-              No representatives found.
-            </p>
-          )}
-        </div>
+        <table className="w-full border-collapse border border-gray-300 text-left shadow-md">
+          <tbody>
+            {list.map((ele, index) => (
+              <tr key={ele._id} className="hover:bg-gray-100">
+                <td className="border px-4 py-2">{ele.name}</td>
+                <td className="border px-4 py-2 text-center">
+                  <button
+                    onClick={() => toggleVisibility(index, ele)}
+                    className="bg-customYellow text-black px-4 py-1 rounded-full"
+                  >
+                    View
+                  </button>
+                </td>
+                <td className="border px-4 py-2 text-center">
+                  <button
+                    onClick={() => handleDelete(ele._id)}
+                    className="bg-red-500 text-white px-4 py-1 rounded-full"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </>
   );
