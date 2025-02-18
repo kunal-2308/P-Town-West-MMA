@@ -385,7 +385,7 @@ export const addCustomerRepresentative = async (req, res) => {
     let newUser = new customerModel({ name: name });
 
     let response = await newUser.save();
-
+    console.log("CR : ",response);
     if (response) {
       return res.status(200).json({
         message: "Customer respresentative added successfully",
@@ -462,13 +462,12 @@ export const updatePassword = async (req, res) => {
 export const deleteRepresentative = async (req, res) => {
   try {
     let id = req.params.id;
+    console.log(id);
     let response = await customerModel.findById(id);
-
     if (response.name === "No Customer representative") {
       return res.status(205).json({ message: "Cannot delete this representative" });
     } else {
       let { _id } = await customerModel.findOne({ name: "No Customer representative" }, { _id: 1 });
-
       let clientsList = response.clients;
 
       // Push all clients to "No Customer representative"
@@ -477,7 +476,6 @@ export const deleteRepresentative = async (req, res) => {
         { $push: { clients: { $each: clientsList } } },
         { new: true }
       );
-
       // Delete the original representative
       await customerModel.findByIdAndDelete(id);
 
