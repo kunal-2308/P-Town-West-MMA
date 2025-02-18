@@ -37,7 +37,7 @@ export const sendMail = async (req, res) => {
 
   const notificationMailOptions = {
     from: `"P-Town West MMA" <${process.env.EMAIL_USER}>`,
-    to: "notifications@example.com",
+    to: `<${process.env.EMAIL_USER}>`,
     subject: "New Membership Inquiry Received",
     html: `
       <div style="background-color:#f8f9fa; padding:20px; font-family:Arial, sans-serif;">
