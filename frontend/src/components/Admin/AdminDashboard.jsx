@@ -16,6 +16,7 @@ import { IoLogOut, IoMenu, IoClose } from "react-icons/io5";
 import DisplayUploadedImage from "./DisplaySchedule";
 import CustomerRelationship from "./CustomerRelationship";
 import { FaUsers } from "react-icons/fa";
+import ViewAllApplicants from "./ViewAllApplicants";
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -32,6 +33,8 @@ const AdminDashboard = () => {
         return <AdminHome onViewAllClick={setSelectedTab} />;
       case "Schedule a Class":
         return <NewAddClass />;
+      case "All Applicants":
+        return <ViewAllApplicants />;
       case "Add Admin":
         return <AdminAdd />;
       case "View Admins":
@@ -81,6 +84,7 @@ const AdminDashboard = () => {
             {[
               { label: "Home", icon: <GoHomeFill /> },
               { label: "Schedule a Class", icon: <FaRegCalendarAlt /> },
+              { label: "All Applicants", icon: <FaUsers /> },
               { label: "Add Admin", icon: <FaUserPlus /> },
               { label: "View Admins", icon: <FaUserPlus /> },
               { label: "Change Password", icon: <FaUserPlus /> },
