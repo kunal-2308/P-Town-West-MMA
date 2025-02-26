@@ -160,22 +160,32 @@ export const getAllClasses = async (req, res) => {
       .json({ message: "Failed to retrieve classes", error: error.message });
   }
 };
+
 //ISSUE FUNCTIONS OVER-------------------------------------------------------
 
 // Get class by id
 export const getClassById = async (req, res) => {
   try {
-    const classId = req.params.classId; // Correct the parameter name
+    const { classId } = req.params;
+
+    // Validate if classId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(classId)) {
+      return res.status(400).json({ message: "Invalid class ID" });
+    }
+
     const classDetails = await Class.findOne({ _id: classId });
+
     if (!classDetails) {
       return res.status(404).json({ message: "Class not found" });
     }
+
     res.status(200).json(classDetails);
   } catch (error) {
     console.error("Error fetching class details:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 export const getListOfUpcomingClasses = async (req, res) => {
   try {
@@ -375,3 +385,26 @@ export const bookGuestClasses = async (req, res) => {
     res.status(500).json({ message: "Failed to book class", error: error.message });
   }
 };
+
+//all customer
+// ->with booked class
+// name
+// email phone Number
+
+// , class Title Date
+export const allApplicants = async (req, res) => {
+  let allApplicants = await Application.find({}).populate({
+    path: "userId",
+    model: "User",
+    select: "name email phoneNumber",
+  }).populate({
+    path: "classId",
+    model: "Class",
+    select: "title"
+  }).limit(2);
+  return res.status(200).json({
+    message: "Applicants List",
+    allApplicants
+  });
+  // console.log("hello");
+}

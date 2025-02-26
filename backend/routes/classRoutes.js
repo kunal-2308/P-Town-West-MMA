@@ -12,6 +12,7 @@ import {
   getListOfApplicants,
   guestClassDetails,
   bookGuestClasses,
+  allApplicants
 } from "../controllers/classController.js";
 import { protectAdmin, protectUser } from "../middleware/authMiddleware.js";
 
@@ -25,9 +26,11 @@ router.get("/previous", protectUser, getPreviousClasses);
 router.get("/all-classes", protectUser, getAllClasses);
 router.get("/view/:classId", getClassById);
 router.get("/guest/list", getAllClasses);
+router.get("/applicants",protectAdmin,allApplicants);
 //Admin routes:
 router.get("/admin/previous", getListOfPreviousClasses);
 router.get("/admin/upcoming", getListOfUpcomingClasses);
 router.get("/guest/:classId", guestClassDetails);
 router.post("/guest/book/class/:classId", bookGuestClasses);
+
 export default router;
