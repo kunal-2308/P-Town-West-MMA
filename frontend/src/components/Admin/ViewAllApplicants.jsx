@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../../../configure";
 import Cookies from "js-cookie";
+import { CSVLink } from "react-csv";
 import axios from "axios";
 
 const ViewAllApplicants = () => {
@@ -10,26 +11,25 @@ const ViewAllApplicants = () => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const fetchApplicants = async () => {
+    try {
+      let token = Cookies.get("jwt_token");
+      const response = await axios.get(`${API_URL}/api/classes/applicants`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setApplicants(response.data.allApplicants);
+      console;
+      setFilteredApplicants(response.data.allApplicants);
+    } catch (error) {
+      setError(error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchApplicants = async () => {
-      try {
-        let token = Cookies.get("jwt_token");
-        const response = await axios.get(`${API_URL}/api/classes/applicants`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const data = response.data;
-        setApplicants(data.allApplicants);
-        setFilteredApplicants(data.allApplicants);
-      } catch (error) {
-        setError(error.response?.data?.message || error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchApplicants();
   }, []);
 
@@ -54,8 +54,24 @@ const ViewAllApplicants = () => {
     return <div className="text-red-500 text-center mt-5">Error: {error}</div>;
 
   return (
-    <div className="p-6 max-w-4xl">
-      <h2 className="text-2xl font-bold mb-4 text-center">Applicants List</h2>
+    <div className="p-6 max-w-5xl">
+      <div className="flex flex-row justify-between place-items-center items-center">
+        <h2 className="text-2xl font-bold mb-4 text-center">Applicants List</h2>
+        <CSVLink
+          data={applicants}
+          headers={[
+            { label: "Name", key: "userId.name" },
+            { label: "Email", key: "userId.email" },
+            { label: "Phone Number", key: "userId.phoneNumber" },
+            { label: "Class", key: "classId.title" },
+            { label: "Date", key: "date" },
+          ]}
+          filename={`applicants-list.csv`}
+          className="text-white bg-neutral-800 hover:bg-neutral-950 px-4 py-2 mb-4 rounded-full"
+        >
+          Export to CSV
+        </CSVLink>
+      </div>
       <input
         type="text"
         placeholder="Search by name, email, or class..."
